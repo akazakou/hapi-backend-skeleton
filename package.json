@@ -1,8 +1,9 @@
 {
-  "name": "backend-skeleton",
+  "name": "ads-platform",
+  "author": "Andrei Kazakou <a.v.kazakou@gmail.com>",
   "version": "0.0.1",
-  "description": "Skeleton project for backend tasks",
-  "repository": "git@gitlab.com:akazakou/backend-skeleton.git",
+  "description": "Ads platform",
+  "repository": "git@gitlab.com:akazakou/ads-platform.git",
   "license": "MIT",
   "keywords": [],
   "scripts": {
