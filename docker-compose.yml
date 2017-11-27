@@ -47,16 +47,16 @@ services:
   # Backend API
   #
   # Node.js Instance running Hapi.
-  # Requires Postgres and SFTP to be running
+  # Requires MongoDB and SFTP to be running
   # before starting.
 
   backend:
     container_name: "backend"
     image: 'node:8'
     expose:
-      - "5000"
+      - "3000"
     ports:
-      - "5000:5000"
+      - "3000:3000"
       - "9229:9229"
     volumes:
       - ./:/usr/src/app
