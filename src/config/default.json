@@ -1,0 +1,16 @@
+{
+  "server": {
+    "port": 3978
+  },
+
+  "log": {
+    "level": "debug",
+    "json": false,
+    "showLevel": true,
+    "timestamp": true,
+    "colorize": true,
+    "exitOnError": false,
+    "handleExceptions": true,
+    "humanReadableUnhandledException": true
+  }
+}

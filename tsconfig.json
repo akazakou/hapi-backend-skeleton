@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "outDir": "build",
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib":["es2016", "dom"]
+  },
+  "include": [
+    "src/**/**.ts",
+    "test/**/**.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
