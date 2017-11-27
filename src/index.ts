@@ -15,6 +15,11 @@ process.on('uncaughtException', (error: Error) => {
 // initializing server client
 const server = Server.init();
 
-server.start(() => {
-  log.info(`Server running at: ${server.info.uri}`);
+server.then(server => {
+  server.start(() => {
+    log.info(`Server running at: ${server.info.uri}`);
+  });
+}).catch(error => {
+  log.error("Can't start server because: " + error.message, error);
 });
+

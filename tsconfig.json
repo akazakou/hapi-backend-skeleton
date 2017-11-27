@@ -7,11 +7,15 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "lib":["es2016", "dom"]
+    "lib": [
+      "es2016",
+      "dom"
+    ]
   },
   "include": [
     "src/**/**.ts",
-    "test/**/**.ts"
+    "test/**/**.ts",
+    "typings/index.d.ts"
   ],
   "exclude": [
     "node_modules"

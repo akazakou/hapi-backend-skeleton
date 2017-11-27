@@ -20,14 +20,18 @@
     "hapi-auth-jwt2": "^7.3.0",
     "hapi-swagger": "^7.9.1",
     "joi": "^11.0.3",
+    "mongoose": "^4.13.5",
     "nconf": "^0.8.4",
-    "winston": "^2.3.1"
+    "winston": "^2.3.1",
+    "inert": "^4.2.0",
+    "vision": "^4.1.0"
   },
   "devDependencies": {
     "@types/chai": "^4.0.4",
     "@types/hapi": "^16.1.9",
     "@types/joi": "^10.4.3",
     "@types/mocha": "^2.2.43",
+    "@types/mongoose": "^4.7.28",
     "@types/nconf": "0.0.34",
     "@types/sinon": "^2.3.5",
     "@types/winston": "^2.3.6",

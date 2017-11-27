@@ -17,6 +17,7 @@ services:
   database:
     container_name: "database"
     image: mongo:3.4
+    hostname: ads-platform-database
     expose:
       - "27017"
       - "27018"
@@ -66,4 +67,5 @@ services:
       - mailserver
     environment:
       - NODE_ENV=debug
+      - database__uri=mongodb://ads-platform-database:27017/ads-platform
     command: sh /usr/src/app/docker.sh
