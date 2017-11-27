@@ -12,7 +12,7 @@
     "tsc-watch": "tsc -w",
     "build": "gulp default",
     "test": "NODE_ENV=test gulp test",
-    "watch": "nodemon --inspect=localhost:9229 --watch build/src build/src/index.js"
+    "watch": "nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js"
   },
   "dependencies": {
     "hapi": "^16.6.0",
