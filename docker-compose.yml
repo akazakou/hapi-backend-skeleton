@@ -1,0 +1,68 @@
+version: '3'
+services:
+
+  # MongoDB Database
+  #
+  # Version 3.4 running default
+  # settings. Used for Backend API data
+  # storage.
+  #
+  # Accessible from Host:
+  #
+  # Server: localhost
+  # Ports: 27017, 27018, 27019, 28017
+  # Username: postgres
+  # Password:
+
+  database:
+    container_name: "database"
+    image: mongo:3.4
+    expose:
+      - "27017"
+      - "27018"
+      - "27019"
+    ports:
+      - "57017:27017"
+      - "57018:27018"
+      - "57019:27019"
+      - "58017:28017"
+
+  # SMTP Server
+  #
+  # Uses simple Mailtrap server
+  # for grabbing SMTP email messages
+  # sent via port 25.
+  #
+  # Accessible from host via:
+  # smtp://localhost:25
+
+  mailserver:
+    container_name: "mailserver"
+    image: mailhog/mailhog
+    expose:
+        - "1025"
+    ports:
+      - "8025:8025"
+
+  # Backend API
+  #
+  # Node.js Instance running Hapi.
+  # Requires Postgres and SFTP to be running
+  # before starting.
+
+  backend:
+    container_name: "backend"
+    image: 'node:8'
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+      - "9229:9229"
+    volumes:
+      - ./:/usr/src/app
+    depends_on:
+      - database
+      - mailserver
+    environment:
+      - NODE_ENV=debug
+    command: sh /usr/src/app/docker.sh

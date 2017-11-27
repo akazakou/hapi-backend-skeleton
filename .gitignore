@@ -67,3 +67,4 @@ typings/
 
 # Application overloading configuration file
 /config.json
+/package-lock.json
