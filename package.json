@@ -7,7 +7,7 @@
   "keywords": [],
   "scripts": {
     "start": "node build/src/index.js",
-    "start:dev": "concurrently \"tsc-watch\" \"gulp watch\" \"npm run watch\"",
+    "start:dev": "concurrently \"npm run tsc-watch\" \"npm run watch\"",
     "tsc": "tsc",
     "tsc-watch": "tsc -w",
     "build": "gulp default",
