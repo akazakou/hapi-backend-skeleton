@@ -1,35 +1,46 @@
-import {IPlugin, IPluginOptions} from "../interfaces";
+import {IPlugin} from "../interfaces";
 import * as Hapi from "hapi";
 import {User} from "../../models/user/user";
 import * as Config from "../../config";
+import * as Log from "../../log";
+import * as HapiAuthJWT2 from "hapi-auth-jwt2";
+
 
 // loading configuration
 const config = Config.init();
+
+const log = Log.init();
 
 export default (): IPlugin => {
   return {
     register: async (server: Hapi.Server): Promise<void> => {
       const validateUser = (decoded, request, cb) => {
-        if (config.get("server:auth:jwt:active")) {
-          User.findById(decoded.id)
-            .then((user) => {
-              if (!user) {
-                return cb(null, false);
-              }
-              return cb(null, true);
-            });
-        } else {
-          return User.findOne();
+        if (!config.get("server:auth:jwt:active")) {
+          return User.findOne({});
         }
+
+        User.findById(decoded.id).then((user) => {
+          if (user && user.token) {
+            return cb(null, true);
+          }
+
+          return cb(null, false);
+        });
       };
+
       try {
-        await server.register({register: require('hapi-auth-jwt2')});
-        server.auth.strategy('jwt', 'jwt', config.get("server:auth:jwt:active"), {
+        const toggle = config.get("server:auth:jwt:active") ? 'required' : false;
+
+        await server.register({register: HapiAuthJWT2});
+
+        server.auth.strategy('jwt', 'jwt', toggle, {
           key: config.get("server:auth:jwt:jwtSecret"),
           validateFunc: validateUser,
           verifyOptions: {algorithms: ['HS256']}
         });
+
       } catch (err) {
+        log.error(`Catch error on token validation: ${err.message}`, {err});
         throw new Error(err);
       }
     },
@@ -41,5 +52,3 @@ export default (): IPlugin => {
     }
   };
 };
-
-

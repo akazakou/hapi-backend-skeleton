@@ -21,4 +21,61 @@ export default function (server: Hapi.Server) {
       }
     },
   });
+
+  server.route({
+    method: 'GET',
+    path: '/user',
+    config: {
+      handler: clientsController.getList,
+      tags: ['api', 'user', 'list'],
+      description: 'Get detailed information about all users',
+      validate: Validator.list,
+      plugins: {
+        'hapi-swagger': Documentation.list,
+      }
+    },
+  });
+
+  server.route({
+    method: 'POST',
+    path: '/user/login',
+    config: {
+      auth: false,
+      handler: clientsController.loginUser,
+      tags: ['api', 'user', 'login'],
+      description: 'Validate user login and password',
+      validate: Validator.login,
+      plugins: {
+        'hapi-swagger': Documentation.login,
+      }
+    },
+  });
+
+  server.route({
+    method: 'PUT',
+    path: '/user/logout',
+    config: {
+      handler: clientsController.logoutUser,
+      tags: ['api', 'user', 'logout'],
+      description: 'Remove authorisation token from user object',
+      validate: Validator.logout,
+      plugins: {
+        'hapi-swagger': Documentation.logout,
+      }
+    },
+  });
+
+  server.route({
+    method: 'PUT',
+    path: '/user/auth',
+    config: {
+      handler: clientsController.authUser,
+      tags: ['api', 'user', 'auth'],
+      description: 'Update user authorisation status',
+      validate: Validator.auth,
+      plugins: {
+        'hapi-swagger': Documentation.auth,
+      }
+    },
+  });
 }

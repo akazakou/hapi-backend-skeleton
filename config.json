@@ -9,7 +9,8 @@
     },
     "plugins": [
       "jwt-auth",
-      "swagger"
+      "swagger",
+      "logger"
     ]
   },
   "database": {

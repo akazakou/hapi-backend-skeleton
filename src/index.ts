@@ -3,6 +3,7 @@ require('events').EventEmitter.defaultMaxListeners = 100;
 
 import * as Server from "./server";
 import * as Log from "./log";
+import * as Database from "./database";
 
 // initializing logger instance
 const log = Log.init();
@@ -12,14 +13,15 @@ process.on('uncaughtException', (error: Error) => {
   log.warn(`Detect uncaughtException: ${error.toString()}`);
 });
 
-// initializing server client
-const server = Server.init();
+Database.init().then(() => {
+  // initializing server client
+  const server = Server.init();
 
-server.then(server => {
-  server.start(() => {
-    log.info(`Server running at: ${server.info.uri}`);
+  server.then(server => {
+    server.start(() => {
+      log.info(`Server running at: ${server.info.uri}`);
+    });
+  }).catch(error => {
+    log.error("Can't start server because: " + error.message, error);
   });
-}).catch(error => {
-  log.error("Can't start server because: " + error.message, error);
 });
-

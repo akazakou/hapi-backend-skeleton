@@ -1,9 +1,10 @@
 import * as Joi from "joi";
 
 const IUser = Joi.object().keys({
-  id: Joi.number().required().description('Unique ID of user entity'),
+  _id: Joi.string().regex(/[0-9a-z]{24}/g).required().description('Unique ID of user entity'),
   login: Joi.string().min(1).required().description('User login using for authorization'),
   password: Joi.string().min(1).optional().description('User password using for authorization'),
+  token: Joi.string().optional().description('Bearer token for detecting authorized user'),
   createdAt: Joi.string().isoDate().optional().description('Date when user record was created'),
   updatedAt: Joi.string().isoDate().optional().description('Date when user record was updated last time'),
 })
@@ -11,8 +12,9 @@ const IUser = Joi.object().keys({
   .label('IUser')
   .description('Detailed user information')
   .example({
-    "id": "59eef4f909225626a7fb0b7f",
+    "_id": "59eef4f909225626a7fb0b7f",
     "login": "admin",
+    "token": "Bearer 59eef4f909225626a7fb0b7f59eef4f909225626a7fb0b7f59eef4f909225626a7fb0b7f",
     "password": "password123",
     "createdAt": "2017-11-27T11:09:15.463Z",
     "updatedAt": "2017-11-27T11:09:15.463Z",
@@ -28,22 +30,32 @@ const Validator = {
   },
   update: {
     params: {
-      id: Joi.number().required().description('Internal ID of current client configuration'),
+      id: Joi.string().required().description('Internal ID of current client configuration'),
     },
     payload: IUser
   },
   delete: {
     params: {
-      id: Joi.number().required().description('Internal ID of current client configuration'),
+      id: Joi.string().required().description('Internal ID of current client configuration'),
     },
   },
   get: {
     params: {
-      id: Joi.number().required().description('Internal ID of current client configuration'),
+      id: Joi.string().required().description('Internal ID of current client configuration'),
     },
   },
   list: {
   },
+  login: {
+    payload: {
+      login: Joi.string().min(1).required().description('User login using for authorization'),
+      password: Joi.string().min(1).optional().description('User password using for authorization'),
+    }
+  },
+  logout: {
+  },
+  auth: {
+  }
 };
 
 export {
