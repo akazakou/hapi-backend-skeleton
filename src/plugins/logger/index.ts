@@ -10,13 +10,13 @@ export default (): IPlugin => {
       return server.register({
         register: good,
         options: {
+          ops: false,
           reporters: {
             winston: [{
               module: 'good-winston',
               args: [{
                 log: '*',
                 response: '*',
-                ops: false,
                 winston: Log.init(),
               }]
             }],
