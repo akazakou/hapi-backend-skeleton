@@ -21,5 +21,15 @@
       "poolSize": 10,
       "bufferMaxEntries": 0
     }
+  },
+  "log": {
+    "level": "debug",
+    "json": false,
+    "showLevel": true,
+    "timestamp": true,
+    "colorize": true,
+    "exitOnError": false,
+    "handleExceptions": true,
+    "humanReadableUnhandledException": true
   }
 }
