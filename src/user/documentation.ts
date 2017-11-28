@@ -55,6 +55,7 @@ const userList = {
             "_id": "59eef4f909225626a7fb0b7f",
             "login": "admin",
             "password": "password123",
+            "role": "administrator",
             "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhMWJmZDBmYzc2OGVlNjVlYzQ3NzVjYiIsImlhdCI6MTUxMTg2MDM2M30.NkQOr1mKxuShtOm5oZ5EZWrYvdL5lFzmWZVV2DfXqMw",
             "createdAt": "2017-11-27T11:09:15.463Z",
             "updatedAt": "2017-11-27T11:09:15.463Z",
@@ -74,6 +75,14 @@ const userCreate = {
     '201': {
       'description': 'Report about success user creation with full user configuration data',
       'schema': IUser,
+    },
+    '422': {
+      'description': 'Report about wrong data for creating new user',
+      'schema': HTTPError.example({
+        "statusCode": 422,
+        "error": "Unprocessable Entity",
+        "message": 'User with login "admin" already exists'
+      }),
     }
   }),
 };
@@ -88,7 +97,15 @@ const userUpdate = {
     '200': {
       'description': 'Report about success user configuration data update',
       'schema': IUser,
-    }
+    },
+    '422': {
+      'description': 'Report about wrong data for updating existed user',
+      'schema': HTTPError.example({
+        "statusCode": 422,
+        "error": "Unprocessable Entity",
+        "message": 'User with login "admin" already exists'
+      }),
+    },
   }),
 };
 

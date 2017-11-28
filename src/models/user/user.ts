@@ -115,6 +115,17 @@ Schema.pre('save', function (next) {
   next();
 });
 
+
+Schema.set('toJSON', {
+  transform: function(document: IUser, result: any) {
+    if (result.password) {
+      delete result.password;
+    }
+
+    return result;
+  },
+});
+
 /**
  * Database collection object for User entity
  * @type {"mongoose".Model<IUser>}

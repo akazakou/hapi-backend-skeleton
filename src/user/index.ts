@@ -38,6 +38,34 @@ export default function (server: Hapi.Server) {
 
   server.route({
     method: 'POST',
+    path: '/user',
+    config: {
+      handler: clientsController.createUser,
+      tags: ['api', 'user', 'create'],
+      description: 'Create new user record',
+      validate: Validator.create,
+      plugins: {
+        'hapi-swagger': Documentation.create,
+      }
+    },
+  });
+
+  server.route({
+    method: 'PUT',
+    path: '/user/{id}',
+    config: {
+      handler: clientsController.updateUser,
+      tags: ['api', 'user', 'update'],
+      description: 'Update user record',
+      validate: Validator.update,
+      plugins: {
+        'hapi-swagger': Documentation.update,
+      }
+    },
+  });
+
+  server.route({
+    method: 'POST',
     path: '/user/login',
     config: {
       auth: false,

@@ -22,7 +22,7 @@ export default class UserController {
 
       reply(user);
     } catch (err) {
-      reply(Boom.badImplementation(err));
+      reply(Boom.badImplementation(err.message, err));
     }
   }
 
@@ -42,7 +42,64 @@ export default class UserController {
 
       reply(users);
     } catch (err) {
-      reply(Boom.badImplementation(err));
+      reply(Boom.badImplementation(err.message, err));
+    }
+  }
+
+  /**
+   * Create new user record
+   * @param {Request} request
+   * @param {ReplyNoContinue} reply
+   * @returns {Promise<void>}
+   */
+  public async createUser(request: Hapi.Request, reply: Hapi.ReplyNoContinue) {
+    try {
+      let existedUser: IUser = await User.findOne({login: request.payload.login});
+      if (existedUser) {
+        return reply(Boom.badData(`User with login "${request.payload.login}" already exists`));
+      }
+
+      let user: IUser = new User(request.payload);
+
+      await user.save();
+
+      reply(user);
+    } catch (err) {
+      reply(Boom.badImplementation(err.message, err));
+    }
+  }
+
+  /**
+   * Update existing user record by user ID
+   * @param {Request} request
+   * @param {ReplyNoContinue} reply
+   * @returns {Promise<Response>}
+   */
+  public async updateUser(request: Hapi.Request, reply: Hapi.ReplyNoContinue) {
+    try {
+      let user: IUser = await User.findById(request.params.id);
+
+      if (!user) {
+        return reply(Boom.badRequest(`Can't find user with ID: ${request.params.id}`, {request}));
+      }
+
+      let existedUser: IUser = await User.findOne({login: request.payload.login});
+      if (existedUser && existedUser.id !== user.id) {
+        return reply(Boom.badData(`User with login "${request.payload.login}" already exists`));
+      }
+
+      user = Object.assign(user, request.payload);
+      for (let propertyName in request.payload) {
+        if (user[propertyName]) {
+          user.markModified(propertyName);
+        }
+      }
+
+      user = await user.save();
+
+      reply(user);
+    } catch (err) {
+      reply(Boom.badImplementation(err.message, err));
     }
   }
 
@@ -71,7 +128,7 @@ export default class UserController {
 
       reply(user).header('X-Access-Token', user.token);
     } catch (err) {
-      reply(Boom.badImplementation(err));
+      reply(Boom.badImplementation(err.message, err));
     }
   }
 
