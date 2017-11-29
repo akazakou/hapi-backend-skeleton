@@ -86,11 +86,11 @@ export default function (server: Hapi.Server) {
 
   server.route({
     method: 'POST',
-    path: '/user/login',
+    path: '/auth',
     config: {
       auth: false,
       handler: clientsController.loginUser,
-      tags: ['api', 'user', 'login'],
+      tags: ['api', 'auth', 'create'],
       description: 'Validate user login and password',
       validate: Validator.login,
       plugins: {
@@ -101,11 +101,11 @@ export default function (server: Hapi.Server) {
   });
 
   server.route({
-    method: 'PUT',
-    path: '/user/logout',
+    method: 'DELETE',
+    path: '/auth',
     config: {
       handler: clientsController.logoutUser,
-      tags: ['api', 'user', 'logout'],
+      tags: ['api', 'auth', 'delete'],
       description: 'Remove authorisation token from user object',
       validate: Validator.logout,
       plugins: {
@@ -117,10 +117,10 @@ export default function (server: Hapi.Server) {
 
   server.route({
     method: 'PUT',
-    path: '/user/auth',
+    path: '/auth',
     config: {
       handler: clientsController.authUser,
-      tags: ['api', 'user', 'auth'],
+      tags: ['api', 'auth', 'update'],
       description: 'Update user authorisation status',
       validate: Validator.auth,
       plugins: {

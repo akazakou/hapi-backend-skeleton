@@ -17,6 +17,10 @@ export default (): IPlugin => {
             },
             tags: [
               {
+                name: 'auth',
+                description:'API endpoint for manipulating user authentication'
+              },
+              {
                 name: 'user',
                 description:'Api interface for manipulate user information'
               },
