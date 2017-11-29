@@ -10,6 +10,7 @@ const IUser = Joi.object().keys({
   token: Joi.string().optional().description('Bearer token for detecting authorized user'),
   createdAt: Joi.string().isoDate().optional().description('Date when user record was created'),
   updatedAt: Joi.string().isoDate().optional().description('Date when user record was updated last time'),
+  __v: Joi.number().optional().description('Version of current entity record'),
 })
   .unknown(false)
   .label('IUser')
@@ -22,6 +23,7 @@ const IUser = Joi.object().keys({
     "password": "password123",
     "createdAt": "2017-11-27T11:09:15.463Z",
     "updatedAt": "2017-11-27T11:09:15.463Z",
+    "__v": 0,
   });
 
 /**

@@ -11,8 +11,8 @@ export default (): IPlugin => {
           register: require('hapi-swagger'),
           options: {
             info: {
-              title: 'Ads Platform API',
-              description: 'Ads Platform API documentation',
+              title: 'Candle Backend API',
+              description: 'Documentation for Candle Backend API application',
               version: '0.0.1'
             },
             tags: [
