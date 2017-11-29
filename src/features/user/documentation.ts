@@ -29,6 +29,15 @@ const BasicErrors = {
       "message": "Missing authentication"
     }),
   },
+  '403': {
+    'description': 'An internal server error occurred.',
+    'label': 'HTTP_FORBIDDEN',
+    'schema': HTTPError.example({
+      "statusCode": 403,
+      "error": "Forbidden",
+      "message": "You don't have access to the route /user/{id}"
+    }),
+  },
   '500': {
     'description': 'An internal server error occurred.',
     'label': 'HTTP_INTERNAL_SERVER_ERROR',
@@ -37,7 +46,7 @@ const BasicErrors = {
       "error": "Internal Server Error",
       "message": "An internal server error occurred"
     }),
-  }
+  },
 };
 
 const userList = {
@@ -55,7 +64,7 @@ const userList = {
             "_id": "59eef4f909225626a7fb0b7f",
             "login": "admin",
             "password": "password123",
-            "role": "administrator",
+            "roles": ["administrator"],
             "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhMWJmZDBmYzc2OGVlNjVlYzQ3NzVjYiIsImlhdCI6MTUxMTg2MDM2M30.NkQOr1mKxuShtOm5oZ5EZWrYvdL5lFzmWZVV2DfXqMw",
             "createdAt": "2017-11-27T11:09:15.463Z",
             "updatedAt": "2017-11-27T11:09:15.463Z",
@@ -140,6 +149,12 @@ const userGet = {
 const userLogin = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
+      'headers': {
+        'X-Access-Token': {
+          'description': 'Value of access token for accessing to backend application',
+          'type': 'string'
+        }
+      },
       'description': 'Validate login and password success',
       'schema': IUser,
     },

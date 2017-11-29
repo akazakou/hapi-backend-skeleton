@@ -35,7 +35,7 @@ async function init() {
   const plugins: Array<string> = config.get("server:plugins");
   let promises: Array<Promise<any>> = [];
   plugins.forEach((pluginName: string) => {
-    let plugin: IPlugin = (require("../plugins/" + pluginName)).default();
+    let plugin: IPlugin = (require("../../plugins/" + pluginName)).default();
     logger.info(`Register Plugin ${plugin.info().name} v${plugin.info().version}`);
     promises.push(plugin.register(server));
   });

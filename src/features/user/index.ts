@@ -2,6 +2,7 @@ import * as Hapi from "hapi";
 import UserController from "./controller";
 import {Documentation} from "./documentation";
 import {Validator} from "./validator";
+import {Role} from "../../models/user/user";
 
 export default function (server: Hapi.Server) {
 
@@ -18,6 +19,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.get,
       plugins: {
         'hapi-swagger': Documentation.get,
+        'roles': [Role.ADMIN],
       }
     },
   });
@@ -32,6 +34,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.list,
       plugins: {
         'hapi-swagger': Documentation.list,
+        'roles': [Role.ADMIN],
       }
     },
   });
@@ -46,6 +49,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.create,
       plugins: {
         'hapi-swagger': Documentation.create,
+        'roles': [Role.ADMIN],
       }
     },
   });
@@ -60,6 +64,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.update,
       plugins: {
         'hapi-swagger': Documentation.update,
+        'roles': [Role.ADMIN],
       }
     },
   });
@@ -75,6 +80,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.login,
       plugins: {
         'hapi-swagger': Documentation.login,
+        'roles': [Role.UNKNOWN],
       }
     },
   });
@@ -89,6 +95,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.logout,
       plugins: {
         'hapi-swagger': Documentation.logout,
+        'roles': [Role.RETAILER, Role.USER],
       }
     },
   });
@@ -103,6 +110,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.auth,
       plugins: {
         'hapi-swagger': Documentation.auth,
+        'roles': [Role.RETAILER, Role.USER],
       }
     },
   });
