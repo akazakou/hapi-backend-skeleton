@@ -46,6 +46,11 @@ const Role: { ADMIN: TypeRoleAdmin; RETAILER: TypeRoleRetailer; USER: TypeRoleUs
  */
 interface IUser extends Mongoose.Document, ITimed, Mongoose.MongooseDocumentOptionals {
   /**
+   * Flag that indicates the user is active or not
+   * Disabled user can't login
+   */
+  isActive: boolean;
+  /**
    * Login will be used for identify user
    */
   login: string;
@@ -93,6 +98,10 @@ interface IUserSchema extends Mongoose.Model<IUser> {
  * Description of user schema for storing it into database
  */
 let Schema = new Mongoose.Schema({
+  /**
+   * Flag that indicates the user is active or not
+   */
+  isActive: {type: Boolean, required: true, unique: false, default: true},
   /**
    * Login will be used for identify user
    */

@@ -189,4 +189,27 @@ export default class UserController {
       reply(Boom.badImplementation());
     }
   }
+
+  /**
+   * Disallow user to login into backend application
+   * @param {Request} request
+   * @param {ReplyNoContinue} reply
+   * @returns {Promise<void>}
+   */
+  public async deleteUser(request: Hapi.Request, reply: Hapi.ReplyNoContinue) {
+    try {
+      let user: IUser = await User.findById(request.params.id);
+
+      if (!user) {
+        return reply(Boom.badRequest(`Can't find user with ID: ${request.params.id}`, {request}));
+      }
+
+      user.isActive = false;
+      user.markModified('isActive');
+
+      reply(await user.save());
+    } catch (error) {
+      reply(Boom.badImplementation());
+    }
+  }
 }

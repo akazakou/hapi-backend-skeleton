@@ -4,6 +4,7 @@ const roles = Joi.string().only(['administrator', 'retailer', 'user', 'unknown']
 
 const IUser = Joi.object().keys({
   _id: Joi.string().regex(/[0-9a-z]{24}/g).optional().description('Unique ID of user entity'),
+  isActive: Joi.boolean().required().description('User login using for authorization'),
   login: Joi.string().min(1).required().description('User login using for authorization'),
   password: Joi.string().min(1).optional().description('User password using for authorization'),
   roles: Joi.array().min(1).items(roles).required().description('User roles list for accessing to backend application'),
@@ -17,6 +18,7 @@ const IUser = Joi.object().keys({
   .description('Detailed user information')
   .example({
     "_id": "59eef4f909225626a7fb0b7f",
+    "isActive": true,
     "login": "admin",
     "roles": ["administrator"],
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhMWJmZDBmYzc2OGVlNjVlYzQ3NzVjYiIsImlhdCI6MTUxMTg2MDM2M30.NkQOr1mKxuShtOm5oZ5EZWrYvdL5lFzmWZVV2DfXqMw",

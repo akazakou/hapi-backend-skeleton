@@ -70,6 +70,21 @@ export default function (server: Hapi.Server) {
   });
 
   server.route({
+    method: 'DELETE',
+    path: '/user/{id}',
+    config: {
+      handler: clientsController.deleteUser,
+      tags: ['api', 'user', 'delete'],
+      description: 'Mark user inavtive',
+      validate: Validator.delete,
+      plugins: {
+        'hapi-swagger': Documentation.delete,
+        'roles': [Role.ADMIN],
+      }
+    },
+  });
+
+  server.route({
     method: 'POST',
     path: '/user/login',
     config: {

@@ -62,6 +62,7 @@ const userList = {
         .label('Array<IUser>')
         .example([{
             "_id": "59eef4f909225626a7fb0b7f",
+            "isActive": true,
             "login": "admin",
             "password": "password123",
             "roles": ["administrator"],
