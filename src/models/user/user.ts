@@ -2,7 +2,7 @@ import * as Mongoose from 'mongoose';
 import * as Bcrypt from 'bcrypt';
 import {ITimed} from '../misc/timed';
 import * as Jwt from 'jsonwebtoken';
-import * as Config from "../../config";
+import * as Config from "../../services/config";
 
 const config = Config.init();
 

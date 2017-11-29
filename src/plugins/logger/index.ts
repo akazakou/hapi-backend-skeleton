@@ -1,6 +1,6 @@
 import {IPlugin} from "../interfaces";
 import * as Hapi from "hapi";
-import * as Log from "../../log";
+import * as Log from "../../services/log";
 
 const good = require('good');
 

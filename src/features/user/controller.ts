@@ -1,7 +1,7 @@
 import * as Hapi from 'hapi';
 import * as Boom from 'boom';
-import {User, IUser} from '../models/user/user';
-import * as Config from "../config";
+import {User, IUser} from '../../models/user/user';
+import * as Config from "../../services/config/index";
 
 const config = Config.init();
 

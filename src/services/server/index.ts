@@ -1,8 +1,8 @@
-import * as Config from "../config";
-import * as Log from "../log";
+import * as Config from "../config/index";
+import * as Log from "../log/index";
 import * as Hapi from "hapi";
-import {IPlugin} from "../plugins/interfaces";
-import UserFeature from "../user";
+import {IPlugin} from "../../plugins/interfaces";
+import UserFeature from "../../features/user/index";
 
 const logger = Log.init();
 

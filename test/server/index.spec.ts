@@ -1,6 +1,6 @@
 import {expect} from 'chai';
 import * as sinon from 'sinon';
-import * as Server from "../../src/server"
+import * as Server from "../../src/services/server"
 
 describe('Server', () => {
   let sandbox: sinon.SinonSandbox;

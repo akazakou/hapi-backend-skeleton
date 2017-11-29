@@ -1,9 +1,9 @@
 // setting EventEmitter maxListeners
 require('events').EventEmitter.defaultMaxListeners = 100;
 
-import * as Server from "./server";
-import * as Log from "./log";
-import * as Database from "./database";
+import * as Server from "./services/server";
+import * as Log from "./services/log";
+import * as Database from "./services/database";
 
 // initializing logger instance
 const log = Log.init();

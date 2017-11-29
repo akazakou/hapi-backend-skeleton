@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import * as Log from "../../src/log"
+import * as Log from "../../src/services/log"
 
 describe('Logs', () => {
     it('should initialize logs correctly', done => {

@@ -43,8 +43,8 @@ gulp.task('compile', shell.task([
  * Copy config files
  */
 gulp.task('configs', (cb) => {
-  return gulp.src("src/config/**/*.json")
-    .pipe(gulp.dest(outDir + '/src/config/'));
+  return gulp.src("src/services/config/**/*.json")
+    .pipe(gulp.dest(outDir + '/src/services/config/'));
 });
 
 /**
