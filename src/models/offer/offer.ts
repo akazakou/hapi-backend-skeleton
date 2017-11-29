@@ -40,7 +40,7 @@ let Schema = new Mongoose.Schema({
   /**
    * Retailer information that own this branch
    */
-  retailer: {type: Mongoose.Types.ObjectId, required: true, ref: 'Retailer'},
+  retailer: {type: Mongoose.Schema.Types.ObjectId, required: true, ref: 'Retailer'},
   /**
    * Date of starting campaign
    */

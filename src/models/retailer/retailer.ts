@@ -9,6 +9,11 @@ import {IPlan} from "../plan/plan";
  */
 interface IRetailer extends Mongoose.Document, ITimed, Mongoose.MongooseDocumentOptionals {
   /**
+   * Flag indicates that retailer in active status.
+   * If it equals to FALSE, he will be excluded from all activities in frontend application
+   */
+  isActive: boolean;
+  /**
    * User that own this information
    */
   user: IUser | Mongoose.Types.ObjectId;
@@ -39,7 +44,7 @@ interface IRetailer extends Mongoose.Document, ITimed, Mongoose.MongooseDocument
   /**
    * Plan that assigned to that retailer
    */
-  plan: IPlan | Mongoose.Types.ObjectId;
+  plan?: IPlan | Mongoose.Types.ObjectId;
 }
 
 /**
@@ -47,9 +52,14 @@ interface IRetailer extends Mongoose.Document, ITimed, Mongoose.MongooseDocument
  */
 let Schema = new Mongoose.Schema({
   /**
+   * Flag indicates that retailer in active status.
+   * If it equals to FALSE, he will be excluded from all activities in frontend application
+   */
+  isActive: {type: Boolean, required: true, default: true},
+  /**
    * User that own this information
    */
-  user: {type: Mongoose.Types.ObjectId, required: true, ref: 'User'},
+  user: {type: Mongoose.Schema.Types.ObjectId, required: true, ref: 'User'},
   /**
    * Brand name
    */
@@ -57,7 +67,7 @@ let Schema = new Mongoose.Schema({
   /**
    * Brand name
    */
-  logo: {type: Mongoose.Types.ObjectId, required: true, ref: 'File'},
+  logo: {type: Mongoose.Schema.Types.ObjectId, required: true, ref: 'File'},
   /**
    * Brand name
    */
@@ -77,7 +87,7 @@ let Schema = new Mongoose.Schema({
   /**
    * Brand name
    */
-  plan: {type: Mongoose.Types.ObjectId, required: true, ref: 'Plan'},
+  plan: {type: Mongoose.Schema.Types.ObjectId, required: false, ref: 'Plan'},
 }, {
   /**
    * Automatic set createdAt and updatedAt values

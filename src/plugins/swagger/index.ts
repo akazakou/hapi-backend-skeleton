@@ -17,8 +17,12 @@ export default (): IPlugin => {
             },
             tags: [
               {
-                name: 'users',
+                name: 'user',
                 description:'Api interface for manipulate user information'
+              },
+              {
+                name: 'retailer',
+                description:'Api interface for manipulate retailer information'
               },
             ],
             documentationPath: '/docs'
