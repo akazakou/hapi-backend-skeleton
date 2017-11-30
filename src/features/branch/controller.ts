@@ -42,6 +42,16 @@ export default class BranchController {
         return reply(Boom.badData(`Can't find Branch with ID "${request.params.id}"`, {params: request.params}));
       }
 
+      const retailer: IRetailer = await Retailer.findById(branch.retailer);
+
+      if (!retailer) {
+        return reply(Boom.badData(`Can't find retailer for requested branch ID "${branch.id}"`, {params: request.params}));
+      }
+
+      if (!retailer.isActive) {
+        return reply(Boom.forbidden(`Retailer with ID "${retailer.id}" are disabled`, {params: request.params}));
+      }
+
       reply(branch);
     } catch (err) {
       reply(Boom.badImplementation(err.message, err));
