@@ -5,6 +5,7 @@ import {IPlugin} from "../../plugins/interfaces";
 import UserFeature from "../../features/user/index";
 import RetailerFeature from "../../features/retailer/index";
 import BranchFeature from "../../features/branch/index";
+import OfferFeature from "../../features/offer/index";
 
 const logger = Log.init();
 
@@ -52,6 +53,7 @@ async function init() {
     {routes: UserFeature, label: 'User'},
     {routes: RetailerFeature, label: 'Retailer'},
     {routes: BranchFeature, label: 'Branch'},
+    {routes: OfferFeature, label: 'Offer'},
   ];
   let instances: Feature[] = [];
   features.forEach(f => {

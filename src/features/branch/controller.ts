@@ -4,6 +4,7 @@ import * as Log from '../../services/log';
 import {IBranch, Branch} from '../../models/branch/branch';
 import {IRetailer, Retailer} from '../../models/retailer/retailer';
 import {IUser, Role, User} from "../../models/user/user";
+import {IOffer, Offer} from "../../models/offer/offer";
 
 const log = Log.init();
 
@@ -160,6 +161,11 @@ export default class BranchController {
 
       if (!retailer) {
         return reply(Boom.forbidden(`You do not allowed to delete branches for that retailer`));
+      }
+
+      let offers: IOffer[] = await Offer.find({retailer});
+      if (offers && offers.length > 0) {
+        return reply(Boom.badRequest(`You can not delete branches assigned to offers. Please, remove branch assigments to offer before branch deletion.`, {offers: offers.map(data => data.id)}));
       }
 
       await branch.remove();

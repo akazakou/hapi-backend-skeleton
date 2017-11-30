@@ -18,19 +18,23 @@ export default (): IPlugin => {
             tags: [
               {
                 name: 'auth',
-                description:'API endpoint for manipulating user authentication'
+                description:'API endpoint for manipulating User Authentication'
               },
               {
                 name: 'user',
-                description:'Api interface for manipulate user information'
+                description:'Api interface for manipulate User Information'
               },
               {
                 name: 'retailer',
-                description:'Api interface for manipulate retailer information'
+                description:'Api interface for manipulate Retailer information'
               },
               {
                 name: 'branch',
-                description:'Api interface for manipulate branch information'
+                description:'Api interface for manipulate Branch information'
+              },
+              {
+                name: 'offer',
+                description:'Api interface for manipulate Offer information'
               },
             ],
             documentationPath: '/docs'
