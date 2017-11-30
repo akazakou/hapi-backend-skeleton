@@ -4,6 +4,7 @@ import * as Hapi from "hapi";
 import {IPlugin} from "../../plugins/interfaces";
 import UserFeature from "../../features/user/index";
 import RetailerFeature from "../../features/retailer/index";
+import BranchFeature from "../../features/branch/index";
 
 const logger = Log.init();
 
@@ -50,6 +51,7 @@ async function init() {
   let features = [
     {routes: UserFeature, label: 'User'},
     {routes: RetailerFeature, label: 'Retailer'},
+    {routes: BranchFeature, label: 'Branch'},
   ];
   let instances: Feature[] = [];
   features.forEach(f => {

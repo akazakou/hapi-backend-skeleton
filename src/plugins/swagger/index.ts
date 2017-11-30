@@ -28,6 +28,10 @@ export default (): IPlugin => {
                 name: 'retailer',
                 description:'Api interface for manipulate retailer information'
               },
+              {
+                name: 'branch',
+                description:'Api interface for manipulate branch information'
+              },
             ],
             documentationPath: '/docs'
           }
