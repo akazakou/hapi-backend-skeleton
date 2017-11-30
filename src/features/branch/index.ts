@@ -19,7 +19,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.list,
       plugins: {
         'hapi-swagger': Documentation.list,
-        'roles': [Role.ADMIN, Role.RETAILER],
+        'roles': [Role.UNKNOWN],
       }
     },
   });
@@ -34,7 +34,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.get,
       plugins: {
         'hapi-swagger': Documentation.get,
-        'roles': [Role.ADMIN, Role.RETAILER],
+        'roles': [Role.UNKNOWN],
       }
     },
   });

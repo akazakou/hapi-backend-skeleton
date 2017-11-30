@@ -16,14 +16,7 @@ export default class BranchController {
    */
   public async listBranch(request: Hapi.Request, reply: Hapi.ReplyNoContinue) {
     try {
-      let user: IUser = await User.getUserFromRequest(request);
-
-      let query: any = {isActive: true};
-      if (user.roles.indexOf(Role.ADMIN) === -1) {
-        query.user = user;
-      }
-
-      const retailers: IRetailer[] = await Retailer.find(query, {_id: 1});
+      const retailers: IRetailer[] = await Retailer.find({isActive: true}, {_id: 1});
 
       reply(await Branch.find({
         retailer: {
@@ -47,29 +40,6 @@ export default class BranchController {
 
       if (!branch) {
         return reply(Boom.badData(`Can't find Branch with ID "${request.params.id}"`, {params: request.params}));
-      }
-
-      const retailer: IRetailer = await Retailer.findById(branch.retailer);
-
-      if (!retailer) {
-        return reply(Boom.badData(`Can't find retailer for requested branch ID "${branch.id}"`, {params: request.params}));
-      }
-
-      if (!retailer.isActive) {
-        return reply(Boom.forbidden(`Retailer with ID "${retailer.id}" are disabled`, {params: request.params}));
-      }
-
-      const branchUser: IUser = await User.findById(retailer.user);
-      const loggedInUser: IUser = await User.getUserFromRequest(request);
-
-      // if someone except Admin or Branch owner tried to receive information about other Branchs
-      if (loggedInUser.roles.indexOf(Role.ADMIN) === -1 && branchUser.id !== loggedInUser.id) {
-        log.warn(`User with ID "${loggedInUser.id}" tried receive access to Branch info with ID "${branch.id}"`, {
-          loggedInUser,
-          branchUser,
-          branch
-        });
-        return reply(Boom.forbidden(`You can't see other Branches information`));
       }
 
       reply(branch);
