@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import * as Config from "../../src/services/config";
+import * as Config from "../../../src/services/config/index";
 
 describe('Configuration', () => {
     it('should initialize configuration correctly', done => {
