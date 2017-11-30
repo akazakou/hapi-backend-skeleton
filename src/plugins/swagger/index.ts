@@ -36,6 +36,10 @@ export default (): IPlugin => {
                 name: 'offer',
                 description:'Api interface for manipulate Offer information'
               },
+              {
+                name: 'plan',
+                description:'Api interface for manipulate Plan information'
+              },
             ],
             documentationPath: '/docs'
           }

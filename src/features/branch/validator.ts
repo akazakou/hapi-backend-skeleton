@@ -24,7 +24,7 @@ const IBranch = Joi.object().keys({
   __v: Joi.number().optional().description('Version of current entity record'),
 })
   .unknown(false)
-  .label('IUser')
+  .label('IBranch')
   .description('Detailed retailer information')
   .example({
     "_id": "59eef4f909225626a7fb0b7f",
@@ -45,7 +45,7 @@ const IBranchPayload = Joi.object().keys({
   location: IGeoJSON.required().description("Coordinates description for branch"),
 })
   .unknown(false)
-  .label('IUser')
+  .label('IBranchPayload')
   .description('Detailed retailer information')
   .example({
     "name": "some name here",
