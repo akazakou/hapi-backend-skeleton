@@ -66,7 +66,7 @@ const branchList = {
           "retailer": "59eef4f909225626a7fb0b8b",
           "location": {
             "type": "Point",
-            "location": [53.927766, 27.683593],
+            "coordinates": [53.927766, 27.683593],
           },
           "createdAt": "2017-11-27T11:09:15.463Z",
           "updatedAt": "2017-11-27T11:09:15.463Z",

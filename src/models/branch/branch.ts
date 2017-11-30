@@ -13,7 +13,7 @@ interface IGeoJSON {
   /**
    * Coordinates of GeoJSON object
    */
-  location: Array<number>;
+  coordinates: Array<number>;
 }
 
 /**

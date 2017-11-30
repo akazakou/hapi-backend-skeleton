@@ -4,14 +4,14 @@ const ObjectId = Joi.string().regex(/[0-9a-z]{24}/g);
 
 const IGeoJSON = Joi.object().keys({
   type: Joi.string().only(['Point']).required().description("Type of coordinates for branch"),
-  location: Joi.array().items(Joi.number()).min(2).max(2).required().description("Latitude and Longitude of branch position"),
+  coordinates: Joi.array().items(Joi.number()).min(2).max(2).required().description("Latitude and Longitude of branch position"),
 })
   .unknown(false)
   .label('IGeoJSON')
   .description('Coordinates description for branch')
   .example({
     "type": "Point",
-    "location": [53.927766, 27.683593],
+    "coordinates": [53.927766, 27.683593],
   });
 
 const IBranch = Joi.object().keys({
@@ -32,7 +32,7 @@ const IBranch = Joi.object().keys({
     "retailer": "59eef4f909225626a7fb0b8b",
     "location": {
       "type": "Point",
-      "location": [53.927766, 27.683593],
+      "coordinates": [53.927766, 27.683593],
     },
     "createdAt": "2017-11-27T11:09:15.463Z",
     "updatedAt": "2017-11-27T11:09:15.463Z",
@@ -52,7 +52,7 @@ const IBranchPayload = Joi.object().keys({
     "retailer": "59eef4f909225626a7fb0b8b",
     "location": {
       "type": "Point",
-      "location": [53.927766, 27.683593],
+      "coordinates": [53.927766, 27.683593],
     },
   });
 
