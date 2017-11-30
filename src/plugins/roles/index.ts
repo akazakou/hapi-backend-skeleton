@@ -9,6 +9,12 @@ import {IUser, User, Role, TypeRoles} from "../../models/user/user";
 // define logger instance with category identifier
 const log = Log.init();
 
+// ignored paths
+const ignored: [RegExp] = [
+  new RegExp('^\/swagger'),
+  new RegExp('^\/docs'),
+];
+
 const Plugin: any = {
   register: function (server: Hapi.Server, options: IPluginOptions, next: any) {
 
@@ -18,6 +24,12 @@ const Plugin: any = {
      * @param {Base_Reply} reply
      */
     server.ext('onPostAuth', async function (request: Request, reply: ReplyWithContinue) {
+      for (let ignore of ignored) {
+        if (ignore.test(request.route.path)) {
+          return reply.continue();
+        }
+      }
+
       // receive required access levels for accessing to this route
       let permissions: TypeRoles[] = [];
       if (!request.route.settings.plugins || !request.route.settings.plugins['roles']) {
