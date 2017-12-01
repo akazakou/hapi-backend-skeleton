@@ -13,6 +13,7 @@ export default function (server: Hapi.Server) {
     method: 'GET',
     path: '/offer',
     config: {
+      auth: false,
       handler: offerController.listOffer,
       tags: ['api', 'offer', 'list'],
       description: 'Get list with detailed information about all offers',
@@ -28,6 +29,7 @@ export default function (server: Hapi.Server) {
     method: 'GET',
     path: '/offer/{id}',
     config: {
+      auth: false,
       handler: offerController.getOffer,
       tags: ['api', 'offer', 'get'],
       description: 'Get detailed information about specified offer',

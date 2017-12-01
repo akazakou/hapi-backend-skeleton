@@ -13,6 +13,7 @@ export default function (server: Hapi.Server) {
     method: 'GET',
     path: '/plan',
     config: {
+      auth: false,
       handler: planController.listPlan,
       tags: ['api', 'plan', 'list'],
       description: 'Get list with detailed information about all plans',
@@ -28,6 +29,7 @@ export default function (server: Hapi.Server) {
     method: 'GET',
     path: '/plan/{id}',
     config: {
+      auth: false,
       handler: planController.getPlan,
       tags: ['api', 'plan', 'get'],
       description: 'Get detailed information about specified plan',

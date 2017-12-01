@@ -13,6 +13,7 @@ export default function (server: Hapi.Server) {
     method: 'GET',
     path: '/branch',
     config: {
+      auth: false,
       handler: branchController.listBranch,
       tags: ['api', 'branch', 'list'],
       description: 'Get list with detailed information about all branches',
@@ -28,6 +29,7 @@ export default function (server: Hapi.Server) {
     method: 'GET',
     path: '/branch/{id}',
     config: {
+      auth: false,
       handler: branchController.getBranch,
       tags: ['api', 'branch', 'get'],
       description: 'Get detailed information about specified branch',
