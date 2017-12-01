@@ -15,9 +15,8 @@ services:
   # Password:
 
   database:
-    container_name: "database"
+    container_name: "candle-database"
     image: mongo:3.4
-    hostname: ads-platform-database
     expose:
       - "27017"
       - "27018"
@@ -38,7 +37,7 @@ services:
   # smtp://localhost:25
 
   mailserver:
-    container_name: "mailserver"
+    container_name: "candle-mailserver"
     image: mailhog/mailhog
     expose:
         - "1025"
@@ -52,7 +51,7 @@ services:
   # before starting.
 
   backend:
-    container_name: "backend"
+    container_name: "candle-backend"
     image: 'node:8'
     expose:
       - "3000"
@@ -67,5 +66,5 @@ services:
       - mailserver
     environment:
       - NODE_ENV=debug
-      - database__uri=mongodb://ads-platform-database:27017/ads-platform
+      - database__uri=mongodb://candle-database:27017/candle-backend
     command: sh /usr/src/app/docker.sh
