@@ -16,7 +16,9 @@
     "watch": "nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js"
   },
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
+    "bson": "^1.0.4",
     "good": "^7.3.0",
     "good-winston": "^4.0.0",
     "hapi": "^16.6.0",
@@ -25,6 +27,7 @@
     "inert": "^4.2.0",
     "joi": "^11.0.3",
     "jsonwebtoken": "^8.1.0",
+    "mongodb-uri": "^0.9.7",
     "mongoose": "^4.13.5",
     "nconf": "^0.8.4",
     "vision": "^4.1.0",
