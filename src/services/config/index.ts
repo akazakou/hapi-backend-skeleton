@@ -1,15 +1,55 @@
 import * as nconf from "nconf";
 
+const defaults = {
+  "server": {
+    "port": 3000,
+    "auth": {
+      "jwt": {
+        "active": true,
+        "jwtSecret": "change me"
+      }
+    },
+    "plugins": [
+      "jwt-auth",
+      "swagger",
+      "logger",
+      "roles"
+    ]
+  },
+  "database": {
+    "uri": "mongodb://default:27017/candle-backend",
+    "options": {
+      "useMongoClient": true,
+      "autoIndex": true,
+      "reconnectInterval": 500,
+      "poolSize": 10,
+      "bufferMaxEntries": 0
+    }
+  },
+  "log": {
+    "level": "debug",
+    "json": false,
+    "showLevel": true,
+    "timestamp": true,
+    "colorize": true,
+    "exitOnError": false,
+    "handleExceptions": true,
+    "humanReadableUnhandledException": true
+  }
+};
+
 /**
  * Prepare configuration for next using
  * @returns {Provider}
  */
 function init(): nconf.Provider {
-  return nconf
-    .file('custom', {file: __dirname + '/../../../config.json'}) // loading overloaded parameters
-    .file({file: __dirname + '/default.json'}) // loading default parameters
-    .env() // getting environment parameters
-    .argv(); // getting argv parameters
+  nconf.argv()
+    .env({separator:'__'})
+    .file({file: __dirname + '/../../../../config.json'})
+    .defaults(defaults)
+    .overrides({ always: 'be this value'});
+
+  return nconf;
 }
 
 export {

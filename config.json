@@ -14,7 +14,7 @@
     ]
   },
   "database": {
-    "uri": "mongodb://localhost:27017/ads-platform",
+    "uri": "mongodb://custom:27017/candle-backend",
     "options": {
       "useMongoClient": true,
       "autoIndex": true,
