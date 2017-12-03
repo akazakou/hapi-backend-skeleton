@@ -16,6 +16,7 @@
 * Branches crud operations
 * User CRUD operations
 * Users authorisation mechanism
+* Access control mechanism for Admin, User, Retailer and unknown auth type users
 * Retailers information CRUD operations
 * Files database models (CRUD not implemented)
 * Seed functionality with example data by fastfood restraunts
