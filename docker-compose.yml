@@ -10,7 +10,7 @@ services:
   # Accessible from Host:
   #
   # Server: localhost
-  # Ports: 27017, 27018, 27019, 28017
+  # Ports: 27017, 27018, 27019
   # Username: postgres
   # Password:
 
@@ -27,14 +27,13 @@ services:
       - database__name=backend
     command: sh /usr/src/container/init.sh
 
-  # Backend API
+  # Backend API Application
   #
   # Node.js Instance running Hapi.
-  # Requires MongoDB and SFTP to be running
-  # before starting.
+  # Requires MongoDB be running before starting.
 
   application:
-    container_name: "backend-app"
+    container_name: "backend-application"
     image: 'node:8'
     expose:
       - "3000"
@@ -49,5 +48,6 @@ services:
       - database
     environment:
       - NODE_ENV=debug
+      - server__port=3000
       - database__uri=mongodb://backend-database:27017/backend
     command: sh /usr/src/container/init.sh

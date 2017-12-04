@@ -23,5 +23,10 @@ cd /usr/src/app && npm run build
 echo "Initialization: apply migrations to database"
 cd /usr/src/app && migrate up --es6 --autosync --dbConnectionUri $database__uri
 
-echo "Initialization: start the server"
-cd /usr/src/app && npm run start:dev
+echo "Initialization: starting the server"
+if [ "$NODE_ENV" == "production" ]; then
+    cd /usr/src/app && npm run start
+else
+    cd /usr/src/app && npm run start:dev
+fi
+
