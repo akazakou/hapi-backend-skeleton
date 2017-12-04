@@ -15,12 +15,17 @@ services:
   # Password:
 
   database:
-    container_name: "candle-database"
+    container_name: "backend-database"
     image: mongo:3.4
     expose:
       - "27017-27019"
     ports:
       - "57017-57019:27017-27019"
+    volumes:
+      - ./docker/database:/usr/src/container
+    environment:
+      - database__name=backend
+    command: sh /usr/src/container/init.sh
 
   # Backend API
   #
@@ -28,8 +33,8 @@ services:
   # Requires MongoDB and SFTP to be running
   # before starting.
 
-  backend:
-    container_name: "candle-backend"
+  application:
+    container_name: "backend-app"
     image: 'node:8'
     expose:
       - "3000"
@@ -38,10 +43,11 @@ services:
       - "3000:3000"
       - "9229:9229"
     volumes:
+      - ./docker/application:/usr/src/container
       - ./:/usr/src/app
     depends_on:
       - database
     environment:
       - NODE_ENV=debug
-      - database__uri=mongodb://candle-database:27017/candle-backend
-    command: sh /usr/src/app/docker.sh
+      - database__uri=mongodb://backend-database:27017/backend
+    command: sh /usr/src/container/init.sh
