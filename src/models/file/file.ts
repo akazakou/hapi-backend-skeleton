@@ -44,24 +44,24 @@ const Schema = new Mongoose.Schema(
     /**
      * Used interface for this file object
      */
-    type: {type: Mongoose.Schema.Types.String, required: true},
+    type: {type: String, required: true},
     /**
      * Size in bytes
      */
-    size: {type: Mongoose.Schema.Types.Number, required: true},
+    size: {type: Number, required: true},
     /**
      * Date when file was uploaded
      */
-    date: {type: Mongoose.Schema.Types.Date, required: true},
+    date: {type: Date, required: true},
     /**
      * Mime type of file
      * @see https://developer.mozilla.org/en/docs/Web/HTTP/Basics_of_HTTP/MIME_Types
      */
-    mime: {type: Mongoose.Schema.Types.String, required: true},
+    mime: {type: String, required: true},
     /**
      * Path in files storage to accessing that file
      */
-    path: {type: Mongoose.Schema.Types.String, required: true},
+    path: {type: String, required: true},
   },
   {
     /**
@@ -84,29 +84,19 @@ const Schema = new Mongoose.Schema(
 );
 
 /**
- * Generate URL for accessing to encrypted file
- * @param fileId
- * @returns {string}
- */
-function generateFileUrl(fileId: string): string {
-  return `${config.get('uploads:baseUrl')}/uploads/${fileId}`;
-}
-
-/**
  * Define virtual URL property to access file
  */
 Schema.virtual('url').get(function () {
-  return generateFileUrl(this._id.toString());
+  return `${config.get('uploads:accessUrl')}/uploads/${this.id}`;
 });
 
 /**
  * Mongoose model for INotification interface
- * @type {"mongoose".Model<IFile>}
+ * @type {Mongoose.Model<IFile>}
  */
 let File = Mongoose.model<IFile>('File', Schema);
 
 export {
   IFile,
   File,
-  generateFileUrl,
 }

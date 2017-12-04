@@ -1,7 +1,7 @@
 import * as Joi from "joi";
 import {IUser} from "./validator";
 
-const BearerToken = Joi.string().required().description('Bearer token for detecting authorized user');
+const AuthToken = Joi.string().required().description('JWT auth token for detecting authorized user');
 
 const HTTPError = Joi.object().keys({
   statusCode: Joi.number().required().description('Code of current error'),
@@ -52,7 +52,7 @@ const BasicErrors = {
 const userList = {
   validate: {
     headers: Joi.object().keys({
-      Authorization: BearerToken,
+      Authorization: AuthToken,
     }).unknown(true),
   },
   responses: Object.assign({}, BasicErrors, {
@@ -78,7 +78,7 @@ const userList = {
 const userCreate = {
   validate: {
     headers: Joi.object().keys({
-      Authorization: BearerToken,
+      Authorization: AuthToken,
     }).unknown(true),
   },
   responses: Object.assign({}, BasicErrors, {
@@ -100,7 +100,7 @@ const userCreate = {
 const userUpdate = {
   validate: {
     headers: Joi.object().keys({
-      Authorization: BearerToken,
+      Authorization: AuthToken,
     }).unknown(true),
   },
   responses: Object.assign({}, BasicErrors, {
@@ -122,7 +122,7 @@ const userUpdate = {
 const userDelete = {
   validate: {
     headers: Joi.object().keys({
-      Authorization: BearerToken,
+      Authorization: AuthToken,
     }).unknown(true),
   },
   responses: Object.assign({}, BasicErrors, {
@@ -136,7 +136,7 @@ const userDelete = {
 const userGet = {
   validate: {
     headers: Joi.object().keys({
-      Authorization: BearerToken,
+      Authorization: AuthToken,
     }).unknown(true),
   },
   responses: Object.assign({}, BasicErrors, {
@@ -173,7 +173,7 @@ const userLogin = {
 const userLogout = {
   validate: {
     headers: Joi.object().keys({
-      Authorization: BearerToken,
+      Authorization: AuthToken,
     }).unknown(true),
   },
   responses: Object.assign({}, BasicErrors, {
@@ -187,7 +187,7 @@ const userLogout = {
 const userAuth = {
   validate: {
     headers: Joi.object().keys({
-      Authorization: BearerToken,
+      Authorization: AuthToken,
     }).unknown(true),
   },
   responses: Object.assign({}, BasicErrors, {

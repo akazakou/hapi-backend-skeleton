@@ -18,31 +18,9 @@ services:
     container_name: "candle-database"
     image: mongo:3.4
     expose:
-      - "27017"
-      - "27018"
-      - "27019"
+      - "27017-27019"
     ports:
-      - "57017:27017"
-      - "57018:27018"
-      - "57019:27019"
-      - "58017:28017"
-
-  # SMTP Server
-  #
-  # Uses simple Mailtrap server
-  # for grabbing SMTP email messages
-  # sent via port 25.
-  #
-  # Accessible from host via:
-  # smtp://localhost:25
-
-  mailserver:
-    container_name: "candle-mailserver"
-    image: mailhog/mailhog
-    expose:
-        - "1025"
-    ports:
-      - "8025:8025"
+      - "57017-57019:27017-27019"
 
   # Backend API
   #
@@ -63,7 +41,6 @@ services:
       - ./:/usr/src/app
     depends_on:
       - database
-      - mailserver
     environment:
       - NODE_ENV=debug
       - database__uri=mongodb://candle-database:27017/candle-backend

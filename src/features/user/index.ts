@@ -110,7 +110,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.logout,
       plugins: {
         'hapi-swagger': Documentation.logout,
-        'roles': [Role.RETAILER, Role.USER],
+        'roles': [Role.USER],
       }
     },
   });
@@ -125,7 +125,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.auth,
       plugins: {
         'hapi-swagger': Documentation.auth,
-        'roles': [Role.RETAILER, Role.USER],
+        'roles': [Role.USER],
       }
     },
   });

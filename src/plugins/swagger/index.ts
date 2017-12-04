@@ -4,6 +4,8 @@ import * as Hapi from "hapi";
 export default (): IPlugin => {
   return {
     register: (server: Hapi.Server): Promise<any> => {
+      const packageInfo = require('../../../../package.json');
+
       return server.register([
         require('inert'),
         require('vision'),
@@ -11,34 +13,18 @@ export default (): IPlugin => {
           register: require('hapi-swagger'),
           options: {
             info: {
-              title: 'Candle Backend API',
-              description: 'Documentation for Candle Backend API application',
-              version: '0.0.1'
+              title: packageInfo.title,
+              description: packageInfo.description,
+              version: packageInfo.version
             },
             tags: [
               {
                 name: 'auth',
-                description:'API endpoint for manipulating User Authentication'
+                description:'Api interface for manipulate User Authorisation'
               },
               {
                 name: 'user',
-                description:'Api interface for manipulate User Information'
-              },
-              {
-                name: 'retailer',
-                description:'Api interface for manipulate Retailer information'
-              },
-              {
-                name: 'branch',
-                description:'Api interface for manipulate Branch information'
-              },
-              {
-                name: 'offer',
-                description:'Api interface for manipulate Offer information'
-              },
-              {
-                name: 'plan',
-                description:'Api interface for manipulate Plan information'
+                description:'Api interface for manipulate User Entity'
               },
             ],
             documentationPath: '/docs'

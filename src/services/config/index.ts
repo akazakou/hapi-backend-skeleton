@@ -12,7 +12,7 @@ const defaults = {
     "plugins": [
       "jwt-auth",
       "swagger",
-      "logger",
+      "logs",
       "roles"
     ]
   },

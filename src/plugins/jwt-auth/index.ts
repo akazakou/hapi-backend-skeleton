@@ -2,7 +2,7 @@ import {IPlugin} from "../interfaces";
 import * as Hapi from "hapi";
 import {User} from "../../models/user/user";
 import * as Config from "../../services/config";
-import * as Log from "../../services/log";
+import * as Log from "../../services/logs";
 import * as HapiAuthJWT2 from "hapi-auth-jwt2";
 
 

@@ -1,7 +1,7 @@
 import {IPlugin, IPluginOptions} from "../interfaces";
 import * as Hapi from "hapi";
 import {Request, Base_Reply, ReplyWithContinue} from "hapi";
-import * as Log from "../../services/log";
+import * as Log from "../../services/logs";
 import * as Boom from "boom";
 import {IUser, User, Role, TypeRoles} from "../../models/user/user";
 

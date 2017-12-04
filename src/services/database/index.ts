@@ -1,5 +1,5 @@
 import * as Mongoose from "mongoose";
-import * as Log from "../log";
+import * as Log from "../logs";
 import * as Config from "../config/index";
 
 // get config object

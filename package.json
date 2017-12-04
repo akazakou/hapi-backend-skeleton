@@ -1,9 +1,10 @@
 {
-  "name": "ads-platform",
-  "author": "Andrei Kazakou <a.v.kazakou@gmail.com>",
+  "name": "node-backend-skeleton",
   "version": "0.0.1",
-  "description": "Ads platform",
-  "repository": "git@gitlab.com:akazakou/ads-platform.git",
+  "title": "Node Backend Skeleton Application",
+  "description": "Example of Node.js Backend Application",
+  "author": "Andrei Kazakou <a.v.kazakou@gmail.com>",
+  "repository": "git@gitlab.com:akazakou/backend.git",
   "license": "MIT",
   "keywords": [],
   "scripts": {

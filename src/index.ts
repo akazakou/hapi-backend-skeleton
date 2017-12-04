@@ -2,7 +2,7 @@
 require('events').EventEmitter.defaultMaxListeners = 100;
 
 import * as Server from "./services/server";
-import * as Log from "./services/log";
+import * as Log from "./services/logs";
 import * as Database from "./services/database";
 
 // initializing logger instance

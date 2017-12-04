@@ -14,10 +14,6 @@ const config = Config.init();
  */
 type TypeRoleAdmin = "administrator";
 /**
- * Access role for retailer
- */
-type TypeRoleRetailer = "retailer";
-/**
  * Access role for registered user
  */
 type TypeRoleUser = "user";
@@ -28,15 +24,14 @@ type TypeRoleUnknown = "unknown";
 /**
  * List of available access roles
  */
-type TypeRoles = TypeRoleAdmin | TypeRoleRetailer | TypeRoleUser | TypeRoleUnknown;
+type TypeRoles = TypeRoleAdmin | TypeRoleUser | TypeRoleUnknown;
 
 /**
  * List available user roles
- * @type {{ADMIN: TypeRoleAdmin; RETAILER: TypeRoleRetailer; USER: TypeRoleUser; UNKNOWN: TypeRoleUnknown}}
+ * @type {{[key: string]: TypeRoles}}
  */
-const Role: { ADMIN: TypeRoleAdmin; RETAILER: TypeRoleRetailer; USER: TypeRoleUser; UNKNOWN: TypeRoleUnknown } = {
+const Role: { ADMIN: TypeRoleAdmin; USER: TypeRoleUser; UNKNOWN: TypeRoleUnknown } = {
   ADMIN: "administrator" as TypeRoleAdmin,
-  RETAILER: "retailer" as TypeRoleRetailer,
   USER: "user" as TypeRoleUser,
   UNKNOWN: "unknown" as TypeRoleUnknown,
 };
@@ -118,7 +113,7 @@ let Schema = new Mongoose.Schema({
     required: true,
     default: [Role.UNKNOWN],
     validate: [(val: string[]) => {
-      let allowed = [Role.ADMIN, Role.RETAILER, Role.USER, Role.UNKNOWN];
+      let allowed = [Role.ADMIN, Role.USER, Role.UNKNOWN];
       for (let check of val) {
         if (allowed.indexOf(check as TypeRoles) === -1) {
           return false;
@@ -199,7 +194,7 @@ Schema.set('toJSON', {
 
 /**
  * Database collection object for User entity
- * @type {"mongoose".Model<IUser>}
+ * @type {Mongoose.Model<IUser>}
  */
 const User: IUserSchema = Mongoose.model<IUser, IUserSchema>('User', Schema);
 
@@ -209,7 +204,6 @@ export {
   Role,
   TypeRoles,
   TypeRoleAdmin,
-  TypeRoleRetailer,
   TypeRoleUser,
   TypeRoleUnknown,
 }

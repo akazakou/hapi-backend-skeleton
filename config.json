@@ -1,26 +1,8 @@
 {
   "server": {
-    "port": 3000,
-    "auth": {
-      "jwt": {
-        "active": true,
-        "jwtSecret": "change me"
-      }
-    },
-    "plugins": [
-      "jwt-auth",
-      "swagger",
-      "logger"
-    ]
+    "port": 3000
   },
   "database": {
-    "uri": "mongodb://custom:27017/candle-backend",
-    "options": {
-      "useMongoClient": true,
-      "autoIndex": true,
-      "reconnectInterval": 500,
-      "poolSize": 10,
-      "bufferMaxEntries": 0
-    }
+    "uri": "mongodb://localhost:27017/node-backend-skeleton"
   }
 }

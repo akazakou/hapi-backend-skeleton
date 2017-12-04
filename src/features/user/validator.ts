@@ -7,7 +7,7 @@ const IUser = Joi.object().keys({
   isActive: Joi.boolean().required().description('User login using for authorization'),
   login: Joi.string().min(1).required().description('User login using for authorization'),
   roles: Joi.array().min(1).items(roles).required().description('User roles list for accessing to backend application'),
-  token: Joi.string().optional().description('Bearer token for detecting authorized user'),
+  token: Joi.string().optional().description('JWT auth token for detecting authorized user'),
   createdAt: Joi.string().isoDate().optional().description('Date when user record was created'),
   updatedAt: Joi.string().isoDate().optional().description('Date when user record was updated last time'),
   __v: Joi.number().optional().description('Version of current entity record'),
