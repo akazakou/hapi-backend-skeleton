@@ -18,6 +18,6 @@ export async function init(): Promise<void> {
     await Mongoose.connect(connectionString, config.get('database:options'));
     log.info(`Connected to database: ${connectionString}`);
   } catch (error) {
-    log.error(`Unable to connect to database: ${connectionString}`);
+    log.error(`Unable to connect to database: ${connectionString}`, error);
   }
 }
