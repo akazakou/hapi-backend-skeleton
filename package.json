@@ -8,10 +8,8 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "start": "node build/src/index.js",
-    "start:dev": "concurrently \"npm run tsc-watch\" \"npm run watch\"",
-    "tsc": "tsc",
-    "tsc-watch": "tsc -w",
+    "start": "npm run build && node build/src/index.js",
+    "start:dev": "npm run build && concurrently 'tsc -w' 'npm run watch'",
     "build": "gulp default",
     "watch": "nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js",
     "test": "npm run build && npm run coverage",

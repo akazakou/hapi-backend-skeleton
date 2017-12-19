@@ -17,9 +17,6 @@ fi
 echo "Initialization: installing node modules"
 cd /usr/src/app && npm install -g gulp migrate-mongoose && npm install gulp && npm install
 
-echo "Initialization: compiling from typescript to JS"
-cd /usr/src/app && npm run build
-
 echo "Initialization: apply migrations to database"
 cd /usr/src/app && migrate up --es6 --autosync --dbConnectionUri $database__uri
 
