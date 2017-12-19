@@ -13,8 +13,10 @@
     "tsc": "tsc",
     "tsc-watch": "tsc -w",
     "build": "gulp default",
-    "test": "NODE_ENV=test gulp test",
-    "watch": "nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js"
+    "watch": "nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js",
+    "test": "npm run build && npm run coverage",
+    "coverage": "nyc mocha -r ts-node/register -r source-map-support/register --recursive test/**/*.ts",
+    "codecov": "codecov -f build/coverage/*.json -t $CODECOV_TOKEN"
   },
   "dependencies": {
     "babel-runtime": "^6.26.0",
@@ -54,9 +56,53 @@
     "gulp-tslint": "^7.1.0",
     "mocha": "^3.5.3",
     "nodemon": "^1.10.2",
+    "nyc": "^11.3.0",
     "sinon": "^3.3.0",
+    "source-map-support": "^0.5.0",
+    "ts-node": "^4.0.2",
     "tslint": "^4.5.1",
     "typescript": "^2.5.2"
+  },
+  "nyc": {
+    "report-dir": "build/coverage",
+    "check-coverage": true,
+    "fail": true,
+    "cache": false,
+    "all": true,
+    "lines": 100,
+    "statements": 100,
+    "functions": 100,
+    "branches": 100,
+    "watermarks": {
+      "lines": [
+        95,
+        100
+      ],
+      "functions": [
+        95,
+        100
+      ],
+      "branches": [
+        95,
+        100
+      ],
+      "statements": [
+        95,
+        100
+      ]
+    },
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "src/**/*.ts"
+    ],
+    "reporter": [
+      "html",
+      "text",
+      "text-summary",
+      "json"
+    ]
   },
   "engines": {
     "node": ">=6.5.0"
