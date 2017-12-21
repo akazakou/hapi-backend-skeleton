@@ -17,6 +17,9 @@ fi
 echo "Initialization: installing node modules"
 cd /usr/src/app && npm install
 
+echo "Initialization: build the project"
+cd /usr/src/app && npm run build
+
 echo "Initialization: apply migrations to database"
 cd /usr/src/app && npm run migrate:up
 
