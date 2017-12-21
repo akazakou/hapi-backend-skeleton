@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # try to execute database migrations
-migrate up --es6 --autosync --dbConnectionUri ${database__uri}
+npm run migrate:up
 
 # starting the daemon
 node build/src/index.js --server:port=${PORT}
