@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 
 RUN cd /usr/src/app
 RUN rm -rf build node_modules package-lock.json
-RUN npm install -g gulp migrate-mongoose && npm install gulp && npm install
+RUN npm install
 RUN npm run build
 
 CMD sh /usr/src/app/docker/application/heroku.sh
