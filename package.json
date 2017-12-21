@@ -8,10 +8,9 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "start": "npm run build && node build/src/index.js",
-    "start:dev": "npm run build && concurrently 'tsc -w' 'npm run watch'",
     "build": "gulp default",
-    "watch": "nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js",
+    "start": "npm run build && node build/src/index.js",
+    "start:dev": "npm run build && concurrently 'tsc -w' 'nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js'",
     "test": "npm run build && npm run coverage",
     "coverage": "nyc mocha -r ts-node/register -r source-map-support/register --recursive test/**/*.ts",
     "codecov": "codecov -f build/coverage/*.json -t $CODECOV_TOKEN"
