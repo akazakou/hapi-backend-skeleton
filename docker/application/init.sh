@@ -15,10 +15,10 @@ else
 fi
 
 echo "Initialization: installing node modules"
-cd /usr/src/app && npm install -g gulp migrate-mongoose && npm install gulp && npm install
+cd /usr/src/app && npm install
 
 echo "Initialization: apply migrations to database"
-cd /usr/src/app && migrate up --es6 --autosync --dbConnectionUri $database__uri
+cd /usr/src/app && npm run migrate:up
 
 echo "Initialization: starting the server"
 if [ "$NODE_ENV" == "production" ]; then

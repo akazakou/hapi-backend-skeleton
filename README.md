@@ -99,6 +99,7 @@ After server stated, documentation for available API Endpoints will be available
 * `npm test` - build and run test coverage functionality. `nyc` configuration for test report available in `nyc` section of `package.json` file
 * `npm run coverage` - run test coverage functionality
 * `npm run codecov` - upload test coverage reports onto codecov service. Require environment variable `CODECOV_TOKEN`
+* `migrate:up` - implement database update scripts to project database. Require environment variable `database__uri`
 
 ## Migrations
 
