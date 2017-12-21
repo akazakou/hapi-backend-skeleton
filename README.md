@@ -106,3 +106,7 @@ After server stated, documentation for available API Endpoints will be available
 This functionality provided by [migrate-mongoose](https://www.npmjs.com/package/migrate-mongoose) package and will be executed every time on container startup
 
 `migrate up --es6 --autosync --dbConnectionUri mongodb://localhost:27017/backend-database`
+
+## Initial database dump
+
+For local development, you can use database dump, received with `mongodump` support. For automatic uploading this dump into database container, you should pace all files into `docker/database/dump` folder
