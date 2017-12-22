@@ -26,6 +26,10 @@ export default (): IPlugin => {
                 name: 'user',
                 description:'Api interface for manipulate User Entity'
               },
+              {
+                name: 'profile',
+                description:'Api interface for manipulate User Profile Entity'
+              },
             ],
             documentationPath: '/docs'
           }
