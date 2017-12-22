@@ -25,8 +25,8 @@ export default function (server: Hapi.Server) {
   });
 
   server.route({
-    method: 'GET',
-    path: '/user',
+    method: 'POST',
+    path: '/user/list',
     config: {
       handler: clientsController.getList,
       tags: ['api', 'user', 'list'],
@@ -55,7 +55,7 @@ export default function (server: Hapi.Server) {
   });
 
   server.route({
-    method: 'PUT',
+    method: 'PATCH',
     path: '/user/{id}',
     config: {
       handler: clientsController.updateUser,
