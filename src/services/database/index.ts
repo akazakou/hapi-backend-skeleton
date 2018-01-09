@@ -1,6 +1,6 @@
 import * as Mongoose from "mongoose";
 import * as Log from "../logs";
-import * as Config from "../config/index";
+import * as Config from "../config";
 
 // get config object
 const config = Config.init();

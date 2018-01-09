@@ -1,5 +1,5 @@
 import BasicController from "../basic/controller";
-import {IProfile, Profile} from "../../models/profile/profile";
+import {IProfile, Profile} from "../../models/profile";
 
 /**
  * That controller provides CRUD functionality for user profile

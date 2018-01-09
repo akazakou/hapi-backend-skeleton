@@ -3,7 +3,7 @@ import * as Hapi from "hapi";
 import {Request, Base_Reply, ReplyWithContinue} from "hapi";
 import * as Log from "../../services/logs";
 import * as Boom from "boom";
-import {IUser, User} from "../../models/user/user";
+import {IUser, User} from "../../models/user";
 import {Role, TypeRoles} from "../../models/user/role";
 
 

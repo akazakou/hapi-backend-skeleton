@@ -1,5 +1,5 @@
-import * as Config from "../config/index";
-import * as Log from "../logs/index";
+import * as Config from "../config";
+import * as Log from "../logs";
 import * as Hapi from "hapi";
 import {IPlugin} from "../../plugins/interfaces";
 import UserFeature from "../../features/user";

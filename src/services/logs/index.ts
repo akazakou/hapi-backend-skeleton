@@ -1,5 +1,5 @@
 import * as winston from "winston";
-import * as Config from "../config/index";
+import * as Config from "../config";
 
 function init() {
   // create new logger instance
