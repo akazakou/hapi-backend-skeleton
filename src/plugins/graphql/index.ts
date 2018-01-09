@@ -1,36 +1,64 @@
-import * as Hapi from 'hapi';
-import { graphqlHapi } from 'apollo-server-hapi';
-import { IPlugin } from '../interfaces';
+import { graphqlHapi, HapiPluginOptions } from 'apollo-server-hapi';
+import { Server, PluginAttributes, PluginRegistrationObject } from "hapi";
+import { IPlugin, IPluginInfo } from '../interfaces';
+import Schema from "./schema";
 
-const myGraphQLSchema = {};
-
-const packageInfo = require('../../../../package.json');
-const info = {
-  name: graphqlHapi.name || "Apollo GraphQL Server",
-  version: graphqlHapi.version || packageInfo.dependencies['apollo-server-hapi'].replace('^', ''),
+/**
+ * Plugin attributes definition
+ * @type {PluginAttributes}
+ */
+const attributes: PluginAttributes = {
+  name: "Apollo GraphQL Server",
+  version: graphqlHapi.version || require('../../../../package.json').dependencies['apollo-server-hapi'].replace('^', ''),
 };
 
+/**
+ * Exporting user roles plugin
+ * @returns {IPlugin}
+ */
 export default (): IPlugin => {
   return {
-    register: (server: Hapi.Server): Promise<any> => {
-      const register: any = graphqlHapi.register;
-      register.attributes = info;
+    /**
+     * Register plugin in server instance
+     * @param {Server} server
+     * @returns {Promise<Error | null>}
+     */
+    register: async function (server: Server) {
+      return new Promise((resolve, reject) => {
+        try {
+          // define plugin registration object
+          const plugin: PluginRegistrationObject<HapiPluginOptions> = {
+            register: graphqlHapi.register,
+            options: {
+              path: '/graphql',
+              graphqlOptions: {
+                schema: Schema,
+              },
+              route: {
+                cors: true,
+                auth: false,
+              },
+            } as HapiPluginOptions,
+          };
 
-      return server.register({
-        register: register,
-        options: {
-          path: '/graphql',
-          graphqlOptions: {
-            schema: myGraphQLSchema,
-          },
-          route: {
-            cors: true,
-          },
-        },
+          // assign attributes property
+          plugin.register.attributes = attributes;
+
+          // register plugin registration object into server instance
+          server.register(plugin);
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
       });
     },
+
+    /**
+     * Plugin description for server reporting
+     * @returns {IPluginInfo}
+     */
     info: () => {
-      return info;
+      return attributes as IPluginInfo;
     }
   };
 };

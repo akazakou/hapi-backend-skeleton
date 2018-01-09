@@ -13,6 +13,7 @@ const log = Log.init();
 const ignored: [RegExp] = [
   new RegExp('^\/swagger'),
   new RegExp('^\/docs'),
+  new RegExp('^\/graphql'),
 ];
 
 const Plugin: any = {
