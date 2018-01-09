@@ -1,10 +1,10 @@
-import { IPlugin } from "../interfaces";
-import * as Hapi from "hapi";
+import { IPlugin } from '../interfaces'
+import * as Hapi from 'hapi'
 
 export default (): IPlugin => {
   return {
     register: (server: Hapi.Server): Promise<any> => {
-      const packageInfo = require('../../../../package.json');
+      const packageInfo = require('../../../../package.json')
 
       return server.register([
         require('inert'),
@@ -20,27 +20,27 @@ export default (): IPlugin => {
             tags: [
               {
                 name: 'auth',
-                description:'Api interface for manipulate User Authorization'
+                description: 'Api interface for manipulate User Authorization'
               },
               {
                 name: 'user',
-                description:'Api interface for manipulate User Entity'
+                description: 'Api interface for manipulate User Entity'
               },
               {
                 name: 'profile',
-                description:'Api interface for manipulate User Profile Entity'
-              },
+                description: 'Api interface for manipulate User Profile Entity'
+              }
             ],
             documentationPath: '/docs'
           }
         }
-      ]);
+      ])
     },
     info: () => {
       return {
-        name: "Swagger Documentation",
-        version: "1.0.0"
-      };
+        name: 'Swagger Documentation',
+        version: '1.0.0'
+      }
     }
-  };
-};
+  }
+}

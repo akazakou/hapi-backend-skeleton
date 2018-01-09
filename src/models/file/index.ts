@@ -1,8 +1,8 @@
-import * as Mongoose from 'mongoose';
-import {ITimed} from '../misc/timed';
-import * as Config from "../../services/config";
+import * as Mongoose from 'mongoose'
+import { ITimed } from '../misc/timed'
+import * as Config from '../../services/config'
 
-const config = Config.init();
+const config = Config.init()
 
 /**
  * That interface allow create files records
@@ -11,28 +11,28 @@ interface IFile extends Mongoose.Document, ITimed, Mongoose.MongooseDocumentOpti
   /**
    * Type of current file
    */
-  type: 'IFile';
+  type: 'IFile'
   /**
    * Size in bytes
    */
-  size: number;
+  size: number
   /**
    * Date when file was uploaded
    */
-  date: Date;
+  date: Date
   /**
    * Mime type of file
    * @see https://developer.mozilla.org/en/docs/Web/HTTP/Basics_of_HTTP/MIME_Types
    */
-  mime: string;
+  mime: string
   /**
    * Path in files storage to accessing that file
    */
-  path: string;
+  path: string
   /**
    * Virtual generated url for accessing to it in storage over HTTPS
    */
-  readonly url: string;
+  readonly url: string
 }
 
 /**
@@ -44,24 +44,24 @@ const Schema = new Mongoose.Schema(
     /**
      * Used interface for this file object
      */
-    type: {type: String, required: true},
+    type: { type: String, required: true },
     /**
      * Size in bytes
      */
-    size: {type: Number, required: true},
+    size: { type: Number, required: true },
     /**
      * Date when file was uploaded
      */
-    date: {type: Date, required: true},
+    date: { type: Date, required: true },
     /**
      * Mime type of file
      * @see https://developer.mozilla.org/en/docs/Web/HTTP/Basics_of_HTTP/MIME_Types
      */
-    mime: {type: String, required: true},
+    mime: { type: String, required: true },
     /**
      * Path in files storage to accessing that file
      */
-    path: {type: String, required: true},
+    path: { type: String, required: true }
   },
   {
     /**
@@ -80,23 +80,23 @@ const Schema = new Mongoose.Schema(
     toJSON: {
       virtuals: true
     }
-  },
-);
+  }
+)
 
 /**
  * Define virtual URL property to access file
  */
-Schema.virtual('url').get(function () {
-  return `${config.get('uploads:accessUrl')}/uploads/${this.id}`;
-});
+Schema.virtual('url').get(function (this: IFile) {
+  return `${config.get('uploads:accessUrl')}/uploads/${this.id}`
+})
 
 /**
  * Mongoose model for INotification interface
  * @type {Mongoose.Model<IFile>}
  */
-let File = Mongoose.model<IFile>('File', Schema);
+let File = Mongoose.model<IFile>('File', Schema)
 
 export {
   IFile,
-  File,
+  File
 }

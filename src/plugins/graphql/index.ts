@@ -1,16 +1,16 @@
-import { graphqlHapi, HapiPluginOptions } from 'apollo-server-hapi';
-import { Server, PluginAttributes, PluginRegistrationObject } from "hapi";
-import { IPlugin, IPluginInfo } from '../interfaces';
-import Schema from "./schema";
+import { graphqlHapi, HapiPluginOptions } from 'apollo-server-hapi'
+import { Server, PluginAttributes, PluginRegistrationObject } from 'hapi'
+import { IPlugin, IPluginInfo } from '../interfaces'
+import Schema from './schema'
 
 /**
  * Plugin attributes definition
  * @type {PluginAttributes}
  */
 const attributes: PluginAttributes = {
-  name: "Apollo GraphQL Server",
-  version: graphqlHapi.version || require('../../../../package.json').dependencies['apollo-server-hapi'].replace('^', ''),
-};
+  name: 'Apollo GraphQL Server',
+  version: graphqlHapi.version || require('../../../../package.json').dependencies['apollo-server-hapi'].replace('^', '')
+}
 
 /**
  * Exporting user roles plugin
@@ -32,27 +32,27 @@ export default (): IPlugin => {
             options: {
               path: '/graphql',
               graphqlOptions: {
-                schema: Schema,
+                schema: Schema
               },
               route: {
                 cors: true,
-                auth: false,
-              },
-            } as HapiPluginOptions,
-          };
+                auth: false
+              }
+            } as HapiPluginOptions
+          }
 
           // assign attributes property
-          plugin.register.attributes = attributes;
+          plugin.register.attributes = attributes
 
           // register plugin registration object into server instance
-          server.register(plugin);
+          server.register(plugin)
 
           // that plugin do not returning promise or callback calling, that why we are resolving it simply after call registration functionality
-          resolve();
+          resolve()
         } catch (error) {
-          reject(error);
+          reject(error)
         }
-      });
+      })
     },
 
     /**
@@ -60,7 +60,7 @@ export default (): IPlugin => {
      * @returns {IPluginInfo}
      */
     info: () => {
-      return attributes as IPluginInfo;
+      return attributes as IPluginInfo
     }
-  };
-};
+  }
+}

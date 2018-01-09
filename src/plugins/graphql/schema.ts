@@ -1,4 +1,4 @@
-import { GraphQLSchema, GraphQLObjectType, GraphQLString } from "graphql";
+import { GraphQLObjectType, GraphQLSchema, GraphQLString } from 'graphql'
 
 const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -6,12 +6,12 @@ const schema = new GraphQLSchema({
     fields: {
       hello: {
         type: GraphQLString,
-        resolve() {
-          return 'world';
+        resolve () {
+          return 'world'
         }
       }
     }
   })
-});
+})
 
-export default schema;
+export default schema

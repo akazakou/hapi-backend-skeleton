@@ -1,16 +1,13 @@
-import {expect} from 'chai';
-import * as sinon from 'sinon';
-import * as Server from "../../../src/services/server/index"
+import * as sinon from 'sinon'
 
 describe('Server', () => {
-  let sandbox: sinon.SinonSandbox;
+  let sandbox: sinon.SinonSandbox
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create();
-  });
+    sandbox = sinon.sandbox.create()
+  })
 
   afterEach(() => {
-    sandbox.restore();
-  });
-});
-
+    sandbox.restore()
+  })
+})

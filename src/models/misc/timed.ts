@@ -1,6 +1,6 @@
 interface ITimed {
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: Date
+  updatedAt: Date
 }
 
 export {

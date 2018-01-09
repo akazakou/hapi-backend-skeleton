@@ -1,27 +1,40 @@
 // setting EventEmitter maxListeners
-require('events').EventEmitter.defaultMaxListeners = 100;
+require('events').EventEmitter.defaultMaxListeners = 100
 
-import * as Server from "./services/server";
-import * as Log from "./services/logs";
-import * as Database from "./services/database";
+import { Server as HapiServer } from 'hapi'
+import * as Server from './services/server'
+import * as Log from './services/logs'
+import * as Database from './services/database'
 
 // initializing logger instance
-const log = Log.init();
+const log = Log.init()
 
 // reporting about uncaught exception
 process.on('uncaughtException', (error: Error) => {
-  log.warn(`Detect uncaughtException: ${error.toString()}`);
-});
+  log.warn(`Detect uncaughtException: ${error.toString()}`)
+})
 
-Database.init().then(() => {
-  // initializing server client
-  const server = Server.init();
+async function init () {
 
-  server.then(server => {
-    server.start(() => {
-      log.info(`Server running at: ${server.info.uri}`);
-    });
-  }).catch(error => {
-    log.error("Can't start server because: " + error.message, error);
-  });
-});
+  try {
+    // waiting database connection
+    await Database.init()
+
+    //
+    const server: HapiServer | null = await Server.init()
+    const info = server.info
+
+    if (info && info.uri) {
+      server.start(() => {
+        log.info(`Server running at: ${info.uri}`)
+      })
+    } else {
+      log.error(`Server doesn't initialized`)
+    }
+
+  } catch (error) {
+    log.error('Can\'t start server because: ' + error.message, { error })
+  }
+}
+
+init()

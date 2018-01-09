@@ -1,14 +1,14 @@
-import * as Hapi from "hapi";
-import ProfileController from "./controller";
-import {Documentation} from "./documentation";
-import {Validator as BasicValidator} from "../basic/validator";
-import {Validator} from "./validator";
-import {Role} from "../../models/user/role";
+import * as Hapi from 'hapi'
+import ProfileController from './controller'
+import { Documentation } from './documentation'
+import { Validator as BasicValidator } from '../basic/validator'
+import { Validator } from './validator'
+import { Role } from '../../models/user/role'
 
 export default function (server: Hapi.Server) {
 
-  const controller = new ProfileController();
-  server.bind(controller);
+  const controller = new ProfileController()
+  server.bind(controller)
 
   server.route({
     method: 'GET',
@@ -20,10 +20,10 @@ export default function (server: Hapi.Server) {
       validate: BasicValidator.get,
       plugins: {
         'hapi-swagger': Documentation.get,
-        'roles': [Role.UNKNOWN],
+        'roles': [Role.UNKNOWN]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'POST',
@@ -35,10 +35,10 @@ export default function (server: Hapi.Server) {
       validate: BasicValidator.list,
       plugins: {
         'hapi-swagger': Documentation.list,
-        'roles': [Role.UNKNOWN],
+        'roles': [Role.UNKNOWN]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'POST',
@@ -50,10 +50,10 @@ export default function (server: Hapi.Server) {
       validate: Validator.create,
       plugins: {
         'hapi-swagger': Documentation.create,
-        'roles': [Role.USER],
+        'roles': [Role.USER]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'PATCH',
@@ -65,10 +65,10 @@ export default function (server: Hapi.Server) {
       validate: Validator.update,
       plugins: {
         'hapi-swagger': Documentation.update,
-        'roles': [Role.USER],
+        'roles': [Role.USER]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'DELETE',
@@ -80,8 +80,8 @@ export default function (server: Hapi.Server) {
       validate: BasicValidator.delete,
       plugins: {
         'hapi-swagger': Documentation.delete,
-        'roles': [Role.ADMIN],
+        'roles': [Role.ADMIN]
       }
-    },
-  });
+    }
+  })
 }
