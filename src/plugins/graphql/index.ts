@@ -46,6 +46,8 @@ export default (): IPlugin => {
 
           // register plugin registration object into server instance
           server.register(plugin);
+
+          // that plugin do not returning promise or callback calling, that why we are resolving it simply after call registration functionality
           resolve();
         } catch (error) {
           reject(error);

@@ -2,7 +2,7 @@ import * as Hapi from "hapi";
 import UserController from "./controller";
 import {Documentation} from "./documentation";
 import {Validator} from "./validator";
-import {Role} from "../../models/user/user";
+import {Role} from "../../models/user/role";
 
 export default function (server: Hapi.Server) {
 

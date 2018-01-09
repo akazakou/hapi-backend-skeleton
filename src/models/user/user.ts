@@ -6,35 +6,9 @@ import * as Jwt from 'jsonwebtoken';
 import * as Config from "../../services/config";
 import * as Boom from "boom";
 import {IUser} from "../../features/user/validator";
+import {TypeRoles, Role} from "./role";
 
 const config = Config.init();
-
-/**
- * Access role for system administrator
- */
-type TypeRoleAdmin = "administrator";
-/**
- * Access role for registered user
- */
-type TypeRoleUser = "user";
-/**
- * Access role for unknown user
- */
-type TypeRoleUnknown = "unknown";
-/**
- * List of available access roles
- */
-type TypeRoles = TypeRoleAdmin | TypeRoleUser | TypeRoleUnknown;
-
-/**
- * List available user roles
- * @type {{[key: string]: TypeRoles}}
- */
-const Role: { ADMIN: TypeRoleAdmin; USER: TypeRoleUser; UNKNOWN: TypeRoleUnknown } = {
-  ADMIN: "administrator" as TypeRoleAdmin,
-  USER: "user" as TypeRoleUser,
-  UNKNOWN: "unknown" as TypeRoleUnknown,
-};
 
 /**
  * Description of user object
@@ -201,9 +175,4 @@ const User: IUserSchema = Mongoose.model<IUser, IUserSchema>('User', Schema);
 export {
   User,
   IUser,
-  Role,
-  TypeRoles,
-  TypeRoleAdmin,
-  TypeRoleUser,
-  TypeRoleUnknown,
 }
