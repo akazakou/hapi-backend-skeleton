@@ -10,7 +10,7 @@ const defaults = {
       }
     },
     'plugins': [
-      'graphql',
+//      'graphql',
       'jwt-auth',
       'swagger',
       'logs',
