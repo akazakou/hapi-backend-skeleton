@@ -1,11 +1,11 @@
 import BasicController from '../basic/controller'
-import { IProfile, Profile } from '../../models/profile'
+import { Interface, Model } from '../../models/profile'
 
 /**
  * That controller provides CRUD functionality for user profile
  */
-export default class ProfileController extends BasicController<IProfile> {
+export default class ProfileController extends BasicController<Interface> {
   public constructor () {
-    super(Profile)
+    super(Model)
   }
 }

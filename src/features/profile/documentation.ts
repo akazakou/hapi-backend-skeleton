@@ -1,5 +1,5 @@
 import * as Joi from 'joi'
-import { IProfile } from './validator'
+import * as Profile from '../../models/profile'
 
 const AuthToken = Joi.string().required().description('JWT auth token for detecting authorized user')
 
@@ -57,7 +57,7 @@ const profileList = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Receiving list of all selected user profiles',
-      'schema': Joi.array().items(IProfile)
+      'schema': Joi.array().items(Profile.Validator.Model)
         .label('Array<IUser>')
         .example([
           {
@@ -83,7 +83,7 @@ const createProfile = {
   responses: Object.assign({}, BasicErrors, {
     '201': {
       'description': 'Report about success user profile creation with full user profile data',
-      'schema': IProfile
+      'schema': Profile.Validator.Model
     },
     '422': {
       'description': 'Report about wrong data for creating new user profile',
@@ -105,7 +105,7 @@ const profileUpdate = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Report about success user profile data update',
-      'schema': IProfile
+      'schema': Profile.Validator.Model
     },
     '422': {
       'description': 'Report about wrong data for updating existed user profile',
@@ -127,7 +127,7 @@ const profileDelete = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Report about success user profile data deletion',
-      'schema': IProfile
+      'schema': Profile.Validator.Model
     }
   })
 }
@@ -141,7 +141,7 @@ const profileGet = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Receiving detailed object description by ID',
-      'schema': IProfile
+      'schema': Profile.Validator.Model
     }
   })
 }

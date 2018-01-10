@@ -40,5 +40,5 @@ const Validator = {
 }
 
 export {
-  Validator,
+  Validator
 }

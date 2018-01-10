@@ -2,8 +2,8 @@ import { IPlugin, IPluginOptions } from '../interfaces'
 import { Base_Reply, PluginSpecificConfiguration, ReplyWithContinue, Request, Server } from 'hapi'
 import * as Log from '../../services/logs'
 import * as Boom from 'boom'
-import { IUser, User } from '../../models/user'
-import { Role, TypeRoles } from '../../models/user/role'
+import * as User from '../../models/user'
+import { Role, TypeRoles } from '../../models/roles/interface'
 
 // define logger instance with category identifier
 const log = Log.init()
@@ -77,9 +77,9 @@ const Plugin: any = {
       }
 
       // receive information about authenticated user
-      let user: IUser | null
+      let user: User.Interface | null
       try {
-        user = await User.getUserFromRequest(request)
+        user = await User.Model.getUserFromRequest(request)
       } catch (error) {
         return reply(error)
       }

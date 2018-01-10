@@ -1,9 +1,8 @@
-import * as Hapi from 'hapi'
+import { ReplyNoContinue, Request, Response } from 'hapi'
 import * as Boom from 'boom'
 import * as Mongoose from 'mongoose'
 import * as Log from '../../services/logs'
 import { ITimed } from '../../models/misc/timed'
-import { IUser } from '../../models/user'
 
 /**
  * Interface for working with model data
@@ -41,7 +40,7 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async getModel (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async getModel (request: Request, reply: ReplyNoContinue): Promise<void | Response> {
     try {
       reply(await this.model.findById(request.params.id))
     } catch (err) {
@@ -56,7 +55,7 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async getList (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async getList (request: Request, reply: ReplyNoContinue): Promise<void | Response> {
     try {
       const query = request.payload.query ? request.payload.query : {}
       const fields = request.payload.fields ? request.payload.fields : { _id: 1 }
@@ -92,7 +91,7 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async createModel (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async createModel (request: Request, reply: ReplyNoContinue): Promise<void | Response> {
     try {
       let model: T = new this.model(request.payload)
       reply(model.save()).code(201)
@@ -108,7 +107,7 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async updateModel (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async updateModel (request: Request, reply: ReplyNoContinue): Promise<void | Response> {
     try {
       let model: T | null = await this.model.findById(request.params.id)
 
@@ -136,7 +135,7 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async deleteModel (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async deleteModel (request: Request, reply: ReplyNoContinue): Promise<void | Response> {
     try {
       let model: T | null = await this.model.findById(request.params.id)
 

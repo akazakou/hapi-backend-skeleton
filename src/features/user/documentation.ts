@@ -1,5 +1,5 @@
 import * as Joi from 'joi'
-import { IUser } from './validator'
+import * as User from '../../models/user'
 
 const AuthToken = Joi.string().required().description('JWT auth token for detecting authorized user')
 
@@ -57,7 +57,7 @@ const userList = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Receiving list of all available users',
-      'schema': Joi.array().items(IUser)
+      'schema': Joi.array().items(User.Validator.Model)
         .label('Array<IUser>')
         .example([
           {
@@ -84,7 +84,7 @@ const userCreate = {
   responses: Object.assign({}, BasicErrors, {
     '201': {
       'description': 'Report about success user creation with full user configuration data',
-      'schema': IUser
+      'schema': User.Validator.Model
     },
     '422': {
       'description': 'Report about wrong data for creating new user',
@@ -106,7 +106,7 @@ const userUpdate = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Report about success user configuration data update',
-      'schema': IUser
+      'schema': User.Validator.Model
     },
     '422': {
       'description': 'Report about wrong data for updating existed user',
@@ -128,7 +128,7 @@ const userDelete = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Report about success user configuration data deletion',
-      'schema': IUser
+      'schema': User.Validator.Model
     }
   })
 }
@@ -142,7 +142,7 @@ const userGet = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Receiving detailed object description by ID',
-      'schema': IUser
+      'schema': User.Validator.Model
     }
   })
 }
@@ -157,7 +157,7 @@ const userLogin = {
         }
       },
       'description': 'Validate login and password success',
-      'schema': IUser
+      'schema': User.Validator.Model
     },
     '400': {
       'description': 'Wrong username or password',
@@ -179,7 +179,7 @@ const userLogout = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Validate login and password success',
-      'schema': IUser
+      'schema': User.Validator.Model
     }
   })
 }
@@ -193,7 +193,7 @@ const userAuth = {
   responses: Object.assign({}, BasicErrors, {
     '200': {
       'description': 'Validate login and password success',
-      'schema': IUser
+      'schema': User.Validator.Model
     }
   })
 }

@@ -3,7 +3,7 @@ import ProfileController from './controller'
 import { Documentation } from './documentation'
 import { Validator as BasicValidator } from '../basic/validator'
 import { Validator } from './validator'
-import { Role } from '../../models/user/role'
+import { Role } from '../../models/roles/interface'
 
 export default function (server: Hapi.Server) {
 

@@ -19,10 +19,18 @@ type TypeRoles = TypeRoleAdmin | TypeRoleUser | TypeRoleUnknown
  * List available user roles
  * @type {{[key: string]: TypeRoles}}
  */
-const Role: { ADMIN: TypeRoleAdmin; USER: TypeRoleUser; UNKNOWN: TypeRoleUnknown } = {
-  ADMIN: 'administrator' as TypeRoleAdmin,
-  USER: 'user' as TypeRoleUser,
-  UNKNOWN: 'unknown' as TypeRoleUnknown
+class Role {
+  public static readonly ADMIN: TypeRoleAdmin = 'administrator'
+  public static readonly USER: TypeRoleUser = 'user'
+  public static readonly UNKNOWN: TypeRoleUnknown = 'unknown'
+
+  public static toArray () {
+    return [
+      Role.ADMIN,
+      Role.USER,
+      Role.UNKNOWN
+    ]
+  }
 }
 
 export {
@@ -30,5 +38,7 @@ export {
   TypeRoles,
   TypeRoleAdmin,
   TypeRoleUser,
-  TypeRoleUnknown,
+  TypeRoleUnknown
 }
+
+export default Role

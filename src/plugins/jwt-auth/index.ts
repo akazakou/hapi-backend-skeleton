@@ -1,6 +1,6 @@
 import { IPlugin } from '../interfaces'
 import { Server, Request } from 'hapi'
-import { User } from '../../models/user'
+import * as User from '../../models/user'
 import * as Config from '../../services/config'
 import * as Log from '../../services/logs'
 import * as HapiAuthJWT2 from 'hapi-auth-jwt2'
@@ -19,10 +19,10 @@ export default (): IPlugin => {
     register: async (server: Server): Promise<void> => {
       const validateUser = (decoded: JWTData, request: Request, cb: Function) => {
         if (!config.get('server:auth:jwt:active')) {
-          return User.findOne({})
+          return User.Model.findOne({})
         }
 
-        User.findById(decoded.id).then((user) => {
+        User.Model.findById(decoded.id).then((user) => {
           if (user && user.token) {
             return cb(null, true)
           }
