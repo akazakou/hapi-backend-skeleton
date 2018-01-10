@@ -1,8 +1,8 @@
-import {IPlugin} from "../interfaces";
-import * as Hapi from "hapi";
-import * as Log from "../../services/logs";
+import { IPlugin } from '../interfaces'
+import * as Hapi from 'hapi'
+import * as Log from '../../services/logs'
 
-const good = require('good');
+const good = require('good')
 
 export default (): IPlugin => {
   return {
@@ -17,18 +17,18 @@ export default (): IPlugin => {
               args: [{
                 log: '*',
                 response: '*',
-                winston: Log.init(),
+                winston: Log.init()
               }]
-            }],
+            }]
           }
         }
-      });
+      })
     },
     info: () => {
       return {
-        name: "Winston Logger",
-        version: "1.0.0"
-      };
+        name: 'Winston Logger',
+        version: '1.0.0'
+      }
     }
-  };
-};
+  }
+}

@@ -66,4 +66,7 @@ typings/
 
 # Application overloading configuration file
 /config.json
+
+# Ignore lock files until it not will be published
 /package-lock.json
+/shrinkwrap.yaml

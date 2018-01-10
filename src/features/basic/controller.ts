@@ -1,8 +1,9 @@
-import * as Hapi from 'hapi';
-import * as Boom from 'boom';
-import * as Mongoose from 'mongoose';
-import * as Log from '../../services/logs';
-import {ITimed} from "../../models/misc/timed";
+import * as Hapi from 'hapi'
+import * as Boom from 'boom'
+import * as Mongoose from 'mongoose'
+import * as Log from '../../services/logs'
+import { ITimed } from '../../models/misc/timed'
+import { IUser } from '../../models/user'
 
 /**
  * Interface for working with model data
@@ -11,27 +12,27 @@ interface IBasicModel extends Mongoose.Document, ITimed, Mongoose.MongooseDocume
   /**
    * String version of document ID value
    */
-  readonly id: string;
+  readonly id: string
 }
 
 /**
  * Initialization of logger instance
  * @type {winston.LoggerInstance}
  */
-const log = Log.init();
+const log = Log.init()
 
 export default class BasicController<T extends IBasicModel> {
   /**
    * Model, that should be used for CRUD operations
    */
-  protected model: Mongoose.Model<T>;
+  protected model: Mongoose.Model<T>
 
   /**
    * Constructor of basic CRUD controller class
    * @param {"mongoose".Schema} model
    */
-  public constructor(model: Mongoose.Model<T>) {
-    this.model = model;
+  public constructor (model: Mongoose.Model<T>) {
+    this.model = model
   }
 
   /**
@@ -40,12 +41,12 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async getModel(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async getModel (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
     try {
-      reply(await this.model.findById(request.params.id));
+      reply(await this.model.findById(request.params.id))
     } catch (err) {
-      log.error(err);
-      reply(Boom.badImplementation(err.message, err));
+      log.error(err)
+      reply(Boom.badImplementation(err.message, err))
     }
   }
 
@@ -55,33 +56,33 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async getList(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async getList (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
     try {
-      const query = request.payload.query ? request.payload.query : {};
-      const fields = request.payload.fields ? request.payload.fields : {_id: 1};
+      const query = request.payload.query ? request.payload.query : {}
+      const fields = request.payload.fields ? request.payload.fields : { _id: 1 }
 
       // make a query for extract list of object records
-      let dbRequest = this.model.find(query, fields);
+      let dbRequest = this.model.find(query, fields)
 
       // skip records
       if (request.payload.skip) {
-        dbRequest.skip(request.payload.skip);
+        dbRequest.skip(request.payload.skip)
       }
 
       // limit records
       if (request.payload.limit) {
-        dbRequest.limit(request.payload.limit);
+        dbRequest.limit(request.payload.limit)
       }
 
       // sort records
       if (request.payload.sort) {
-        dbRequest.sort(request.payload.sort);
+        dbRequest.sort(request.payload.sort)
       }
 
-      reply(await dbRequest);
+      reply(await dbRequest)
     } catch (err) {
-      log.error(err);
-      reply(Boom.badImplementation(err.message, err));
+      log.error(err)
+      reply(Boom.badImplementation(err.message, err))
     }
   }
 
@@ -91,13 +92,13 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async createModel(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async createModel (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
     try {
-      let model: T = new this.model(request.payload);
-      reply(model.save()).code(201);
+      let model: T = new this.model(request.payload)
+      reply(model.save()).code(201)
     } catch (err) {
-      log.error(err);
-      reply(Boom.badImplementation(err.message, err));
+      log.error(err)
+      reply(Boom.badImplementation(err.message, err))
     }
   }
 
@@ -107,25 +108,25 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async updateModel(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async updateModel (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
     try {
-      let model: T = await this.model.findById(request.params.id);
+      let model: T | null = await this.model.findById(request.params.id)
 
       if (!model) {
-        reply(Boom.badData(`Can't find model ${this.model.constructor.name} with ID ${request.params.id}`));
+        return reply(Boom.badData(`Can't find model ${this.model.constructor.name} with ID ${request.params.id}`))
       }
 
       for (let key in request.payload) {
         if (request.payload.hasOwnProperty(key)) {
-          model.set(key, request.payload[key]);
-          model.markModified(key);
+          model.set(key, request.payload[key])
+          model.markModified(key)
         }
       }
 
-      reply(await model.save());
+      reply(await model.save())
     } catch (err) {
-      log.error(err);
-      reply(Boom.badImplementation(err.message, err));
+      log.error(err)
+      reply(Boom.badImplementation(err.message, err))
     }
   }
 
@@ -135,20 +136,20 @@ export default class BasicController<T extends IBasicModel> {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void | Response>}
    */
-  public async deleteModel(request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
+  public async deleteModel (request: Hapi.Request, reply: Hapi.ReplyNoContinue): Promise<void | Hapi.Response> {
     try {
-      let model: T = await this.model.findById(request.params.id);
+      let model: T | null = await this.model.findById(request.params.id)
 
       if (!model) {
-        reply(Boom.badData(`Can't find model ${this.model.constructor.name} with ID ${request.params.id}`));
+        return reply(Boom.badData(`Can't find model ${this.model.constructor.name} with ID ${request.params.id}`))
       }
 
-      await model.remove();
+      await model.remove()
 
-      reply(model);
+      reply(model)
     } catch (err) {
-      log.error(err);
-      reply(Boom.badImplementation(err.message, err));
+      log.error(err)
+      reply(Boom.badImplementation(err.message, err))
     }
   }
 }

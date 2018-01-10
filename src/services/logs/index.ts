@@ -1,17 +1,17 @@
-import * as winston from "winston";
-import * as Config from "../config/index";
+import * as winston from 'winston'
+import * as Config from '../config'
 
-function init() {
+function init () {
   // create new logger instance
-  let logger = new winston.Logger();
+  let logger = new winston.Logger()
 
   // logger instance switch to CLI mode
-  logger.cli();
+  logger.cli()
 
   // add console transport to logger instance object
-  logger.add(winston.transports.Console, Config.init().get('log'));
+  logger.add(winston.transports.Console, Config.init().get('log'))
 
-  return logger;
+  return logger
 }
 
 export {

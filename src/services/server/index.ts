@@ -1,18 +1,18 @@
-import * as Config from "../config/index";
-import * as Log from "../logs/index";
-import * as Hapi from "hapi";
-import {IPlugin} from "../../plugins/interfaces";
-import UserFeature from "../../features/user";
-import ProfileFeature from "../../features/profile";
+import * as Config from '../config'
+import * as Log from '../logs'
+import * as Hapi from 'hapi'
+import { IPlugin } from '../../plugins/interfaces'
+import UserFeature from '../../features/user'
+import ProfileFeature from '../../features/profile'
 
-const logger = Log.init();
+const logger = Log.init()
 
 export class Feature {
-  constructor(protected server: Hapi.Server, protected routes: Function) {
+  constructor (protected server: Hapi.Server, protected routes: Function) {
   }
 
-  init() {
-    this.routes(this.server);
+  init () {
+    this.routes(this.server)
   }
 }
 
@@ -20,45 +20,45 @@ export class Feature {
  * Initialization of Hapi HTTP web server
  * @returns {Podium}
  */
-async function init() {
+async function init () {
   // loading configuration
-  const config = Config.init();
+  const config = Config.init()
 
   // initializing server
-  let server = new Hapi.Server();
+  let server = new Hapi.Server()
 
   // establish connection
   server.connection({
-    port: config.get("server:port"),
-  });
+    port: config.get('server:port')
+  })
 
   //  Setup Hapi Plugins
-  const plugins: Array<string> = config.get("server:plugins");
-  let promises: Array<Promise<any>> = [];
+  const plugins: Array<string> = config.get('server:plugins')
+  let promises: Array<Promise<any>> = []
   plugins.forEach((pluginName: string) => {
-    let plugin: IPlugin = (require("../../plugins/" + pluginName)).default();
-    logger.info(`Register Plugin ${plugin.info().name} v${plugin.info().version}`);
-    promises.push(plugin.register(server));
-  });
+    let plugin: IPlugin = (require('../../plugins/' + pluginName)).default()
+    logger.info(`Register Plugin ${plugin.info().name} v${plugin.info().version}`)
+    promises.push(plugin.register(server))
+  })
   try {
-    await Promise.all(promises);
+    await Promise.all(promises)
   } catch (err) {
-    logger.error('PLUGIN ERROR: ', err);
+    logger.error('PLUGIN ERROR: ', err)
   }
 
   // Setup Hapi Features
   let features = [
-    {routes: UserFeature, label: 'User'},
-    {routes: ProfileFeature, label: 'Profile'},
-  ];
-  let instances: Feature[] = [];
+    { routes: UserFeature, label: 'User' },
+    { routes: ProfileFeature, label: 'Profile' }
+  ]
+  let instances: Feature[] = []
   features.forEach(f => {
-    instances.push(new Feature(server, f.routes));
-  });
-  instances.forEach(instance => instance.init());
-  logger.info(`Features: ${features.map(f => '[' + f.label + ']').join(', ')}`);
+    instances.push(new Feature(server, f.routes))
+  })
+  instances.forEach(instance => instance.init())
+  logger.info(`Features: ${features.map(f => '[' + f.label + ']').join(', ')}`)
 
-  return server;
+  return server
 }
 
 export {

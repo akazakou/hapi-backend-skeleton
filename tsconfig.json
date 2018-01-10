@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strict": true,
     "outDir": "build",
     "target": "es6",
     "module": "commonjs",
@@ -8,6 +9,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "lib": [
+      "esnext.asynciterable",
       "es2016",
       "dom"
     ]

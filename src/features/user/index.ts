@@ -1,13 +1,13 @@
-import * as Hapi from "hapi";
-import UserController from "./controller";
-import {Documentation} from "./documentation";
-import {Validator} from "./validator";
-import {Role} from "../../models/user/user";
+import { Server } from 'hapi'
+import UserController from './controller'
+import { Documentation } from './documentation'
+import { Validator } from './validator'
+import { Role } from '../../models/user/role'
 
-export default function (server: Hapi.Server) {
+export default function (server: Server) {
 
-  const clientsController = new UserController();
-  server.bind(clientsController);
+  const clientsController = new UserController()
+  server.bind(clientsController)
 
   server.route({
     method: 'GET',
@@ -19,10 +19,10 @@ export default function (server: Hapi.Server) {
       validate: Validator.get,
       plugins: {
         'hapi-swagger': Documentation.get,
-        'roles': [Role.ADMIN],
+        'roles': [Role.ADMIN]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'POST',
@@ -34,10 +34,10 @@ export default function (server: Hapi.Server) {
       validate: Validator.list,
       plugins: {
         'hapi-swagger': Documentation.list,
-        'roles': [Role.ADMIN],
+        'roles': [Role.ADMIN]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'POST',
@@ -49,10 +49,10 @@ export default function (server: Hapi.Server) {
       validate: Validator.create,
       plugins: {
         'hapi-swagger': Documentation.create,
-        'roles': [Role.ADMIN],
+        'roles': [Role.ADMIN]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'PATCH',
@@ -64,10 +64,10 @@ export default function (server: Hapi.Server) {
       validate: Validator.update,
       plugins: {
         'hapi-swagger': Documentation.update,
-        'roles': [Role.ADMIN],
+        'roles': [Role.ADMIN]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'DELETE',
@@ -79,10 +79,10 @@ export default function (server: Hapi.Server) {
       validate: Validator.delete,
       plugins: {
         'hapi-swagger': Documentation.delete,
-        'roles': [Role.ADMIN],
+        'roles': [Role.ADMIN]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'POST',
@@ -95,10 +95,10 @@ export default function (server: Hapi.Server) {
       validate: Validator.login,
       plugins: {
         'hapi-swagger': Documentation.login,
-        'roles': [Role.UNKNOWN],
+        'roles': [Role.UNKNOWN]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'DELETE',
@@ -110,10 +110,10 @@ export default function (server: Hapi.Server) {
       validate: Validator.logout,
       plugins: {
         'hapi-swagger': Documentation.logout,
-        'roles': [Role.USER],
+        'roles': [Role.USER]
       }
-    },
-  });
+    }
+  })
 
   server.route({
     method: 'PUT',
@@ -125,8 +125,8 @@ export default function (server: Hapi.Server) {
       validate: Validator.auth,
       plugins: {
         'hapi-swagger': Documentation.auth,
-        'roles': [Role.USER],
+        'roles': [Role.USER]
       }
-    },
-  });
+    }
+  })
 }
