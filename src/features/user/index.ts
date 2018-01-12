@@ -6,14 +6,13 @@ import { Role } from '../../plugins/roles/interface'
 
 export default function (server: Server) {
 
-  const clientsController = new UserController()
-  server.bind(clientsController)
+  server.bind(new UserController())
 
   server.route({
     method: 'GET',
     path: '/user/{id}',
     config: {
-      handler: clientsController.getUser,
+      handler: UserController.getUser,
       tags: ['api', 'user'],
       description: 'Get detailed information about specified user',
       validate: Validator.get,
@@ -28,7 +27,7 @@ export default function (server: Server) {
     method: 'POST',
     path: '/users',
     config: {
-      handler: clientsController.getList,
+      handler: UserController.getList,
       tags: ['api', 'user'],
       description: 'Get detailed information about all users',
       validate: Validator.list,
@@ -43,7 +42,7 @@ export default function (server: Server) {
     method: 'POST',
     path: '/user',
     config: {
-      handler: clientsController.createUser,
+      handler: UserController.createUser,
       tags: ['api', 'user'],
       description: 'Create new user record',
       validate: Validator.create,
@@ -58,7 +57,7 @@ export default function (server: Server) {
     method: 'PATCH',
     path: '/user/{id}',
     config: {
-      handler: clientsController.updateUser,
+      handler: UserController.updateUser,
       tags: ['api', 'user'],
       description: 'Update user record',
       validate: Validator.update,
@@ -73,7 +72,7 @@ export default function (server: Server) {
     method: 'DELETE',
     path: '/user/{id}',
     config: {
-      handler: clientsController.deleteUser,
+      handler: UserController.deleteUser,
       tags: ['api', 'user'],
       description: 'Mark user inavtive',
       validate: Validator.delete,
@@ -89,7 +88,7 @@ export default function (server: Server) {
     path: '/user/auth',
     config: {
       auth: false,
-      handler: clientsController.loginUser,
+      handler: UserController.loginUser,
       tags: ['api', 'auth'],
       description: 'Validate user login and password',
       validate: Validator.login,
@@ -104,7 +103,7 @@ export default function (server: Server) {
     method: 'DELETE',
     path: '/user/auth',
     config: {
-      handler: clientsController.logoutUser,
+      handler: UserController.logoutUser,
       tags: ['api', 'auth'],
       description: 'Remove authorisation token from user object',
       validate: Validator.logout,
@@ -119,7 +118,7 @@ export default function (server: Server) {
     method: 'PATCH',
     path: '/user/auth',
     config: {
-      handler: clientsController.authUser,
+      handler: UserController.authUser,
       tags: ['api', 'auth'],
       description: 'Update user authorisation status',
       validate: Validator.auth,

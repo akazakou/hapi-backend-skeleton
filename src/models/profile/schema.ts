@@ -48,7 +48,7 @@ const Schema = new DatabaseSchema(
 /**
  * Validate password that was requested on auth method
  * @param {string} requestPassword
- * @returns {any}
+ * @returns {string}
  */
 Schema.methods.validatePassword = function (requestPassword: string) {
   return Bcrypt.compareSync(requestPassword, this.password)

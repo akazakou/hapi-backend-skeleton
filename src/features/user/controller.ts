@@ -13,7 +13,7 @@ export default class UserController {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void>}
    */
-  public async getUser (request: Request, reply: ReplyNoContinue) {
+  public static async getUser (request: Request, reply: ReplyNoContinue) {
     try {
       const user: User.Interface | null = await User.Model.findById(request.params.id)
 
@@ -33,7 +33,7 @@ export default class UserController {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void>}
    */
-  public async getList (request: Request, reply: ReplyNoContinue) {
+  public static async getList (request: Request, reply: ReplyNoContinue) {
     try {
       const users: User.Interface[] = await User.Model.find()
 
@@ -53,7 +53,7 @@ export default class UserController {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void>}
    */
-  public async createUser (request: Request, reply: ReplyNoContinue) {
+  public static async createUser (request: Request, reply: ReplyNoContinue) {
     try {
       let existedUser: User.Interface | null = await User.Model.findOne({ login: request.payload.login })
       if (existedUser) {
@@ -76,7 +76,7 @@ export default class UserController {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<Response>}
    */
-  public async updateUser (request: Request, reply: ReplyNoContinue) {
+  public static async updateUser (request: Request, reply: ReplyNoContinue) {
     try {
       let user: User.Interface | null = await User.Model.findById(request.params.id)
 
@@ -111,7 +111,7 @@ export default class UserController {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<Response>}
    */
-  public async loginUser (request: Request, reply: ReplyNoContinue) {
+  public static async loginUser (request: Request, reply: ReplyNoContinue) {
     let { login, password } = request.payload
     try {
       const user: User.Interface | null = await User.Model.findOne({ login })
@@ -146,7 +146,7 @@ export default class UserController {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void>}
    */
-  public async authUser (request: Request, reply: ReplyNoContinue) {
+  public static async authUser (request: Request, reply: ReplyNoContinue) {
     try {
       let user: User.Interface | null
 
@@ -177,7 +177,7 @@ export default class UserController {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void>}
    */
-  public async logoutUser (request: Request, reply: ReplyNoContinue) {
+  public static async logoutUser (request: Request, reply: ReplyNoContinue) {
     try {
       let user: User.Interface | null
 
@@ -208,7 +208,7 @@ export default class UserController {
    * @param {ReplyNoContinue} reply
    * @returns {Promise<void>}
    */
-  public async deleteUser (request: Request, reply: ReplyNoContinue) {
+  public static async deleteUser (request: Request, reply: ReplyNoContinue) {
     try {
       let user: User.Interface | null = await User.Model.findById(request.params.id)
 

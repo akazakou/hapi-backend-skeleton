@@ -1,13 +1,14 @@
 import { ReplyNoContinue, Request, Response } from 'hapi'
 import * as Boom from 'boom'
-import * as Mongoose from 'mongoose'
+import { Document, Model, MongooseDocumentOptionals } from 'mongoose'
 import * as Log from '../../services/logs'
 import { ITimed } from '../../models/misc/timed'
+import { LoggerInstance } from 'winston'
 
 /**
  * Interface for working with model data
  */
-interface IBasicModel extends Mongoose.Document, ITimed, Mongoose.MongooseDocumentOptionals {
+interface IBasicModel extends Document, ITimed, MongooseDocumentOptionals {
   /**
    * String version of document ID value
    */
@@ -16,7 +17,7 @@ interface IBasicModel extends Mongoose.Document, ITimed, Mongoose.MongooseDocume
 
 /**
  * Initialization of logger instance
- * @type {winston.LoggerInstance}
+ * @type {LoggerInstance}
  */
 const log = Log.init()
 
@@ -24,13 +25,13 @@ export default class BasicController<T extends IBasicModel> {
   /**
    * Model, that should be used for CRUD operations
    */
-  protected model: Mongoose.Model<T>
+  protected model: Model<T>
 
   /**
    * Constructor of basic CRUD controller class
-   * @param {"mongoose".Schema} model
+   * @param {Model} model
    */
-  public constructor (model: Mongoose.Model<T>) {
+  public constructor (model: Model<T>) {
     this.model = model
   }
 
