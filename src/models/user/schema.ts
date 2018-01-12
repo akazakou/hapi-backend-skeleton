@@ -5,12 +5,14 @@ import * as Config from '../../services/config'
 import * as Boom from 'boom'
 import { Role, TypeRoles } from '../../plugins/roles/interface'
 import Interface from './interface'
+import * as Bcrypt from 'bcrypt'
+import { Provider } from 'nconf'
 
 /**
  * Initialization of configuration object
  * @type {Provider}
  */
-const config = Config.init()
+const config: Provider = Config.init()
 
 /**
  * Description of user schema for storing it into database
@@ -37,7 +39,19 @@ let Schema = new Mongoose.Schema({
   /**
    * JWT Auth token value
    */
-  token: { type: String, required: false }
+  token: { type: String, required: false },
+  /**
+   * Flag that indicates the user is active or not
+   */
+  isActive: { type: Boolean, required: true, unique: false, default: true },
+  /**
+   * Login will be used for identify user
+   */
+  login: { type: String, required: true, unique: true },
+  /**
+   * Password hash for validation of user authorisation
+   */
+  password: { type: String, required: true }
 }, {
   /**
    * Automatic set createdAt and updatedAt values
@@ -69,5 +83,38 @@ Schema.statics.getUserFromRequest = async function (request: Request): Promise<I
 
   return this.findOne()
 }
+
+/**
+ * Validate password that was requested on auth method
+ * @param {string} requestPassword
+ * @returns {string}
+ */
+Schema.methods.validatePassword = function (requestPassword: string) {
+  return Bcrypt.compareSync(requestPassword, this.password)
+}
+
+/**
+ * Remove password field from JSON objects
+ */
+Schema.set('toJSON', {
+  transform: function (document: Interface, result: any) {
+    if (result.password) {
+      delete result.password
+    }
+
+    return result
+  }
+})
+
+/**
+ * Hashing password on update that field ot creating new user record
+ */
+Schema.pre('save', function (this: Interface, next) {
+  if (this.isModified('password')) {
+    this.password = Bcrypt.hashSync(this.password, Bcrypt.genSaltSync(8))
+  }
+
+  next()
+})
 
 export default Schema

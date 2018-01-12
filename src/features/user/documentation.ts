@@ -1,5 +1,6 @@
 import * as Joi from 'joi'
 import * as User from '../../models/user'
+import { default as Role } from '../../plugins/roles/interface'
 
 const AuthToken = Joi.string().required().description('JWT auth token for detecting authorized user')
 
@@ -62,7 +63,9 @@ const userList = {
         .example([
           {
             '_id': '59eef4f909225626a7fb0b7f',
-            'roles': ['administrator'],
+            'isActive': true,
+            'login': 'admin',
+            'roles': [Role.ADMIN, Role.USER],
             'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhMWJmZDBmYzc2OGVlNjVlYzQ3NzVjYiIsImlhdCI6MTUxMTg2MDM2M30.NkQOr1mKxuShtOm5oZ5EZWrYvdL5lFzmWZVV2DfXqMw',
             'createdAt': '2017-11-27T11:09:15.463Z',
             'updatedAt': '2017-11-27T11:09:15.463Z',

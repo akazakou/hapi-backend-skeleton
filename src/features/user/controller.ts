@@ -1,10 +1,14 @@
 import { ReplyNoContinue, Request } from 'hapi'
 import * as Boom from 'boom'
 import * as User from '../../models/user'
-import * as Profile from '../../models/profile'
 import * as Config from '../../services/config'
+import { Provider } from 'nconf'
 
-const config = Config.init()
+/**
+ * Initialized configuration instance
+ * @type {Provider}
+ */
+const config: Provider = Config.init()
 
 export default class UserController {
   /**
@@ -120,13 +124,7 @@ export default class UserController {
         return reply(Boom.unauthorized('User does not exist'))
       }
 
-      let profile: Profile.Interface | null = await Profile.Model.findById(user.id)
-
-      if (!profile) {
-        return reply(Boom.badData(`Profile for user ${user.id} doesn't exists`))
-      }
-
-      if (!profile.validatePassword(password)) {
+      if (!user.validatePassword(password)) {
         return reply(Boom.unauthorized('Password is invalid'))
       }
 
@@ -216,14 +214,8 @@ export default class UserController {
         return reply(Boom.badRequest(`Can't find user with ID: ${request.params.id}`, { request }))
       }
 
-      let profile: Profile.Interface | null = await Profile.Model.findById(user.id)
-
-      if (!profile) {
-        return reply(Boom.badData(`Profile for user ${user.id} doesn't exists`))
-      }
-
-      profile.isActive = false
-      profile.markModified('isActive')
+      user.isActive = false
+      user.markModified('isActive')
 
       reply(await user.save())
     } catch (error) {
