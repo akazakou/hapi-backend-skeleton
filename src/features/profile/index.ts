@@ -15,7 +15,7 @@ export default function (server: Hapi.Server) {
     path: '/profile/{id}',
     config: {
       handler: controller.getModel,
-      tags: ['api', 'user', 'get', 'profile'],
+      tags: ['api', 'profile'],
       description: 'Get detailed information about specified user profile',
       validate: BasicValidator.get,
       plugins: {
@@ -27,10 +27,10 @@ export default function (server: Hapi.Server) {
 
   server.route({
     method: 'POST',
-    path: '/profile/list',
+    path: '/profiles',
     config: {
       handler: controller.getList,
-      tags: ['api', 'user', 'list', 'profile'],
+      tags: ['api', 'profile'],
       description: 'Get detailed information about all user profiles',
       validate: BasicValidator.list,
       plugins: {
@@ -45,7 +45,7 @@ export default function (server: Hapi.Server) {
     path: '/profile',
     config: {
       handler: controller.createModel,
-      tags: ['api', 'user', 'create', 'profile'],
+      tags: ['api', 'profile'],
       description: 'Create new user profile record',
       validate: Validator.create,
       plugins: {
@@ -60,7 +60,7 @@ export default function (server: Hapi.Server) {
     path: '/profile/{id}',
     config: {
       handler: controller.updateModel,
-      tags: ['api', 'user', 'update', 'profile'],
+      tags: ['api', 'profile'],
       description: 'Update user record',
       validate: Validator.update,
       plugins: {
@@ -75,7 +75,7 @@ export default function (server: Hapi.Server) {
     path: '/profile/{id}',
     config: {
       handler: controller.deleteModel,
-      tags: ['api', 'user', 'delete', 'profile'],
+      tags: ['api', 'profile'],
       description: 'Delete user profile from database',
       validate: BasicValidator.delete,
       plugins: {

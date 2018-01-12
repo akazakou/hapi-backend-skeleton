@@ -62,8 +62,6 @@ const userList = {
         .example([
           {
             '_id': '59eef4f909225626a7fb0b7f',
-            'isActive': true,
-            'login': 'admin',
             'roles': ['administrator'],
             'token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjVhMWJmZDBmYzc2OGVlNjVlYzQ3NzVjYiIsImlhdCI6MTUxMTg2MDM2M30.NkQOr1mKxuShtOm5oZ5EZWrYvdL5lFzmWZVV2DfXqMw',
             'createdAt': '2017-11-27T11:09:15.463Z',

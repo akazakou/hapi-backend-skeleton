@@ -17,6 +17,7 @@ export default (): IPlugin => {
               description: packageInfo.description,
               version: packageInfo.version
             },
+            grouping: 'tags',
             tags: [
               {
                 name: 'auth',

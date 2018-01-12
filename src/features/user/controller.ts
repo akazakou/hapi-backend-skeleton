@@ -160,6 +160,10 @@ export default class UserController {
         return reply(Boom.unauthorized('User does not exist'))
       }
 
+      user.generateToken()
+      user.markModified('token')
+      await user.save()
+
       reply(user)
 
     } catch (error) {

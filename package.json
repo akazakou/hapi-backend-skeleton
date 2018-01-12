@@ -8,7 +8,7 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "build": "rm -rf ./build && tsc && npm run lint",
+    "build": "rm -rf ./build && npm run lint && tsc",
     "lint": "tslint --project tsconfig.json --config tslint.json src/**/*.ts",
     "start": "node build/src/index.js",
     "start:dev": "concurrently 'tsc -w' 'nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js'",

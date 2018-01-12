@@ -14,7 +14,7 @@ export default function (server: Server) {
     path: '/user/{id}',
     config: {
       handler: clientsController.getUser,
-      tags: ['api', 'user', 'get'],
+      tags: ['api', 'user'],
       description: 'Get detailed information about specified user',
       validate: Validator.get,
       plugins: {
@@ -26,10 +26,10 @@ export default function (server: Server) {
 
   server.route({
     method: 'POST',
-    path: '/user/list',
+    path: '/users',
     config: {
       handler: clientsController.getList,
-      tags: ['api', 'user', 'list'],
+      tags: ['api', 'user'],
       description: 'Get detailed information about all users',
       validate: Validator.list,
       plugins: {
@@ -44,7 +44,7 @@ export default function (server: Server) {
     path: '/user',
     config: {
       handler: clientsController.createUser,
-      tags: ['api', 'user', 'create'],
+      tags: ['api', 'user'],
       description: 'Create new user record',
       validate: Validator.create,
       plugins: {
@@ -59,7 +59,7 @@ export default function (server: Server) {
     path: '/user/{id}',
     config: {
       handler: clientsController.updateUser,
-      tags: ['api', 'user', 'update'],
+      tags: ['api', 'user'],
       description: 'Update user record',
       validate: Validator.update,
       plugins: {
@@ -74,7 +74,7 @@ export default function (server: Server) {
     path: '/user/{id}',
     config: {
       handler: clientsController.deleteUser,
-      tags: ['api', 'user', 'delete'],
+      tags: ['api', 'user'],
       description: 'Mark user inavtive',
       validate: Validator.delete,
       plugins: {
@@ -86,11 +86,11 @@ export default function (server: Server) {
 
   server.route({
     method: 'POST',
-    path: '/auth',
+    path: '/user/auth',
     config: {
       auth: false,
       handler: clientsController.loginUser,
-      tags: ['api', 'auth', 'create'],
+      tags: ['api', 'auth'],
       description: 'Validate user login and password',
       validate: Validator.login,
       plugins: {
@@ -102,10 +102,10 @@ export default function (server: Server) {
 
   server.route({
     method: 'DELETE',
-    path: '/auth',
+    path: '/user/auth',
     config: {
       handler: clientsController.logoutUser,
-      tags: ['api', 'auth', 'delete'],
+      tags: ['api', 'auth'],
       description: 'Remove authorisation token from user object',
       validate: Validator.logout,
       plugins: {
@@ -116,11 +116,11 @@ export default function (server: Server) {
   })
 
   server.route({
-    method: 'PUT',
-    path: '/auth',
+    method: 'PATCH',
+    path: '/user/auth',
     config: {
       handler: clientsController.authUser,
-      tags: ['api', 'auth', 'update'],
+      tags: ['api', 'auth'],
       description: 'Update user authorisation status',
       validate: Validator.auth,
       plugins: {

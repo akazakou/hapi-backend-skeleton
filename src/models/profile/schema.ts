@@ -11,7 +11,7 @@ const Schema = new DatabaseSchema(
     /**
      * Email of current user profile
      */
-    user: { type: Types.ObjectId, required: true, ref: 'User' },
+    user: { type: DatabaseSchema.Types.ObjectId, required: true, ref: 'User' },
     /**
      * Email of current user profile
      */
