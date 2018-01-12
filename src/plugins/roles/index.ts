@@ -3,7 +3,7 @@ import { Base_Reply, PluginSpecificConfiguration, ReplyWithContinue, Request, Se
 import * as Log from '../../services/logs'
 import * as Boom from 'boom'
 import * as User from '../../models/user'
-import { Role, TypeRoles } from '../../models/roles/interface'
+import { Role, TypeRoles } from './interface'
 
 // define logger instance with category identifier
 const log = Log.init()
@@ -51,22 +51,22 @@ const Plugin: any = {
       let permissions: TypeRoles[] = []
       if (!plugins) {
         // if we do not have configured access level for this route, using default access level requirements
-        permissions.push(Role.UNKNOWN)
+        permissions.push(Role.EVERYONE)
         log.debug(`Non configured access level for route ${route.path}`)
       } else {
         // receive permissions for accessing to current route
-        permissions = plugins['roles'] || [Role.UNKNOWN]
+        permissions = plugins['roles'] || [Role.EVERYONE]
       }
 
       // if we have unauthenticated request, check if that route allowed unauthenticated requests
-      if (permissions.indexOf(Role.UNKNOWN) >= 0) {
+      if (permissions.indexOf(Role.EVERYONE) >= 0) {
         return reply.continue()
       }
 
       // if we have unauthenticated request
       if (!request.auth.isAuthenticated) {
         // checking if permissions allow access to unauthenticated users requests
-        if (permissions.indexOf(Role.UNKNOWN) < 0) {
+        if (permissions.indexOf(Role.EVERYONE) < 0) {
           // if route do not allow unauthenticated request
           log.warn(`Unauthorized access try to route ${route.path}`)
           return reply(Boom.forbidden(`You don't have access to the route ${route.path}`))

@@ -2,7 +2,7 @@ import { Server } from 'hapi'
 import UserController from './controller'
 import { Documentation } from './documentation'
 import { Validator } from './validator'
-import { Role } from '../../models/roles/interface'
+import { Role } from '../../plugins/roles/interface'
 
 export default function (server: Server) {
 
@@ -95,7 +95,7 @@ export default function (server: Server) {
       validate: Validator.login,
       plugins: {
         'hapi-swagger': Documentation.login,
-        'roles': [Role.UNKNOWN]
+        'roles': [Role.EVERYONE]
       }
     }
   })

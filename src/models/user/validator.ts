@@ -1,5 +1,5 @@
 import * as Joi from 'joi'
-import Roles from '../roles/interface'
+import Roles from '../../plugins/roles/interface'
 
 const Model = Joi.object().keys({
   _id: Joi.string().regex(/[0-9a-z]{24}/g).required().description('Unique ID of user entity'),

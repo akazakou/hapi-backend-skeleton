@@ -3,7 +3,7 @@ import ProfileController from './controller'
 import { Documentation } from './documentation'
 import { Validator as BasicValidator } from '../basic/validator'
 import { Validator } from './validator'
-import { Role } from '../../models/roles/interface'
+import { Role } from '../../plugins/roles/interface'
 
 export default function (server: Hapi.Server) {
 
@@ -20,7 +20,7 @@ export default function (server: Hapi.Server) {
       validate: BasicValidator.get,
       plugins: {
         'hapi-swagger': Documentation.get,
-        'roles': [Role.UNKNOWN]
+        'roles': [Role.EVERYONE]
       }
     }
   })
@@ -35,7 +35,7 @@ export default function (server: Hapi.Server) {
       validate: BasicValidator.list,
       plugins: {
         'hapi-swagger': Documentation.list,
-        'roles': [Role.UNKNOWN]
+        'roles': [Role.EVERYONE]
       }
     }
   })

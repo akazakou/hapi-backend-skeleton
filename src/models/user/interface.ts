@@ -1,5 +1,5 @@
 import { ITimed } from '../misc/timed'
-import { TypeRoles } from '../roles/interface'
+import { TypeRoles } from '../../plugins/roles/interface'
 import { Document, MongooseDocumentOptionals } from 'mongoose'
 
 /**

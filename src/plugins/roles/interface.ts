@@ -9,26 +9,25 @@ type TypeRoleUser = 'user'
 /**
  * Access role for unknown user
  */
-type TypeRoleUnknown = 'unknown'
+type TypeRoleEveryone = 'everyone'
 /**
  * List of available access roles
  */
-type TypeRoles = TypeRoleAdmin | TypeRoleUser | TypeRoleUnknown
+type TypeRoles = TypeRoleAdmin | TypeRoleUser | TypeRoleEveryone
 
 /**
  * List available user roles
- * @type {{[key: string]: TypeRoles}}
  */
 class Role {
   public static readonly ADMIN: TypeRoleAdmin = 'administrator'
   public static readonly USER: TypeRoleUser = 'user'
-  public static readonly UNKNOWN: TypeRoleUnknown = 'unknown'
+  public static readonly EVERYONE: TypeRoleEveryone = 'everyone'
 
   public static toArray () {
     return [
       Role.ADMIN,
       Role.USER,
-      Role.UNKNOWN
+      Role.EVERYONE
     ]
   }
 }
@@ -38,7 +37,7 @@ export {
   TypeRoles,
   TypeRoleAdmin,
   TypeRoleUser,
-  TypeRoleUnknown
+  TypeRoleEveryone
 }
 
 export default Role

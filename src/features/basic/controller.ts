@@ -78,7 +78,9 @@ export default class BasicController<T extends IBasicModel> {
         dbRequest.sort(request.payload.sort)
       }
 
-      reply(await dbRequest)
+      const result = await dbRequest.exec()
+
+      reply(result)
     } catch (err) {
       log.error(err)
       reply(Boom.badImplementation(err.message, err))

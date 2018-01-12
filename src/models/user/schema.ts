@@ -3,7 +3,7 @@ import * as Mongoose from 'mongoose'
 import * as Jwt from 'jsonwebtoken'
 import * as Config from '../../services/config'
 import * as Boom from 'boom'
-import { Role, TypeRoles } from '../roles/interface'
+import { Role, TypeRoles } from '../../plugins/roles/interface'
 import Interface from './interface'
 
 /**
@@ -22,9 +22,9 @@ let Schema = new Mongoose.Schema({
   roles: {
     type: [String],
     required: true,
-    default: [Role.UNKNOWN],
+    default: [Role.EVERYONE],
     validate: [(val: string[]) => {
-      let allowed = [Role.ADMIN, Role.USER, Role.UNKNOWN]
+      let allowed = [Role.ADMIN, Role.USER, Role.EVERYONE]
       for (let check of val) {
         if (allowed.indexOf(check as TypeRoles) === -1) {
           return false
