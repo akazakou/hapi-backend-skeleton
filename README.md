@@ -54,7 +54,7 @@
     "auth": {
       "jwt": {
         "active": true,
-        "jwtSecret": "change me"
+        "privateKey": "change me"
       }
     },
     "plugins": [
@@ -89,12 +89,12 @@
 
 ## Documentation
 
-After server stated, documentation for available API Endpoints will be available by link: http://localhost/docs
+After server stated, documentation for available API Endpoints will be available by link: http://host:port
 
 ## NPM Scripts
 
 * `npm start` - build and start `production` version of API Endpoint application
-* `npm run start:dev` - build and start `development` version of API Endpoint application with files changes monitoring and debugger on port 9229
+* `npm run debug` - build and start `development` version of API Endpoint application with files changes monitoring and debugger on port 9229
 * `npm build` - compile all TypeScript files into JavaScript
 * `npm test` - build and run test coverage functionality. `nyc` configuration for test report available in `nyc` section of `package.json` file
 * `npm run coverage` - run test coverage functionality

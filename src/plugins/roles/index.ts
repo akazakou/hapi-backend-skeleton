@@ -3,7 +3,7 @@ import { Base_Reply, PluginSpecificConfiguration, ReplyWithContinue, Request, Se
 import * as Log from '../../services/logs'
 import * as Boom from 'boom'
 import * as User from '../../models/user'
-import { Role, TypeRoles } from './interface'
+import { TypeRoles } from './interface'
 
 // define logger instance with category identifier
 const log = Log.init()
@@ -11,8 +11,7 @@ const log = Log.init()
 // ignored paths
 const ignored: [RegExp] = [
   new RegExp('^\/swagger'),
-  new RegExp('^\/docs'),
-  new RegExp('^\/graphql')
+  new RegExp('^\/$')
 ]
 
 interface RouterPlugins extends PluginSpecificConfiguration {
@@ -20,6 +19,12 @@ interface RouterPlugins extends PluginSpecificConfiguration {
 }
 
 const Plugin: any = {
+  /**
+   * That hook will be activated only if auth on route configuration are enabled
+   * @param {Server} server
+   * @param {IPluginOptions} options
+   * @param next
+   */
   register: function (server: Server, options: IPluginOptions, next: any) {
 
     /**
@@ -28,11 +33,7 @@ const Plugin: any = {
      * @param {Base_Reply} reply
      */
     server.ext('onPostAuth', async function (request: Request, reply: ReplyWithContinue) {
-      const route = request.route
-
-      if (!route) {
-        throw new Error(`Can't get route property from request object`)
-      }
+      const route = Object.assign({}, { settings: undefined, path: '' }, request.route)
 
       for (let ignore of ignored) {
         if (route && ignore.test(route.path)) {
@@ -40,40 +41,21 @@ const Plugin: any = {
         }
       }
 
-      const settings = route.settings
-      if (!settings) {
-        throw new Error(`Can't get settings property from route object`)
-      }
-
-      const plugins: RouterPlugins | undefined = settings.plugins
-
-      // receive required access levels for accessing to this route
-      let permissions: TypeRoles[] = []
-      if (!plugins) {
-        // if we do not have configured access level for this route, using default access level requirements
-        permissions.push(Role.EVERYONE)
-        log.debug(`Non configured access level for route ${route.path}`)
-      } else {
-        // receive permissions for accessing to current route
-        permissions = plugins['roles'] || [Role.EVERYONE]
-      }
-
-      // if we have unauthenticated request, check if that route allowed unauthenticated requests
-      if (permissions.indexOf(Role.EVERYONE) >= 0) {
+      if (route.settings.auth === false) {
         return reply.continue()
       }
 
-      // if we have unauthenticated request
-      if (!request.auth.isAuthenticated) {
-        // checking if permissions allow access to unauthenticated users requests
-        if (permissions.indexOf(Role.EVERYONE) < 0) {
-          // if route do not allow unauthenticated request
-          log.warn(`Unauthorized access try to route ${route.path}`)
-          return reply(Boom.forbidden(`You don't have access to the route ${route.path}`))
-        } else {
-          // if route allowing unauthenticated request
-          return reply.continue()
-        }
+      const plugins: RouterPlugins | undefined = route.settings && route.settings.plugins
+
+      // receive required access levels for accessing to this route
+      let permissions: TypeRoles[] = []
+      if (plugins && plugins.roles) {
+        // receive permissions for accessing to current route
+        permissions = plugins.roles
+      } else {
+        // if we do not have configured access level for this route, using default access level requirements
+        log.debug(`Non configured access level for route ${route.path}`)
+        return reply(Boom.forbidden(`That route should contain configured roles section in configuration ${route.path}`))
       }
 
       // receive information about authenticated user
@@ -84,25 +66,23 @@ const Plugin: any = {
         return reply(error)
       }
 
-      // if we have authenticated user and allowed access for Role.USER continue request
-      if (user && user._id && request.auth.isAuthenticated && permissions.indexOf(Role.USER) !== -1) {
-        return reply.continue()
-      }
-
       // checking is the user have required access level
-      for (let required of permissions) {
-        for (let allowed of user.roles) {
-          if (required === allowed) {
-            return reply.continue()
+      if (user && user.id) {
+        for (let required of permissions) {
+          for (let allowed of user.roles) {
+            if (required === allowed) {
+              return reply.continue()
+            }
           }
         }
       }
 
       // If user doesn't have permissions to access, decline it
-      log.warn(`Unauthorized access try to route ${route.path} from user ${user.id}`, {
-        user: user.id,
+      log.warn(`Unauthorized access try to route ${route.path} from user ${user.id || JSON.stringify(user)}`, {
+        user: user.id || user,
         route: route.path
       })
+
       return reply(Boom.forbidden(`You don't have access to the route ${route.path}`))
     })
 

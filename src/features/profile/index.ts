@@ -14,13 +14,13 @@ export default function (server: Hapi.Server) {
     method: 'GET',
     path: '/profile/{id}',
     config: {
+      auth: false,
       handler: controller.getModel,
       tags: ['api', 'profile'],
       description: 'Get detailed information about specified user profile',
       validate: BasicValidator.get,
       plugins: {
         'hapi-swagger': Documentation.get,
-        'roles': [Role.EVERYONE]
       }
     }
   })
@@ -29,13 +29,13 @@ export default function (server: Hapi.Server) {
     method: 'POST',
     path: '/profiles',
     config: {
+      auth: false,
       handler: controller.getList,
       tags: ['api', 'profile'],
       description: 'Get detailed information about all user profiles',
       validate: BasicValidator.list,
       plugins: {
-        'hapi-swagger': Documentation.list,
-        'roles': [Role.EVERYONE]
+        'hapi-swagger': Documentation.list
       }
     }
   })
@@ -50,7 +50,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.create,
       plugins: {
         'hapi-swagger': Documentation.create,
-        'roles': [Role.USER]
+        'roles': [Role.USER, Role.ADMIN]
       }
     }
   })
@@ -65,7 +65,7 @@ export default function (server: Hapi.Server) {
       validate: Validator.update,
       plugins: {
         'hapi-swagger': Documentation.update,
-        'roles': [Role.USER]
+        'roles': [Role.USER, Role.ADMIN]
       }
     }
   })

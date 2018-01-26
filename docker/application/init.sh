@@ -27,6 +27,6 @@ echo "Initialization: starting the server"
 if [ "$NODE_ENV" == "production" ]; then
     cd /usr/src/app && npm run start
 else
-    cd /usr/src/app && npm run start:dev
+    cd /usr/src/app && npm run debug
 fi
 

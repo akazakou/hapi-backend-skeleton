@@ -7,13 +7,9 @@ type TypeRoleAdmin = 'administrator'
  */
 type TypeRoleUser = 'user'
 /**
- * Access role for unknown user
- */
-type TypeRoleEveryone = 'everyone'
-/**
  * List of available access roles
  */
-type TypeRoles = TypeRoleAdmin | TypeRoleUser | TypeRoleEveryone
+type TypeRoles = TypeRoleAdmin | TypeRoleUser
 
 /**
  * List available user roles
@@ -21,13 +17,11 @@ type TypeRoles = TypeRoleAdmin | TypeRoleUser | TypeRoleEveryone
 class Role {
   public static readonly ADMIN: TypeRoleAdmin = 'administrator'
   public static readonly USER: TypeRoleUser = 'user'
-  public static readonly EVERYONE: TypeRoleEveryone = 'everyone'
 
   public static toArray () {
     return [
       Role.ADMIN,
-      Role.USER,
-      Role.EVERYONE
+      Role.USER
     ]
   }
 }
@@ -36,8 +30,7 @@ export {
   Role,
   TypeRoles,
   TypeRoleAdmin,
-  TypeRoleUser,
-  TypeRoleEveryone
+  TypeRoleUser
 }
 
 export default Role

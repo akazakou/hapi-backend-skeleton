@@ -25,7 +25,9 @@ async function init () {
   const config = Config.init()
 
   // initializing server
-  let server = new Hapi.Server()
+  let server = new Hapi.Server({
+    debug: false
+  })
 
   // establish connection
   server.connection({
@@ -40,11 +42,8 @@ async function init () {
     logger.info(`Register Plugin ${plugin.info().name} v${plugin.info().version}`)
     promises.push(plugin.register(server))
   })
-  try {
-    await Promise.all(promises)
-  } catch (err) {
-    logger.error('PLUGIN ERROR: ', err)
-  }
+
+  await Promise.all(promises)
 
   // Setup Hapi Features
   let features = [

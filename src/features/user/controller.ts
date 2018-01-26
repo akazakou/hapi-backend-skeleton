@@ -3,6 +3,14 @@ import * as Boom from 'boom'
 import * as User from '../../models/user'
 import * as Config from '../../services/config'
 import { Provider } from 'nconf'
+import * as Log from '../../services/logs'
+import BasicController from '../basic/controller'
+
+/**
+ * Initialization of logger instance
+ * @type {LoggerInstance}
+ */
+const log = Log.init()
 
 /**
  * Initialized configuration instance
@@ -10,45 +18,9 @@ import { Provider } from 'nconf'
  */
 const config: Provider = Config.init()
 
-export default class UserController {
-  /**
-   * Get detailed information about specified user
-   * @param {Request} request
-   * @param {ReplyNoContinue} reply
-   * @returns {Promise<void>}
-   */
-  public static async getUser (request: Request, reply: ReplyNoContinue) {
-    try {
-      const user: User.Interface | null = await User.Model.findById(request.params.id)
-
-      if (!user) {
-        return reply(Boom.badRequest(`Can't find user with ID: ${request.params.id}`, { request }))
-      }
-
-      reply(user)
-    } catch (err) {
-      reply(Boom.badImplementation(err.message, err))
-    }
-  }
-
-  /**
-   * Get detailed information about all user
-   * @param {Request} request
-   * @param {ReplyNoContinue} reply
-   * @returns {Promise<void>}
-   */
-  public static async getList (request: Request, reply: ReplyNoContinue) {
-    try {
-      const users: User.Interface[] = await User.Model.find()
-
-      if (!users) {
-        return reply(Boom.badRequest(`Can't find user with ID: ${request.params.id}`, { request }))
-      }
-
-      reply(users)
-    } catch (err) {
-      reply(Boom.badImplementation(err.message, err))
-    }
+export default class UserController extends BasicController<User.Interface> {
+  public constructor () {
+    super(User.Model)
   }
 
   /**
@@ -69,8 +41,9 @@ export default class UserController {
       await user.save()
 
       reply(user)
-    } catch (err) {
-      reply(Boom.badImplementation(err.message, err))
+    } catch (error) {
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 
@@ -88,7 +61,11 @@ export default class UserController {
         return reply(Boom.badRequest(`Can't find user with ID: ${request.params.id}`, { request }))
       }
 
-      let existedUser: User.Interface | null = await User.Model.findOne({ login: request.payload.login })
+      let existedUser: User.Interface | null = await User.Model.findOne({
+        _id: { $ne: user.id },
+        login: request.payload.login
+      })
+
       if (existedUser && existedUser.id !== user.id) {
         return reply(Boom.badData(`User with login "${request.payload.login}" already exists`))
       }
@@ -96,16 +73,15 @@ export default class UserController {
       user = Object.assign(user as User.Interface, request.payload as User.Interface)
 
       for (let propertyName in request.payload) {
-        if (user.hasOwnProperty(propertyName)) {
-          user.markModified(propertyName)
-        }
+        user.markModified(propertyName)
       }
 
       user = await user.save()
 
       reply(user)
-    } catch (err) {
-      reply(Boom.badImplementation(err.message, err))
+    } catch (error) {
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 
@@ -133,8 +109,9 @@ export default class UserController {
       await user.save()
 
       reply(user).header('X-Access-Token', user.token)
-    } catch (err) {
-      reply(Boom.badImplementation(err.message, err))
+    } catch (error) {
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 
@@ -146,13 +123,7 @@ export default class UserController {
    */
   public static async authUser (request: Request, reply: ReplyNoContinue) {
     try {
-      let user: User.Interface | null
-
-      if (config.get('server:auth:jwt:active')) {
-        user = await User.Model.findById(request.auth.credentials.id)
-      } else {
-        user = await User.Model.findOne({})
-      }
+      let user: User.Interface | null = await User.Model.findById(request.auth.credentials.sub)
 
       if (!user) {
         return reply(Boom.unauthorized('User does not exist'))
@@ -163,9 +134,9 @@ export default class UserController {
       await user.save()
 
       reply(user)
-
     } catch (error) {
-      reply(Boom.badImplementation())
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 
@@ -177,13 +148,7 @@ export default class UserController {
    */
   public static async logoutUser (request: Request, reply: ReplyNoContinue) {
     try {
-      let user: User.Interface | null
-
-      if (config.get('server:auth:jwt:active')) {
-        user = await User.Model.findById(request.auth.credentials.id)
-      } else {
-        user = await User.Model.findOne({})
-      }
+      let user: User.Interface | null = await User.Model.findById(request.auth.credentials.sub)
 
       if (!user) {
         return reply(Boom.unauthorized('User does not exist'))
@@ -194,9 +159,9 @@ export default class UserController {
       await user.save()
 
       reply(user)
-
     } catch (error) {
-      reply(Boom.badImplementation())
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 
@@ -216,10 +181,12 @@ export default class UserController {
 
       user.isActive = false
       user.markModified('isActive')
+      await user.save()
 
-      reply(await user.save())
+      reply(user)
     } catch (error) {
-      reply(Boom.badImplementation())
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 }
