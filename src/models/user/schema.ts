@@ -24,17 +24,8 @@ let Schema = new Mongoose.Schema({
   roles: {
     type: [String],
     required: true,
-    default: [Role.EVERYONE],
-    validate: [(val: string[]) => {
-      let allowed = [Role.ADMIN, Role.USER, Role.EVERYONE]
-      for (let check of val) {
-        if (allowed.indexOf(check as TypeRoles) === -1) {
-          return false
-        }
-      }
-
-      return true
-    }, 'Array of user roles contains non existed role']
+    default: [Role.USER],
+    validate: [rolesValidator, 'Array of user roles contains non existed role']
   },
   /**
    * JWT Auth token value
@@ -43,7 +34,7 @@ let Schema = new Mongoose.Schema({
   /**
    * Flag that indicates the user is active or not
    */
-  isActive: { type: Boolean, required: true, unique: false, default: true },
+  isActive: { type: Boolean, required: true, default: true },
   /**
    * Login will be used for identify user
    */
@@ -51,7 +42,7 @@ let Schema = new Mongoose.Schema({
   /**
    * Password hash for validation of user authorisation
    */
-  password: { type: String, required: true }
+  password: { type: String, required: true, set: hashPassword }
 }, {
   /**
    * Automatic set createdAt and updatedAt values
@@ -64,7 +55,20 @@ let Schema = new Mongoose.Schema({
  * @returns {any | number | PromiseLike<ArrayBuffer> | Buffer | string}
  */
 Schema.methods.generateToken = function () {
-  return Jwt.sign({ id: this.id }, config.get('server:auth:jwt:jwtSecret'))
+  // setting current date
+  const current = new Date()
+
+  // set default expiration to one year
+  let expire = new Date()
+  expire.setFullYear(expire.getFullYear() + 1)
+
+  return Jwt.sign({
+    'iss': config.get('server:title'),
+    'iat': Math.floor(current.getTime() / 1000),
+    'exp': Math.floor(expire.getTime() / 1000),
+    'aud': config.get('server:url'),
+    'sub': this.id
+  }, config.get('server:auth:jwt:privateKey'))
 }
 
 /**
@@ -73,15 +77,11 @@ Schema.methods.generateToken = function () {
  * @returns {Promise<IUser>}
  */
 Schema.statics.getUserFromRequest = async function (request: Request): Promise<Interface> {
-  if (config.get('server:auth:jwt:active')) {
-    if (!request.auth || !request.auth.credentials || !request.auth.credentials.id) {
-      throw Boom.unauthorized(`User not authorised`)
-    }
-
-    return this.findById(request.auth.credentials.id)
+  if (!request.auth || !request.auth.credentials || !request.auth.credentials.sub) {
+    throw Boom.unauthorized(`User not authorised`)
   }
 
-  return this.findOne()
+  return this.findById(request.auth.credentials.sub)
 }
 
 /**
@@ -97,24 +97,61 @@ Schema.methods.validatePassword = function (requestPassword: string) {
  * Remove password field from JSON objects
  */
 Schema.set('toJSON', {
-  transform: function (document: Interface, result: any) {
-    if (result.password) {
-      delete result.password
-    }
-
-    return result
-  }
+  transform: toObject
 })
+
+/**
+ * Remove password field from raw objects
+ */
+Schema.set('toObject', {
+  transform: toObject
+})
+
+/**
+ * Remove password field from results object
+ * @param {Interface} document
+ * @param {Interface} result
+ * @returns {Interface}
+ */
+function toObject (document: Interface, result: Interface) {
+  delete result.password
+  return result
+}
 
 /**
  * Hashing password on update that field ot creating new user record
  */
-Schema.pre('save', function (this: Interface, next) {
-  if (this.isModified('password')) {
-    this.password = Bcrypt.hashSync(this.password, Bcrypt.genSaltSync(8))
+function hashPassword (raw: string): string {
+  try {
+    // checking is that raw value already are hashed string
+    Bcrypt.getRounds(raw)
+  } catch (error) {
+    // if it isn't, we are hashing that string
+    return Bcrypt.hashSync(raw, Bcrypt.genSaltSync(8))
   }
 
-  next()
-})
+  // if it is already hashed string, we are just return it without update
+  return raw
+}
+
+/**
+ * Validate roles set to update user object
+ * @param {TypeRoles[]} roles
+ * @returns {boolean}
+ */
+function rolesValidator (roles: TypeRoles[]) {
+  let allowed = Role.toArray()
+  for (let check of roles) {
+    if (allowed.indexOf(check) === -1) {
+      return false
+    }
+  }
+
+  return true
+}
+
+export {
+  rolesValidator
+}
 
 export default Schema

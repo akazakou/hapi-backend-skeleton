@@ -1,16 +1,18 @@
 import { IPlugin } from '../interfaces'
 import * as Hapi from 'hapi'
 
+const swagger = require('hapi-swagger')
+
 export default (): IPlugin => {
   return {
     register: (server: Hapi.Server): Promise<any> => {
-      const packageInfo = require('../../../../package.json')
+      const packageInfo = require(`${global.__basedir}/package.json`)
 
       return server.register([
         require('inert'),
         require('vision'),
         {
-          register: require('hapi-swagger'),
+          register: swagger,
           options: {
             info: {
               title: packageInfo.title,
@@ -32,7 +34,7 @@ export default (): IPlugin => {
                 description: 'Api interface for manipulate User Profile Entity'
               }
             ],
-            documentationPath: '/docs'
+            documentationPath: '/'
           }
         }
       ])
@@ -40,7 +42,7 @@ export default (): IPlugin => {
     info: () => {
       return {
         name: 'Swagger Documentation',
-        version: '1.0.0'
+        version: swagger.register.attributes.version
       }
     }
   }

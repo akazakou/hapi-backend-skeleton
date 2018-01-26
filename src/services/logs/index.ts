@@ -1,16 +1,18 @@
 import { Logger, LoggerInstance, transports } from 'winston'
 import * as Config from '../config'
 
-function init (): LoggerInstance {
-  // create new logger instance
-  let logger = new Logger()
+let logger: LoggerInstance
 
-  // logger instance switch to CLI mode
-  logger.cli()
+function init (reinit: boolean = false): LoggerInstance {
+  if (!logger || reinit) {
+    // create new logger instance
+    logger = new Logger()
 
-  // add console transport to logger instance object
-  logger.add(transports.Console, Config.init().get('log'))
+    // add console transport to logger instance object
+    logger.add(transports.Console, Config.init().get('log'))
+  }
 
+  // logger instance
   return logger
 }
 

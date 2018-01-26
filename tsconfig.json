@@ -17,9 +17,10 @@
   "include": [
     "src/**/**.ts",
     "test/**/**.ts",
-    "typings/index.d.ts"
+    "typings/*.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "build"
   ]
 }

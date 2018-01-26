@@ -9,7 +9,7 @@ const Schema = new DatabaseSchema(
     /**
      * Email of current user profile
      */
-    user: { type: DatabaseSchema.Types.ObjectId, required: true, ref: 'User' },
+    user: { type: DatabaseSchema.Types.ObjectId, required: true, unique: true, ref: 'User' },
     /**
      * Email of current user profile
      */
@@ -17,11 +17,11 @@ const Schema = new DatabaseSchema(
     /**
      * First name of user profile
      */
-    firstName: { type: Number, required: true },
+    firstName: { type: String, required: true },
     /**
      * Last name of user profile
      */
-    lastName: { type: Date, required: true },
+    lastName: { type: String, required: true }
   },
   {
     /**

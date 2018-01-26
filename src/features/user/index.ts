@@ -2,17 +2,19 @@ import { Server } from 'hapi'
 import UserController from './controller'
 import { Documentation } from './documentation'
 import { Validator } from './validator'
+import { Validator as BasicValidator } from '../basic/validator'
 import { Role } from '../../plugins/roles/interface'
 
 export default function (server: Server) {
 
-  server.bind(new UserController())
+  const controller = new UserController()
+  server.bind(controller)
 
   server.route({
     method: 'GET',
     path: '/user/{id}',
     config: {
-      handler: UserController.getUser,
+      handler: controller.getModel,
       tags: ['api', 'user'],
       description: 'Get detailed information about specified user',
       validate: Validator.get,
@@ -27,10 +29,10 @@ export default function (server: Server) {
     method: 'POST',
     path: '/users',
     config: {
-      handler: UserController.getList,
+      handler: controller.getList,
       tags: ['api', 'user'],
       description: 'Get detailed information about all users',
-      validate: Validator.list,
+      validate: BasicValidator.list,
       plugins: {
         'hapi-swagger': Documentation.list,
         'roles': [Role.ADMIN]
@@ -93,8 +95,7 @@ export default function (server: Server) {
       description: 'Validate user login and password',
       validate: Validator.login,
       plugins: {
-        'hapi-swagger': Documentation.login,
-        'roles': [Role.EVERYONE]
+        'hapi-swagger': Documentation.login
       }
     }
   })

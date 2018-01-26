@@ -21,17 +21,17 @@ interface IBasicModel extends Document, ITimed, MongooseDocumentOptionals {
  */
 const log = Log.init()
 
-export default class BasicController<T extends IBasicModel> {
+export default class BasicController<ModelType extends IBasicModel> {
   /**
    * Model, that should be used for CRUD operations
    */
-  protected model: Model<T>
+  protected model: Model<ModelType>
 
   /**
    * Constructor of basic CRUD controller class
    * @param {Model} model
    */
-  public constructor (model: Model<T>) {
+  public constructor (model: Model<ModelType>) {
     this.model = model
   }
 
@@ -43,10 +43,11 @@ export default class BasicController<T extends IBasicModel> {
    */
   public async getModel (request: Request, reply: ReplyNoContinue): Promise<void | Response> {
     try {
-      reply(await this.model.findById(request.params.id))
-    } catch (err) {
-      log.error(err)
-      reply(Boom.badImplementation(err.message, err))
+      const result = await this.model.findById(request.params.id)
+      reply(result)
+    } catch (error) {
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 
@@ -82,9 +83,9 @@ export default class BasicController<T extends IBasicModel> {
       const result = await dbRequest.exec()
 
       reply(result)
-    } catch (err) {
-      log.error(err)
-      reply(Boom.badImplementation(err.message, err))
+    } catch (error) {
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 
@@ -96,11 +97,12 @@ export default class BasicController<T extends IBasicModel> {
    */
   public async createModel (request: Request, reply: ReplyNoContinue): Promise<void | Response> {
     try {
-      let model: T = new this.model(request.payload)
-      reply(model.save()).code(201)
-    } catch (err) {
-      log.error(err)
-      reply(Boom.badImplementation(err.message, err))
+      let model: ModelType = new this.model(request.payload)
+      const result: ModelType = await model.save()
+      reply(result).code(201)
+    } catch (error) {
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 
@@ -112,23 +114,23 @@ export default class BasicController<T extends IBasicModel> {
    */
   public async updateModel (request: Request, reply: ReplyNoContinue): Promise<void | Response> {
     try {
-      let model: T | null = await this.model.findById(request.params.id)
+      let model: ModelType | null = await this.model.findById(request.params.id)
 
       if (!model) {
         return reply(Boom.badData(`Can't find model ${this.model.constructor.name} with ID ${request.params.id}`))
       }
 
       for (let key in request.payload) {
-        if (request.payload.hasOwnProperty(key)) {
-          model.set(key, request.payload[key])
-          model.markModified(key)
-        }
+        model.set(key, request.payload[key])
+        model.markModified(key)
       }
 
-      reply(await model.save())
-    } catch (err) {
-      log.error(err)
-      reply(Boom.badImplementation(err.message, err))
+      const response: ModelType | null = await model.save()
+
+      reply(response)
+    } catch (error) {
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 
@@ -140,7 +142,7 @@ export default class BasicController<T extends IBasicModel> {
    */
   public async deleteModel (request: Request, reply: ReplyNoContinue): Promise<void | Response> {
     try {
-      let model: T | null = await this.model.findById(request.params.id)
+      let model: ModelType | null = await this.model.findById(request.params.id)
 
       if (!model) {
         return reply(Boom.badData(`Can't find model ${this.model.constructor.name} with ID ${request.params.id}`))
@@ -149,9 +151,9 @@ export default class BasicController<T extends IBasicModel> {
       await model.remove()
 
       reply(model)
-    } catch (err) {
-      log.error(err)
-      reply(Boom.badImplementation(err.message, err))
+    } catch (error) {
+      log.error(error.message, { error })
+      reply(Boom.badImplementation(error.message, { error }))
     }
   }
 }

@@ -1,7 +1,12 @@
 import { expect } from 'chai'
-import * as Config from '../../../src/services/config/index'
+import * as Config from '../../src/services/config'
+import initMocha from '../init'
 
 describe('Configuration', () => {
+  before(() => {
+    initMocha() // initialize testing environment
+  })
+
   it('should initialize configuration correctly', done => {
     let config = Config.init().get('server')
 

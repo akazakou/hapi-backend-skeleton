@@ -1,3 +1,6 @@
+// assign basedir property to global variables list
+global.__basedir = `${__dirname}/../..`
+
 // setting EventEmitter maxListeners
 require('events').EventEmitter.defaultMaxListeners = 100
 
@@ -11,7 +14,7 @@ const log = Log.init()
 
 // reporting about uncaught exception
 process.on('uncaughtException', (error: Error) => {
-  log.warn(`Detect uncaughtException: ${error.toString()}`)
+  log.warn(`Detect uncaughtException: ${error.toString()}`, { error })
 })
 
 async function init () {
