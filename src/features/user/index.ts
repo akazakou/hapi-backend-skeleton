@@ -110,7 +110,7 @@ export default function (server: Server) {
       validate: Validator.logout,
       plugins: {
         'hapi-swagger': Documentation.logout,
-        'roles': [Role.USER]
+        'roles': [Role.USER, Role.ADMIN]
       }
     }
   })
@@ -125,7 +125,7 @@ export default function (server: Server) {
       validate: Validator.auth,
       plugins: {
         'hapi-swagger': Documentation.auth,
-        'roles': [Role.USER]
+        'roles': [Role.USER, Role.ADMIN]
       }
     }
   })

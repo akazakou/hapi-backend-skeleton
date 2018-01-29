@@ -130,7 +130,7 @@ export default class UserController extends BasicController<User.Interface> {
       }
 
       user.generateToken()
-      user.markModified('token')
+
       await user.save()
 
       reply(user)

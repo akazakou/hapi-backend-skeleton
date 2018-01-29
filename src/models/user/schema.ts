@@ -62,13 +62,17 @@ Schema.methods.generateToken = function () {
   let expire = new Date()
   expire.setFullYear(expire.getFullYear() + 1)
 
-  return Jwt.sign({
+  this.token = Jwt.sign({
     'iss': config.get('server:title'),
     'iat': Math.floor(current.getTime() / 1000),
     'exp': Math.floor(expire.getTime() / 1000),
     'aud': config.get('server:url'),
     'sub': this.id
   }, config.get('server:auth:jwt:privateKey'))
+
+  this.markModified('token')
+
+  return this.token
 }
 
 /**
