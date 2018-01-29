@@ -60,7 +60,7 @@ Schema.methods.generateToken = function () {
 
   // set default expiration to one year
   let expire = new Date()
-  expire.setFullYear(expire.getFullYear() + 1)
+  expire.setTime(expire.getTime() + config.get('server:auth:jwt:expireIn'))
 
   this.token = Jwt.sign({
     'iss': config.get('server:title'),
