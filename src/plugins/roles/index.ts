@@ -9,7 +9,7 @@ import { TypeRoles } from './interface'
 const log = Log.init()
 
 // ignored paths
-const ignored: [RegExp] = [
+const ignored: RegExp[] = [
   new RegExp('^\/swagger'),
   new RegExp('^\/$')
 ]
