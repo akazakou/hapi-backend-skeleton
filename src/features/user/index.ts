@@ -4,6 +4,10 @@ import { Documentation } from './documentation'
 import { Validator } from './validator'
 import { Validator as BasicValidator } from '../basic/validator'
 import { Role } from '../../plugins/roles/interface'
+import * as Config from '../../services/config'
+
+// initialization of application configuration
+const config = Config.init()
 
 export default function (server: Server) {
 
@@ -13,8 +17,10 @@ export default function (server: Server) {
   server.route({
     method: 'GET',
     path: '/user/{id}',
-    config: {
-      handler: controller.getModel,
+    handler: controller.getModel,
+    options: {
+      cors: config.get('server:cors'),
+      auth: 'jwt',
       tags: ['api', 'user'],
       description: 'Get detailed information about specified user',
       validate: Validator.get,
@@ -28,8 +34,10 @@ export default function (server: Server) {
   server.route({
     method: 'POST',
     path: '/users',
-    config: {
-      handler: controller.getList,
+    handler: controller.getList,
+    options: {
+      cors: config.get('server:cors'),
+      auth: 'jwt',
       tags: ['api', 'user'],
       description: 'Get detailed information about all users',
       validate: BasicValidator.list,
@@ -43,8 +51,10 @@ export default function (server: Server) {
   server.route({
     method: 'POST',
     path: '/user',
-    config: {
-      handler: UserController.createUser,
+    handler: UserController.createUser,
+    options: {
+      cors: config.get('server:cors'),
+      auth: 'jwt',
       tags: ['api', 'user'],
       description: 'Create new user record',
       validate: Validator.create,
@@ -58,8 +68,10 @@ export default function (server: Server) {
   server.route({
     method: 'PATCH',
     path: '/user/{id}',
-    config: {
-      handler: UserController.updateUser,
+    handler: UserController.updateUser,
+    options: {
+      cors: config.get('server:cors'),
+      auth: 'jwt',
       tags: ['api', 'user'],
       description: 'Update user record',
       validate: Validator.update,
@@ -73,8 +85,9 @@ export default function (server: Server) {
   server.route({
     method: 'DELETE',
     path: '/user/{id}',
-    config: {
-      handler: UserController.deleteUser,
+    handler: UserController.deleteUser,
+    options: {
+      cors: config.get('server:cors'),
       tags: ['api', 'user'],
       description: 'Mark user inavtive',
       validate: Validator.delete,
@@ -88,9 +101,10 @@ export default function (server: Server) {
   server.route({
     method: 'POST',
     path: '/user/auth',
-    config: {
+    handler: UserController.loginUser,
+    options: {
+      cors: config.get('server:cors'),
       auth: false,
-      handler: UserController.loginUser,
       tags: ['api', 'auth'],
       description: 'Validate user login and password',
       validate: Validator.login,
@@ -103,8 +117,9 @@ export default function (server: Server) {
   server.route({
     method: 'DELETE',
     path: '/user/auth',
-    config: {
-      handler: UserController.logoutUser,
+    handler: UserController.logoutUser,
+    options: {
+      cors: config.get('server:cors'),
       tags: ['api', 'auth'],
       description: 'Remove authorisation token from user object',
       validate: Validator.logout,
@@ -118,8 +133,9 @@ export default function (server: Server) {
   server.route({
     method: 'PATCH',
     path: '/user/auth',
-    config: {
-      handler: UserController.authUser,
+    handler: UserController.authUser,
+    options: {
+      cors: config.get('server:cors'),
       tags: ['api', 'auth'],
       description: 'Update user authorisation status',
       validate: Validator.auth,

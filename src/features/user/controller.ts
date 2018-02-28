@@ -1,22 +1,15 @@
-import { ReplyNoContinue, Request } from 'hapi'
-import * as Boom from 'boom'
+import { Request, ResponseObject, ResponseToolkit } from 'hapi'
+import { badData, badImplementation, badRequest, Boom, unauthorized } from 'boom'
 import * as User from '../../models/user'
-import * as Config from '../../services/config'
-import { Provider } from 'nconf'
 import * as Log from '../../services/logs'
 import BasicController from '../basic/controller'
+import { AuthorizedRequest, CreateUserRequest, LoginUserRequest, UpdateUserRequest } from './request'
 
 /**
  * Initialization of logger instance
  * @type {LoggerInstance}
  */
 const log = Log.init()
-
-/**
- * Initialized configuration instance
- * @type {Provider}
- */
-const config: Provider = Config.init()
 
 export default class UserController extends BasicController<User.Interface> {
   public constructor () {
@@ -26,48 +19,48 @@ export default class UserController extends BasicController<User.Interface> {
   /**
    * Create new user record
    * @param {Request} request
-   * @param {ReplyNoContinue} reply
+   * @param {ResponseToolkit} toolkit
    * @returns {Promise<void>}
    */
-  public static async createUser (request: Request, reply: ReplyNoContinue) {
+  public static async createUser (request: CreateUserRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
     try {
-      let existedUser: User.Interface | null = await User.Model.findOne({ login: request.payload.login })
+      let existedUser: User.Interface | null = await User.Model.findOne({login: request.payload.login})
       if (existedUser) {
-        return reply(Boom.badData(`User with login "${request.payload.login}" already exists`))
+        return badData(`User with login "${request.payload.login}" already exists`)
       }
 
       let user: User.Interface = new User.Model(request.payload)
 
       await user.save()
 
-      reply(user)
+      return toolkit.response(user)
     } catch (error) {
-      log.error(error.message, { error })
-      reply(Boom.badImplementation(error.message, { error }))
+      log.error(error.message, {error})
+      return badImplementation(error.message, {error})
     }
   }
 
   /**
    * Update existing user record by user ID
    * @param {Request} request
-   * @param {ReplyNoContinue} reply
+   * @param {ResponseToolkit} toolkit
    * @returns {Promise<Response>}
    */
-  public static async updateUser (request: Request, reply: ReplyNoContinue) {
+  public static async updateUser (request: UpdateUserRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
     try {
       let user: User.Interface | null = await User.Model.findById(request.params.id)
 
       if (!user) {
-        return reply(Boom.badRequest(`Can't find user with ID: ${request.params.id}`, { request }))
+        return badRequest(`Can't find user with ID: ${request.params.id}`, {request})
       }
 
       let existedUser: User.Interface | null = await User.Model.findOne({
-        _id: { $ne: user.id },
+        _id: {$ne: user.id},
         login: request.payload.login
       })
 
       if (existedUser && existedUser.id !== user.id) {
-        return reply(Boom.badData(`User with login "${request.payload.login}" already exists`))
+        return badData(`User with login "${request.payload.login}" already exists`)
       }
 
       user = Object.assign(user as User.Interface, request.payload as User.Interface)
@@ -78,115 +71,115 @@ export default class UserController extends BasicController<User.Interface> {
 
       user = await user.save()
 
-      reply(user)
+      return toolkit.response(user)
     } catch (error) {
-      log.error(error.message, { error })
-      reply(Boom.badImplementation(error.message, { error }))
+      log.error(error.message, {error})
+      return badImplementation(error.message, {error})
     }
   }
 
   /**
    * Validate user login and password, and generate access token, if credentials is a valid
    * @param {Request} request
-   * @param {ReplyNoContinue} reply
+   * @param {ResponseToolkit} toolkit
    * @returns {Promise<Response>}
    */
-  public static async loginUser (request: Request, reply: ReplyNoContinue) {
-    let { login, password } = request.payload
+  public static async loginUser (request: LoginUserRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+    let {login, password} = request.payload
     try {
-      const user: User.Interface | null = await User.Model.findOne({ login })
+      const user: User.Interface | null = await User.Model.findOne({login})
 
       if (!user) {
-        return reply(Boom.unauthorized('User does not exist'))
+        return unauthorized('User does not exist')
       }
 
       if (!user.validatePassword(password)) {
-        return reply(Boom.unauthorized('Password is invalid'))
+        return unauthorized('Password is invalid')
       }
 
       user.token = user.generateToken()
       user.markModified('token')
       await user.save()
 
-      reply(user).header('X-Access-Token', user.token)
+      return toolkit.response(user).header('X-Access-Token', user.token)
     } catch (error) {
-      log.error(error.message, { error })
-      reply(Boom.badImplementation(error.message, { error }))
+      log.error(error.message, {error})
+      return badImplementation(error.message, {error})
     }
   }
 
   /**
    * Check user auth status
    * @param {Request} request
-   * @param {ReplyNoContinue} reply
+   * @param {ResponseToolkit} toolkit
    * @returns {Promise<void>}
    */
-  public static async authUser (request: Request, reply: ReplyNoContinue) {
+  public static async authUser (request: AuthorizedRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
     try {
       let user: User.Interface | null = await User.Model.findById(request.auth.credentials.sub)
 
       if (!user) {
-        return reply(Boom.unauthorized('User does not exist'))
+        return unauthorized('User does not exist')
       }
 
       user.generateToken()
 
       await user.save()
 
-      reply(user)
+      return toolkit.response(user)
     } catch (error) {
-      log.error(error.message, { error })
-      reply(Boom.badImplementation(error.message, { error }))
+      log.error(error.message, {error})
+      return badImplementation(error.message, {error})
     }
   }
 
   /**
    * Remove authorisation token from user entity
    * @param {Request} request
-   * @param {ReplyNoContinue} reply
+   * @param {ResponseToolkit} toolkit
    * @returns {Promise<void>}
    */
-  public static async logoutUser (request: Request, reply: ReplyNoContinue) {
+  public static async logoutUser (request: AuthorizedRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
     try {
       let user: User.Interface | null = await User.Model.findById(request.auth.credentials.sub)
 
       if (!user) {
-        return reply(Boom.unauthorized('User does not exist'))
+        return unauthorized('User does not exist')
       }
 
       user.token = undefined
       user.markModified('token')
       await user.save()
 
-      reply(user)
+      return toolkit.response(user)
     } catch (error) {
-      log.error(error.message, { error })
-      reply(Boom.badImplementation(error.message, { error }))
+      log.error(error.message, {error})
+      return badImplementation(error.message, {error})
     }
   }
 
   /**
    * Disallow user to login into backend application
    * @param {Request} request
-   * @param {ReplyNoContinue} reply
+   * @param {ResponseToolkit} toolkit
    * @returns {Promise<void>}
    */
-  public static async deleteUser (request: Request, reply: ReplyNoContinue) {
+  public static async deleteUser (request: Request, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
     try {
       let user: User.Interface | null = await User.Model.findById(request.params.id)
 
       if (!user) {
-        return reply(Boom.badRequest(`Can't find user with ID: ${request.params.id}`, { request }))
+        return badRequest(`Can't find user with ID: ${request.params.id}`, {request})
       }
 
       user.isActive = false
       user.markModified('isActive')
       await user.save()
 
-      reply(user)
+      return toolkit.response(user)
     } catch (error) {
-      log.error(error.message, { error })
-      reply(Boom.badImplementation(error.message, { error }))
+      log.error(error.message, {error})
+      return badImplementation(error.message, {error})
     }
   }
 }

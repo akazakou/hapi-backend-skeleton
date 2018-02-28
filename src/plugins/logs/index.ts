@@ -8,7 +8,7 @@ export default (): IPlugin => {
   return {
     register: (server: Hapi.Server): Promise<any> => {
       return server.register({
-        register: good,
+        plugin: good,
         options: {
           ops: false,
           reporters: {

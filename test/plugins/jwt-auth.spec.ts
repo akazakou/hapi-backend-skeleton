@@ -1,4 +1,6 @@
+import * as chai from 'chai'
 import { expect } from 'chai'
+import * as chaiAsPromised from 'chai-as-promised'
 import * as Server from '../../src/services/server'
 import * as sinon from 'sinon'
 import initMocha from '../init'
@@ -27,6 +29,7 @@ describe('Plugins', () => {
 
   before(async () => {
     initMocha() // initialize testing environment
+    chai.use(chaiAsPromised)
   })
 
   beforeEach(async () => {
@@ -38,58 +41,45 @@ describe('Plugins', () => {
   })
 
   describe('JWT Auth', () => {
-    it('should correctly process exception on plugin initialization', done => {
-      sandbox.stub(require('hapi-auth-jwt2'), 'register').throws()
-
-      Server.init().catch((error: Error) => {
-        expect(error).to.have.property('message')
-        expect(error.message).to.be.equals('TypeError: refAnnotations.errors[cacheKey].push is not a function')
-
-        done()
-      })
+    it('should correctly process exception on plugin initialization', async () => {
+      let pkg = require('hapi-auth-jwt2')
+      sandbox.stub(pkg.plugin, 'register').throws()
+      expect(Server.init()).to.eventually.rejectedWith(Error, 'Error')
     }).timeout(2000)
 
     it('should correctly process user decoded information', async () => {
-      sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
+      sandbox.stub(User.Model, 'findOne').withArgs({
+        _id: fixtures.user._id,
+        token: fixtures.user.token,
+      }).resolves(new User.Model(fixtures.user))
 
-      let result: boolean = false
-      const callback = (error: Error, isValid: boolean, credentials: any) => {
-        expect(error).to.be.equals(null)
-        result = isValid
-      }
-
-      await validateUser({ sub: fixtures.user._id } as any, {} as any, callback)
-
-      expect(result).to.be.equals(true)
+      const result = validateUser({sub: fixtures.user._id} as any, {headers: {authorization: fixtures.user.token}} as any)
+      expect(result).to.eventually.have.property('isValid', true, 'property isValid property should be true')
     })
 
     it('should correctly process non existed user', async () => {
-      sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves()
+      sandbox.stub(User.Model, 'findOne').withArgs({
+        _id: fixtures.user._id,
+        token: fixtures.user.token,
+      }).resolves(null)
 
-      let result: boolean = true
-      const callback = (error: Error, isValid: boolean, credentials: any) => {
-        expect(error).to.be.equals(null)
-        result = isValid
-      }
-
-      await validateUser({ sub: fixtures.user._id } as any, {} as any, callback)
-
-      expect(result).to.be.equals(false)
+      const result = validateUser({sub: fixtures.user._id} as any, {headers: {authorization: fixtures.user.token}} as any)
+      expect(result).to.eventually.have.property('isValid', false, 'property isValid property should be false')
     })
 
     it('should correctly process model exceptions', async () => {
-      sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).throws()
+      sandbox.stub(User.Model, 'findOne').withArgs({
+        _id: fixtures.user._id,
+        token: fixtures.user.token,
+      }).throws()
 
-      let result: boolean = true
-      const callback = (error: Error, isValid: boolean, credentials: any) => {
-        expect(error).to.have.property('message')
-        expect(error.message).to.be.equals('Error')
-        result = isValid
-      }
+      let result = validateUser({sub: fixtures.user._id} as any, {headers: {authorization: fixtures.user.token}} as any)
+      expect(result).to.eventually.rejectedWith(Error, 'Error', 'Validation should be rejected with Error object')
+    })
 
-      await validateUser({ sub: fixtures.user._id } as any, {} as any, callback)
-
-      expect(result).to.be.equals(false)
+    it('should correctly process unauth user without header auth information', async () => {
+      const result = validateUser({sub: fixtures.user._id} as any, {} as any)
+      expect(result).to.eventually.have.property('isValid', false, 'property isValid property should be false')
     })
   })
 })

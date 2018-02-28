@@ -6,8 +6,6 @@ import { Server as ServerInterface } from 'hapi'
 import * as sinon from 'sinon'
 import Role from '../../src/plugins/roles/interface'
 import initMocha from '../init'
-import { Validator } from '../../src/features/user/validator'
-import { Documentation } from '../../src/features/user/documentation'
 
 const fixtures = {
   user: {
@@ -99,10 +97,10 @@ describe('Plugins', () => {
       server.route({
         method: 'OPTIONS',
         path: '/test/with-auth-without-roles',
-        config: {
-          handler: ((request, reply) => {
-            reply('')
-          }),
+        handler: ((request, reply) => {
+          return reply.response()
+        }),
+        options: {
           tags: ['test', 'mocha'],
           description: 'Checking correctly processing of required auth route without roles set',
         }
@@ -123,10 +121,10 @@ describe('Plugins', () => {
       server.route({
         method: 'OPTIONS',
         path: '/swagger/ignoring-patterns',
-        config: {
-          handler: ((request, reply) => {
-            reply('')
-          }),
+        handler: ((request, reply) => {
+          return reply.response()
+        }),
+        options: {
           tags: ['test', 'mocha'],
           description: 'Checking correctly ignoring registered ignoring route patterns'
         }

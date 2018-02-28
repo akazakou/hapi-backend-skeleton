@@ -1,7 +1,7 @@
 import { IPlugin, IPluginOptions } from '../interfaces'
-import { Base_Reply, PluginSpecificConfiguration, ReplyWithContinue, Request, Server } from 'hapi'
+import { PluginSpecificConfiguration, Request, ResponseToolkit, Server } from 'hapi'
 import * as Log from '../../services/logs'
-import * as Boom from 'boom'
+import { Boom, forbidden, internal } from 'boom'
 import * as User from '../../models/user'
 import { TypeRoles } from './interface'
 
@@ -25,24 +25,24 @@ const Plugin: any = {
    * @param {IPluginOptions} options
    * @param next
    */
-  register: function (server: Server, options: IPluginOptions, next: any) {
+  register: async function (server: Server, options: IPluginOptions): Promise<void> {
 
     /**
      * Checking authorization levels for accessing to routes
      * @param {Request} request
      * @param {Base_Reply} reply
      */
-    server.ext('onPostAuth', async function (request: Request, reply: ReplyWithContinue) {
-      const route = Object.assign({}, { settings: undefined, path: '' }, request.route)
+    server.ext('onPostAuth', async function (request: Request, reply: ResponseToolkit): Promise<Boom | symbol> {
+      const route = Object.assign({}, {settings: undefined, path: ''}, request.route)
 
       for (let ignore of ignored) {
         if (route && ignore.test(route.path)) {
-          return reply.continue()
+          return reply.continue
         }
       }
 
       if (route.settings.auth === false) {
-        return reply.continue()
+        return reply.continue
       }
 
       const plugins: RouterPlugins | undefined = route.settings && route.settings.plugins
@@ -55,7 +55,7 @@ const Plugin: any = {
       } else {
         // if we do not have configured access level for this route, using default access level requirements
         log.debug(`Non configured access level for route ${route.path}`)
-        return reply(Boom.forbidden(`That route should contain configured roles section in configuration ${route.path}`))
+        return forbidden(`That route should contain configured roles section in configuration ${route.path}`)
       }
 
       // receive information about authenticated user
@@ -63,7 +63,7 @@ const Plugin: any = {
       try {
         user = await User.Model.getUserFromRequest(request)
       } catch (error) {
-        return reply(error)
+        return internal(error)
       }
 
       // checking is the user have required access level
@@ -71,7 +71,7 @@ const Plugin: any = {
         for (let required of permissions) {
           for (let allowed of user.roles) {
             if (required === allowed) {
-              return reply.continue()
+              return reply.continue
             }
           }
         }
@@ -83,10 +83,8 @@ const Plugin: any = {
         route: route.path
       })
 
-      return reply(Boom.forbidden(`You don't have access to the route ${route.path}`))
+      return forbidden(`You don't have access to the route ${route.path}`)
     })
-
-    next()
   }
 }
 
@@ -98,6 +96,8 @@ Plugin.register.attributes = {
   name: 'User Roles',
   version: '1.0.0'
 }
+
+Plugin.name = 'User Roles'
 
 /**
  * Exporting user roles plugin
