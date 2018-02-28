@@ -14,7 +14,7 @@ const log = Log.init()
 
 // reporting about uncaught exception
 process.on('uncaughtException', (error: Error) => {
-  log.warn(`Detect uncaughtException: ${error.toString()}`, { error })
+  log.warn(`Detect uncaughtException: ${error.toString()}`, {error})
 })
 
 async function init () {
@@ -28,15 +28,14 @@ async function init () {
     const info = server.info
 
     if (info && info.uri) {
-      server.start(() => {
-        log.info(`Server running at: ${info.uri}`)
-      })
+      await server.start()
+      log.info(`Server running at: ${info.uri}`)
     } else {
       log.error(`Server doesn't initialized`)
     }
 
   } catch (error) {
-    log.error('Can\'t start server because: ' + error.message, { error })
+    log.error(`Can't start server\n${error.stack}`, {error})
   }
 }
 

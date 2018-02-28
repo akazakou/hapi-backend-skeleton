@@ -1,17 +1,25 @@
 import * as User from '../../models/user'
 import { JWTData } from './interface'
-import * as Log from '../../services/logs'
+import { Request } from 'hapi'
 
-// init logger instance
-const log = Log.init()
+export default async function (decoded: JWTData, request: Request) {
+  // check is the request have authorization information
+  if (!request.headers || !request.headers.authorization) {
+    return {
+      isValid: false,
+      credentials: decoded
+    }
+  }
 
-export default async function (decoded: JWTData, request: Request, callback: Function) {
-  try {
-    const user: User.Interface | null = await User.Model.findById(decoded.sub)
+  // try to find user with requested data
+  const user: User.Interface | null = await User.Model.findOne({
+    _id: decoded.sub,
+    token: request.headers.authorization,
+  })
 
-    callback(null, !!user, Object.assign({}, decoded, { user }))
-  } catch (error) {
-    log.error(`Catch error on JWT Auth token processing`, { decoded })
-    callback(error, false, decoded)
+  // generate validation response
+  return {
+    isValid: !!user,
+    credentials: Object.assign({}, decoded, {user})
   }
 }

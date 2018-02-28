@@ -1,3 +1,5 @@
+import * as User from '../../models/user'
+
 /**
  * Interface that describes an decoded object structure, assigned to key
  */
@@ -24,6 +26,21 @@ interface JWTData {
   sub: string
 }
 
+/**
+ * Description of authorisation credentials from JWT auth plugin
+ */
+interface AuthData extends JWTData {
+  /**
+   * Initialised model of currently logged on user
+   */
+  user: User.Interface
+}
+
+interface AuthRequest extends Request {
+
+}
+
 export {
-  JWTData
+  JWTData,
+  AuthData,
 }

@@ -345,6 +345,26 @@ describe('Features', () => {
         expect(response.statusCode).to.be.equals(200)
         expect(result).to.be.deep.equals(fixtures.profiles[0])
       })
+
+      it('should correctly report about not founded profile', async () => {
+        sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
+        sandbox.stub(Profile.Model, 'findById').resolves(null)
+
+        const response = await server.inject({
+          method: 'GET',
+          url: `/profile/${fixtures.profiles[0]._id}`,
+          credentials: {sub: `${fixtures.user._id}`}
+        })
+
+        let result = JSON.parse(JSON.stringify(response.result))
+
+        expect(response.statusCode).to.be.equals(404)
+        expect(response.result).to.be.deep.equals({
+          'statusCode': 404,
+          'error': 'Not Found',
+          'message': 'Model with ID 59eef4f909225626a7fb0b7a are not found'
+        })
+      })
     })
   })
 })

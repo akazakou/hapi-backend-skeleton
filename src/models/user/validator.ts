@@ -27,21 +27,12 @@ const Model = Joi.object().keys({
     '__v': 0
   })
 
-const Payload = Joi.object().keys({
+const Payload = {
   isActive: Joi.boolean().required().description('Flag that indicates the disabled user'),
   login: Joi.string().min(1).required().description('User login using for authorization'),
   password: Joi.string().min(1).required().description('Raw user password that using for authorization process'),
   roles: Joi.array().min(1).items(Roles.toArray()).required().description('User roles list for accessing to backend application')
-})
-  .unknown(false)
-  .label('IUserPayload')
-  .description('Detailed user information payload')
-  .example({
-    'isActive': true,
-    'login': 'admin',
-    'password': 'password123',
-    'roles': [Role.ADMIN, Role.USER]
-  })
+}
 
 export {
   Model,

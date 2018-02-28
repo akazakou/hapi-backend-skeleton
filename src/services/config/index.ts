@@ -16,12 +16,14 @@ const defaults = {
       'swagger',
       'logs',
       'roles'
-    ]
+    ],
+    'cors': {
+      'origin': ['*']
+    }
   },
   'database': {
     'uri': 'mongodb://database-host:27017/node-backend-skeleton',
     'options': {
-      'useMongoClient': true,
       'autoIndex': true,
       'reconnectInterval': 500,
       'poolSize': 10,

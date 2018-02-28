@@ -7,6 +7,7 @@ import { Role, TypeRoles } from '../../plugins/roles/interface'
 import Interface from './interface'
 import * as Bcrypt from 'bcrypt'
 import { Provider } from 'nconf'
+import { AuthorizedRequest } from '../../features/user/request'
 
 /**
  * Initialization of configuration object
@@ -80,7 +81,7 @@ Schema.methods.generateToken = function () {
  * @param {Request} request
  * @returns {Promise<IUser>}
  */
-Schema.statics.getUserFromRequest = async function (request: Request): Promise<Interface> {
+Schema.statics.getUserFromRequest = async function (request: AuthorizedRequest): Promise<Interface> {
   if (!request.auth || !request.auth.credentials || !request.auth.credentials.sub) {
     throw Boom.unauthorized(`User not authorised`)
   }

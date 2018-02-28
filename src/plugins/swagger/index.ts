@@ -1,8 +1,6 @@
 import { IPlugin } from '../interfaces'
 import * as Hapi from 'hapi'
 
-const swagger = require('hapi-swagger')
-
 export default (): IPlugin => {
   return {
     register: (server: Hapi.Server): Promise<any> => {
@@ -12,7 +10,7 @@ export default (): IPlugin => {
         require('inert'),
         require('vision'),
         {
-          register: swagger,
+          plugin: require('hapi-swagger'),
           options: {
             info: {
               title: packageInfo.title,
@@ -42,7 +40,7 @@ export default (): IPlugin => {
     info: () => {
       return {
         name: 'Swagger Documentation',
-        version: swagger.register.attributes.version
+        version: '0.0.1'
       }
     }
   }

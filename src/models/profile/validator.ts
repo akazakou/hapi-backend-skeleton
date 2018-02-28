@@ -30,19 +30,11 @@ const Model = Joi.object().keys({
  * Payload model definition
  * @type {Joi.ObjectSchema}
  */
-const Payload = Joi.object().keys({
+const Payload = {
   email: Joi.string().email().required().description('User profile email address'),
   firstName: Joi.string().min(1).required().description('User profile first name'),
   lastName: Joi.string().min(1).required().description('User profile last name')
-})
-  .unknown(false)
-  .label('IProfilePayload')
-  .description('Payload with detailed user profile information')
-  .example({
-    'email': 'address@example.com',
-    'firstName': 'FirstName',
-    'lastName': 'LastName'
-  })
+}
 
 export {
   Model,

@@ -26,11 +26,7 @@ async function init () {
 
   // initializing server
   let server = new Hapi.Server({
-    debug: false
-  })
-
-  // establish connection
-  server.connection({
+    debug: false,
     port: config.get('server:port')
   })
 
@@ -47,8 +43,8 @@ async function init () {
 
   // Setup Hapi Features
   let features = [
-    { routes: UserFeature, label: 'User' },
-    { routes: ProfileFeature, label: 'Profile' }
+    {routes: UserFeature, label: 'User'},
+    {routes: ProfileFeature, label: 'Profile'}
   ]
   let instances: Feature[] = []
   features.forEach(f => {

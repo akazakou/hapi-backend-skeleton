@@ -33,7 +33,7 @@ const Validator = {
     }
   },
   logout: {},
-  auth: {}
+  auth: {},
 }
 
 export {
