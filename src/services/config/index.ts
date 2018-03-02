@@ -54,9 +54,9 @@ let config: nconf.Provider
 function init (): nconf.Provider {
 
   if (!config) {
-    config = nconf.argv()
-      .env({ separator: '__' })
-      .file({ file: `${global.__basedir}/config.json` })
+    config = nconf.argv({parseValues: true})
+      .env({separator: '__', parseValues: true})
+      .file({file: `${global.__basedir}/config.json`})
       .defaults(defaults)
       .overrides()
   }

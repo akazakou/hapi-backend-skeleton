@@ -17,10 +17,12 @@
 
 ## Docker-Compose Setup for local development
 
+* Add to `hosts` file next line: `127.0.0.1	backend.app.local mailer.app.local`
 * Download project `git clone https://gitlab.com/akazakou/backend.git`
 * Go to the folder with project `cd backend`
 * Now you can run project with command `docker-compose up`
-* List of available API Endpoints will be accessible by link http://localhost:3000/docs (Default login: admin / password123)
+* List of available API Endpoints will be accessible by link http://backend.app.local (Default login: admin / password)
+* All emails will not be sent, but will be catches in http://mailer.app.local web interface
 
 ## Standalone Setup
 
@@ -30,7 +32,7 @@
 * Install npm modules by command `npm install`
 * Update `config.json` file to write credentials for database access
 * Start web application with command `npm start`
-* List of available API Endpoints will be accessible by link http://localhost:3000/docs (Default login: admin / password123)
+* List of available API Endpoints will be accessible by link http://backend.app.local (Default login: admin / password)
 
 ## What implemented: 
 
@@ -50,24 +52,28 @@
 ```json
 {
   "server": {
+    "title": "Backend Node #1",
     "port": 3000,
+    "url": "http://localhost:3000",
     "auth": {
       "jwt": {
-        "active": true,
-        "privateKey": "change me"
+        "expireIn": 86400,
+        "privateKey": "change me please"
       }
     },
     "plugins": [
       "jwt-auth",
       "swagger",
-      "logger",
+      "logs",
       "roles"
-    ]
+    ],
+    "cors": {
+      "origin": ["*"]
+    }
   },
   "database": {
-    "uri": "mongodb://localhost:27017/candle-backend",
+    "uri": "mongodb://database-host:27017/node-backend-skeleton",
     "options": {
-      "useMongoClient": true,
       "autoIndex": true,
       "reconnectInterval": 500,
       "poolSize": 10,
@@ -89,7 +95,7 @@
 
 ## Documentation
 
-After server stated, documentation for available API Endpoints will be available by link: http://host:port
+After server stated, documentation for available API Endpoints will be available by link: http://localhost:3000 or http://backend.app.local (for docker compose environment)
 
 ## NPM Scripts
 
