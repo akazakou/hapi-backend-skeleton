@@ -1,5 +1,4 @@
 import * as Joi from 'joi'
-import { ObjectSchema } from 'joi'
 
 const IListPayload = {
   query: Joi.object({}).unknown(true).optional().description(
@@ -12,7 +11,6 @@ const IListPayload = {
 
 /**
  * Validator object that contains all validation rules for HTTP requests
- * @type {{create: ObjectSchema}}
  */
 const Validator = {
   create: {

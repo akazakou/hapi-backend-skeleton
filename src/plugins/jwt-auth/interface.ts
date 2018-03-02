@@ -36,10 +36,6 @@ interface AuthData extends JWTData {
   user: User.Interface
 }
 
-interface AuthRequest extends Request {
-
-}
-
 export {
   JWTData,
   AuthData,

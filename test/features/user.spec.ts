@@ -1,4 +1,5 @@
 import { expect } from 'chai'
+import { Server as HapiServer } from 'hapi'
 import * as Server from '../../src/services/server'
 import * as User from '../../src/models/user'
 import * as sinon from 'sinon'
@@ -24,9 +25,11 @@ const fixtures = {
 
 describe('Features', () => {
   let sandbox: sinon.SinonSandbox
+  let server: HapiServer
 
   before(async () => {
     initMocha() // initialize testing environment
+    server = await Server.init()
   })
 
   beforeEach(async () => {
@@ -44,11 +47,10 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).throws()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/${fixtures.user._id}`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         expect(response.statusCode).to.be.equals(500)
@@ -64,11 +66,10 @@ describe('Features', () => {
         UserModelFindById.withArgs(fixtures.user._id).onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.withArgs('59eef4f909225626a7fb0b7b').resolves()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/59eef4f909225626a7fb0b7b`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         expect(response.statusCode).to.be.equals(400)
@@ -85,14 +86,13 @@ describe('Features', () => {
           isActive: false
         }))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/${fixtures.user._id}`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
-        const expected = Object.assign({}, fixtures.user, { password: undefined })
+        const expected = Object.assign({}, fixtures.user, {password: undefined})
         delete expected.password
 
         expect(response.statusCode).to.be.equals(200)
@@ -106,11 +106,10 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).throws()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/auth`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         expect(response.statusCode).to.be.equals(500)
@@ -126,11 +125,10 @@ describe('Features', () => {
         UserModelFindById.withArgs(fixtures.user._id).onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.withArgs('59eef4f909225626a7fb0b7b').resolves()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/auth`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         expect(response.statusCode).to.be.equals(401)
@@ -147,14 +145,13 @@ describe('Features', () => {
           isActive: false
         }))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/auth`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
-        const expected = Object.assign({}, fixtures.user, { password: undefined })
+        const expected = Object.assign({}, fixtures.user, {password: undefined})
         delete expected.password
         delete expected.token
 
@@ -169,11 +166,10 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).throws()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/auth`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         expect(response.statusCode).to.be.equals(500)
@@ -189,11 +185,10 @@ describe('Features', () => {
         UserModelFindById.withArgs(fixtures.user._id).onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.withArgs('59eef4f909225626a7fb0b7b').resolves()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/auth`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         expect(response.statusCode).to.be.equals(401)
@@ -210,14 +205,13 @@ describe('Features', () => {
           isActive: false
         }))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/auth`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
-        const expected = Object.assign({}, fixtures.user, { password: undefined })
+        const expected = Object.assign({}, fixtures.user, {password: undefined})
         delete expected.password
         delete expected.token
 
@@ -232,9 +226,8 @@ describe('Features', () => {
     describe('Login User', () => {
       it('should report about error on user login action', async () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
-        sandbox.stub(User.Model, 'findOne').withArgs({ login: 'login' }).throws()
+        sandbox.stub(User.Model, 'findOne').withArgs({login: 'login'}).throws()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user/auth`,
@@ -254,9 +247,8 @@ describe('Features', () => {
 
       it('should generate error on non existed user ID', async () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
-        sandbox.stub(User.Model, 'findOne').withArgs({ login: 'login' }).resolves()
+        sandbox.stub(User.Model, 'findOne').withArgs({login: 'login'}).resolves()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user/auth`,
@@ -276,10 +268,9 @@ describe('Features', () => {
 
       it('should process user logout correctly', async () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
-        sandbox.stub(User.Model, 'findOne').withArgs({ login: 'login' }).resolves(new User.Model(fixtures.user))
-        sandbox.stub(User.Model.prototype, 'save').withArgs({ login: 'login' }).resolves(new User.Model(fixtures.user))
+        sandbox.stub(User.Model, 'findOne').withArgs({login: 'login'}).resolves(new User.Model(fixtures.user))
+        sandbox.stub(User.Model.prototype, 'save').withArgs({login: 'login'}).resolves(new User.Model(fixtures.user))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user/auth`,
@@ -289,7 +280,7 @@ describe('Features', () => {
           }
         })
 
-        const expected = Object.assign({}, fixtures.user, { password: undefined })
+        const expected = Object.assign({}, fixtures.user, {password: undefined})
         delete expected.password
         delete expected.token
 
@@ -302,10 +293,9 @@ describe('Features', () => {
 
       it('should generate error on wrong password received', async () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
-        sandbox.stub(User.Model, 'findOne').withArgs({ login: 'login' }).resolves(new User.Model(fixtures.user))
-        sandbox.stub(User.Model.prototype, 'save').withArgs({ login: 'login' }).resolves(new User.Model(fixtures.user))
+        sandbox.stub(User.Model, 'findOne').withArgs({login: 'login'}).resolves(new User.Model(fixtures.user))
+        sandbox.stub(User.Model.prototype, 'save').withArgs({login: 'login'}).resolves(new User.Model(fixtures.user))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user/auth`,
@@ -331,11 +321,10 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).throws()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             'isActive': true,
             'login': 'admin',
@@ -358,11 +347,10 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).resolves()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             'isActive': true,
             'login': 'admin',
@@ -383,15 +371,14 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(User.Model, 'findOne').withArgs({
           login: fixtures.user.login,
-          _id: { $ne: fixtures.user._id }
+          _id: {$ne: fixtures.user._id}
         }).resolves()
         sandbox.stub(User.Model.prototype, 'save').resolves(new User.Model(fixtures.user))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             'isActive': false,
             'login': 'admin',
@@ -400,7 +387,7 @@ describe('Features', () => {
           }
         })
 
-        const expected = Object.assign({}, fixtures.user, { password: undefined })
+        const expected = Object.assign({}, fixtures.user, {password: undefined})
         delete expected.password
         delete expected.token
 
@@ -415,14 +402,13 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(User.Model, 'findOne').withArgs({
           login: fixtures.user.login,
-          _id: { $ne: fixtures.user._id }
-        }).resolves(Object.assign({}, new User.Model(fixtures.user), { _id: 'fake_id' }))
+          _id: {$ne: fixtures.user._id}
+        }).resolves(Object.assign({}, new User.Model(fixtures.user), {_id: 'fake_id'}))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             'isActive': true,
             'login': 'admin',
@@ -443,13 +429,12 @@ describe('Features', () => {
     describe('Create User', () => {
       it('should report about error on user update action', async () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
-        sandbox.stub(User.Model, 'findOne').withArgs({ login: fixtures.user.login }).throws()
+        sandbox.stub(User.Model, 'findOne').withArgs({login: fixtures.user.login}).throws()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             'isActive': true,
             'login': 'admin',
@@ -468,13 +453,12 @@ describe('Features', () => {
 
       it('should generate error on existed user login', async () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
-        sandbox.stub(User.Model, 'findOne').withArgs({ login: fixtures.user.login }).resolves(new User.Model(fixtures.user))
+        sandbox.stub(User.Model, 'findOne').withArgs({login: fixtures.user.login}).resolves(new User.Model(fixtures.user))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             'isActive': true,
             'login': 'admin',
@@ -493,14 +477,13 @@ describe('Features', () => {
 
       it('should process user create correctly', async () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
-        sandbox.stub(User.Model, 'findOne').withArgs({ login: fixtures.user.login }).resolves()
+        sandbox.stub(User.Model, 'findOne').withArgs({login: fixtures.user.login}).resolves()
         sandbox.stub(User.Model.prototype, 'save').resolves(new User.Model(fixtures.user))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             'isActive': false,
             'login': 'admin',
@@ -509,7 +492,7 @@ describe('Features', () => {
           }
         })
 
-        const expected = Object.assign({}, fixtures.user, { password: undefined })
+        const expected = Object.assign({}, fixtures.user, {password: undefined})
         delete expected.password
         delete expected.token
         delete expected._id
@@ -532,14 +515,13 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(User.Model, 'findOne').withArgs({
           login: fixtures.user.login,
-          _id: { $ne: fixtures.user._id }
-        }).resolves(Object.assign({}, new User.Model(fixtures.user), { _id: 'fake_id' }))
+          _id: {$ne: fixtures.user._id}
+        }).resolves(Object.assign({}, new User.Model(fixtures.user), {_id: 'fake_id'}))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             'isActive': true,
             'login': 'admin',

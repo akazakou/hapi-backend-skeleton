@@ -1,4 +1,5 @@
 import { expect } from 'chai'
+import { Server as HapiServer } from 'hapi'
 import * as Server from '../../src/services/server'
 import * as User from '../../src/models/user'
 import * as Profile from '../../src/models/profile'
@@ -47,9 +48,11 @@ const fixtures = {
 
 describe('Features', () => {
   let sandbox: sinon.SinonSandbox
+  let server: HapiServer
 
   before(async () => {
     initMocha() // initialize testing environment
+    server = await Server.init()
   })
 
   beforeEach(async () => {
@@ -66,15 +69,14 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).throws()
 
-        const server = await Server.init()
-        const response = await server.inject({
+        const response = server.inject({
           method: 'DELETE',
           url: `/profile/${fixtures.profiles[0]._id}`,
           credentials: {sub: `${fixtures.user._id}`}
         })
 
-        expect(response.statusCode).to.be.equals(500)
-        expect(response.result).to.be.deep.equals({
+        expect(response).to.eventually.have.property('statusCode').and.to.be.equals(500)
+        expect(response).to.eventually.have.property('result').and.to.be.deep.equals({
           'statusCode': 500,
           'error': 'Internal Server Error',
           'message': 'An internal server error occurred'
@@ -85,15 +87,14 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).resolves(null)
 
-        const server = await Server.init()
-        const response = await server.inject({
+        const response = server.inject({
           method: 'DELETE',
           url: `/profile/${fixtures.profiles[0]._id}`,
           credentials: {sub: `${fixtures.user._id}`}
         })
 
-        expect(response.statusCode).to.be.equals(422)
-        expect(response.result).to.be.deep.equals({
+        expect(response).to.eventually.have.property('statusCode').and.to.be.equals(422)
+        expect(response).to.eventually.have.property('result').and.to.be.deep.equals({
           'error': 'Unprocessable Entity',
           'message': 'Can\'t find model Function with ID 59eef4f909225626a7fb0b7a',
           'statusCode': 422
@@ -105,14 +106,13 @@ describe('Features', () => {
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).resolves(new Profile.Model(fixtures.profiles[0]))
         sandbox.stub(Profile.Model.prototype, 'remove').resolves()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/profile/${fixtures.profiles[0]._id}`,
           credentials: {sub: `${fixtures.user._id}`}
         })
 
-        let result = JSON.parse(JSON.stringify(response.result))
+        const result = JSON.parse(JSON.stringify(response.result))
 
         expect(response.statusCode).to.be.equals(200)
         expect(result).to.be.deep.equals(fixtures.profiles[0])
@@ -124,8 +124,7 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).throws()
 
-        const server = await Server.init()
-        const response = await server.inject({
+        const response = server.inject({
           method: 'PATCH',
           url: `/profile/${fixtures.profiles[0]._id}`,
           credentials: {sub: `${fixtures.user._id}`},
@@ -136,8 +135,8 @@ describe('Features', () => {
           }
         })
 
-        expect(response.statusCode).to.be.equals(500)
-        expect(response.result).to.be.deep.equals({
+        expect(response).to.eventually.have.property('statusCode').and.to.be.equals(500)
+        expect(response).to.eventually.have.property('result').and.to.be.deep.equals({
           'statusCode': 500,
           'error': 'Internal Server Error',
           'message': 'An internal server error occurred'
@@ -148,8 +147,7 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).resolves(null)
 
-        const server = await Server.init()
-        const response = await server.inject({
+        const response = server.inject({
           method: 'PATCH',
           url: `/profile/${fixtures.profiles[0]._id}`,
           credentials: {sub: `${fixtures.user._id}`},
@@ -160,8 +158,8 @@ describe('Features', () => {
           }
         })
 
-        expect(response.statusCode).to.be.equals(422)
-        expect(response.result).to.be.deep.equals({
+        expect(response).to.eventually.have.property('statusCode').and.to.be.equals(422)
+        expect(response).to.eventually.have.property('result').and.to.be.deep.equals({
           'error': 'Unprocessable Entity',
           'message': 'Can\'t find model Function with ID 59eef4f909225626a7fb0b7a',
           'statusCode': 422
@@ -173,7 +171,6 @@ describe('Features', () => {
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).resolves(new Profile.Model(fixtures.profiles[0]))
         sandbox.stub(Profile.Model.prototype, 'save').resolves(new Profile.Model(fixtures.profiles[0]))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/profile/${fixtures.profiles[0]._id}`,
@@ -197,7 +194,6 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model.prototype, 'save').throws()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profile`,
@@ -221,7 +217,6 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model.prototype, 'save').resolves(new Profile.Model(fixtures.profiles[0]))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profile`,
@@ -245,7 +240,6 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'find').throws()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profiles`,
@@ -274,7 +268,6 @@ describe('Features', () => {
           exec: () => Promise.resolve(fixtures.profiles.map(data => new Profile.Model(data)))
         })
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profiles`,
@@ -301,7 +294,6 @@ describe('Features', () => {
           exec: () => Promise.resolve(fixtures.profiles.map(data => new Profile.Model({_id: data._id})))
         })
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profiles`,
@@ -324,7 +316,6 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').throws()
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'GET',
           url: `/profile/${fixtures.profiles[0]._id}`,
@@ -343,7 +334,6 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').resolves(new Profile.Model(fixtures.profiles[0]))
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'GET',
           url: `/profile/${fixtures.profiles[0]._id}`,
@@ -360,7 +350,6 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').resolves(null)
 
-        const server = await Server.init()
         const response = await server.inject({
           method: 'GET',
           url: `/profile/${fixtures.profiles[0]._id}`,

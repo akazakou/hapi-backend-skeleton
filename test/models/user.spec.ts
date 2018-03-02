@@ -1,4 +1,3 @@
-import * as chai from 'chai'
 import { expect } from 'chai'
 import * as User from '../../src/models/user'
 import * as sinon from 'sinon'
@@ -7,7 +6,6 @@ import initMocha from '../init'
 import * as Config from '../../src/services/config'
 import { Provider } from 'nconf'
 import { rolesValidator } from '../../src/models/user/schema'
-import * as chaiAsPromised from 'chai-as-promised'
 
 /**
  * Initialization of configuration object
@@ -36,7 +34,6 @@ describe('Models', () => {
 
   before(async () => {
     initMocha() // initialize testing environment
-    chai.use(chaiAsPromised)
   })
 
   beforeEach(async () => {

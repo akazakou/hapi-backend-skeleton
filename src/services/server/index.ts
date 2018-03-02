@@ -1,6 +1,7 @@
 import * as Config from '../config'
 import * as Log from '../logs'
 import * as Hapi from 'hapi'
+import { Server } from 'hapi'
 import { IPlugin } from '../../plugins/interfaces'
 import UserFeature from '../../features/user'
 import ProfileFeature from '../../features/profile'
@@ -18,9 +19,9 @@ export class Feature {
 
 /**
  * Initialization of Hapi HTTP web server
- * @returns {Podium}
+ * @returns {Server}
  */
-async function init () {
+async function init (): Promise<Server> {
   // loading configuration
   const config = Config.init()
 

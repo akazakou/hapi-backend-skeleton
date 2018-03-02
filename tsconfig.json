@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "strict": true,
+    "rootDirs": [
+      "src",
+      "test"
+    ],
     "outDir": "build",
     "target": "es6",
     "module": "commonjs",
@@ -8,6 +12,21 @@
     "sourceMap": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "declaration": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "removeComments": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "inlineSources": true,
+    "typeRoots": [
+      "src/typings",
+      "node_modules/@types"
+    ],
+    "types": [
+      "node",
+      "mocha"
+    ],
     "lib": [
       "esnext.asynciterable",
       "es2016",

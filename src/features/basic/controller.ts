@@ -3,13 +3,12 @@ import { badData, badImplementation, Boom, notFound } from 'boom'
 import { Document, Model, MongooseDocumentOptionals } from 'mongoose'
 import * as Log from '../../services/logs'
 import { ITimed } from '../../models/misc/timed'
-import { LoggerInstance } from 'winston'
 import { ModelListRequest, ModelUpdateRequest } from './request'
 
 /**
  * Interface for working with model data
  */
-interface IBasicModel extends Document, ITimed, MongooseDocumentOptionals {
+export interface IBasicModel extends Document, ITimed, MongooseDocumentOptionals {
   /**
    * String version of document ID value
    */
@@ -18,7 +17,6 @@ interface IBasicModel extends Document, ITimed, MongooseDocumentOptionals {
 
 /**
  * Initialization of logger instance
- * @type {LoggerInstance}
  */
 const log = Log.init()
 

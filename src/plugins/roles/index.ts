@@ -1,4 +1,4 @@
-import { IPlugin, IPluginOptions } from '../interfaces'
+import { IPlugin } from '../interfaces'
 import { PluginSpecificConfiguration, Request, ResponseToolkit, Server } from 'hapi'
 import * as Log from '../../services/logs'
 import { Boom, forbidden, internal } from 'boom'
@@ -22,10 +22,9 @@ const Plugin: any = {
   /**
    * That hook will be activated only if auth on route configuration are enabled
    * @param {Server} server
-   * @param {IPluginOptions} options
    * @param next
    */
-  register: async function (server: Server, options: IPluginOptions): Promise<void> {
+  register: async function (server: Server): Promise<void> {
 
     /**
      * Checking authorization levels for accessing to routes

@@ -1,8 +1,7 @@
 import { expect } from 'chai'
-import Roles from '../../src/plugins/roles'
 import * as Server from '../../src/services/server'
 import * as User from '../../src/models/user'
-import { Request, ResponseToolkit } from 'hapi'
+import { Request, ResponseToolkit, Server as HapiServer } from 'hapi'
 import * as sinon from 'sinon'
 import Role from '../../src/plugins/roles/interface'
 import initMocha from '../init'
@@ -25,9 +24,11 @@ const fixtures = {
 
 describe('Plugins', () => {
   let sandbox: sinon.SinonSandbox
+  let server: HapiServer
 
   before(async () => {
     initMocha() // initialize testing environment
+    server = await Server.init()
   })
 
   beforeEach(async () => {
@@ -44,63 +45,58 @@ describe('Plugins', () => {
         'roles': [Role.USER]
       })))
 
-      const server = await Server.init()
-      const response = await server.inject({
+      const response = server.inject({
         method: 'GET',
         url: `/user/${fixtures.user._id}`,
-        credentials: { sub: `${fixtures.user._id}` }
+        credentials: {sub: `${fixtures.user._id}`}
       })
 
-      expect(403).to.be.equals(response.statusCode)
+      expect(response).to.eventually.have.property('statusCode').and.to.be.equals(403)
     })
 
     it('should give access to route for user with correct roles set', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
 
-      const server = await Server.init()
-      const response = await server.inject({
+      const response = server.inject({
         method: 'GET',
         url: `/user/${fixtures.user._id}`,
-        credentials: { sub: `${fixtures.user._id}` }
+        credentials: {sub: `${fixtures.user._id}`}
       })
 
-      expect(200).to.be.equals(response.statusCode)
+      expect(response).to.eventually.have.property('statusCode').and.to.be.equals(200)
     })
 
     it('should correctly process exception', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).throws()
 
-      const server = await Server.init()
-      const response = await server.inject({
+      const response = server.inject({
         method: 'GET',
         url: `/user/${fixtures.user._id}`,
-        credentials: { sub: `${fixtures.user._id}` }
+        credentials: {sub: `${fixtures.user._id}`}
       })
 
-      expect(500).to.be.equals(response.statusCode)
+      expect(response).to.eventually.have.property('statusCode').and.to.be.equals(500)
     })
 
     it('should correctly process non existed user', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves({})
 
-      const server = await Server.init()
-      const response = await server.inject({
+      const response = server.inject({
         method: 'GET',
         url: `/user/${fixtures.user._id}`,
-        credentials: { sub: `${fixtures.user._id}` }
+        credentials: {sub: `${fixtures.user._id}`}
       })
 
-      expect(403).to.be.equals(response.statusCode)
+      expect(response).to.eventually.have.property('statusCode').and.to.be.equals(403)
     })
 
     it('should correctly process required auth route without roles set', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).throws()
 
-      const server = await Server.init()
       server.route({
         method: 'OPTIONS',
         path: '/test/with-auth-without-roles',
-        handler: ((request: Request, reply: ResponseToolkit) => {
+        handler: ((_request: Request, reply: ResponseToolkit) => {
           return reply.response()
         }),
         options: {
@@ -109,23 +105,22 @@ describe('Plugins', () => {
         }
       })
 
-      const response = await server.inject({
+      const response = server.inject({
         method: 'OPTIONS',
         url: `/test/with-auth-without-roles`,
-        credentials: { sub: `${fixtures.user._id}` }
+        credentials: {sub: `${fixtures.user._id}`}
       })
 
-      expect(403).to.be.equals(response.statusCode)
+      expect(response).to.eventually.have.property('statusCode').and.to.be.equals(403)
     })
 
     it('should correctly ignore registered ignoring route patterns', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).throws()
 
-      const server = await Server.init()
       server.route({
         method: 'OPTIONS',
         path: '/swagger/ignoring-patterns',
-        handler: ((request: Request, reply: ResponseToolkit) => {
+        handler: ((_request: Request, reply: ResponseToolkit) => {
           return reply.response()
         }),
         options: {
@@ -134,13 +129,13 @@ describe('Plugins', () => {
         }
       })
 
-      const response = await server.inject({
+      const response = server.inject({
         method: 'OPTIONS',
         url: `/swagger/ignoring-patterns`,
-        credentials: { sub: `${fixtures.user._id}` }
+        credentials: {sub: `${fixtures.user._id}`}
       })
 
-      expect(200).to.be.equals(response.statusCode)
+      expect(response).to.eventually.have.property('statusCode').and.to.be.equals(200)
     })
   })
 })

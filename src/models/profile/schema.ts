@@ -1,8 +1,8 @@
-import { Schema as DatabaseSchema, Types } from 'mongoose'
+import { Schema as DatabaseSchema } from 'mongoose'
 
 /**
  * Description of mongoose model schema
- * @type {"mongoose".Schema}
+ * @type {DatabaseSchema}
  */
 const Schema = new DatabaseSchema(
   {

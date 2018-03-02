@@ -1,4 +1,3 @@
-import { Request } from 'hapi'
 import * as Mongoose from 'mongoose'
 import * as Jwt from 'jsonwebtoken'
 import * as Config from '../../services/config'
@@ -78,8 +77,8 @@ Schema.methods.generateToken = function () {
 
 /**
  * Parse Hapi request and extract user object from it
- * @param {Request} request
- * @returns {Promise<IUser>}
+ * @param {AuthorizedRequest} request
+ * @returns {Promise<Interface>}
  */
 Schema.statics.getUserFromRequest = async function (request: AuthorizedRequest): Promise<Interface> {
   if (!request.auth || !request.auth.credentials || !request.auth.credentials.sub) {
@@ -114,11 +113,13 @@ Schema.set('toObject', {
 
 /**
  * Remove password field from results object
- * @param {Interface} document
+ * @param {Interface} _document
  * @param {Interface} result
  * @returns {Interface}
+ *
+ * @ts-ignore: noUnusedParameters
  */
-function toObject (document: Interface, result: Interface) {
+function toObject (_document: Interface, result: Interface) {
   delete result.password
   return result
 }

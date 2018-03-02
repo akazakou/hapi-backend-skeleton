@@ -30,4 +30,5 @@ interface ModelUpdateRequest extends Request {
 export {
   ModelListRequest,
   ModelUpdateRequest,
+  ListPayloadObject,
 }

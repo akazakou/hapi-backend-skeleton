@@ -1,6 +1,4 @@
-import * as chai from 'chai'
 import { expect } from 'chai'
-import * as chaiAsPromised from 'chai-as-promised'
 import * as Server from '../../src/services/server'
 import * as sinon from 'sinon'
 import initMocha from '../init'
@@ -29,7 +27,6 @@ describe('Plugins', () => {
 
   before(async () => {
     initMocha() // initialize testing environment
-    chai.use(chaiAsPromised)
   })
 
   beforeEach(async () => {
