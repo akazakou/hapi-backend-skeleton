@@ -1,3 +1,4 @@
+import * as chai from 'chai'
 import { expect } from 'chai'
 import * as User from '../../src/models/user'
 import * as sinon from 'sinon'
@@ -6,6 +7,7 @@ import initMocha from '../init'
 import * as Config from '../../src/services/config'
 import { Provider } from 'nconf'
 import { rolesValidator } from '../../src/models/user/schema'
+import * as chaiAsPromised from 'chai-as-promised'
 
 /**
  * Initialization of configuration object
@@ -34,6 +36,7 @@ describe('Models', () => {
 
   before(async () => {
     initMocha() // initialize testing environment
+    chai.use(chaiAsPromised)
   })
 
   beforeEach(async () => {
@@ -52,12 +55,7 @@ describe('Models', () => {
     })
 
     it('should correctly process non existed auth information on user object extraction from request', async () => {
-      try {
-        await User.Model.getUserFromRequest({} as any)
-      } catch (error) {
-        expect(error).to.have.property('message')
-        expect(error.message).to.be.equals('User not authorised')
-      }
+      expect(User.Model.getUserFromRequest({} as any)).to.eventually.rejectedWith(Error, 'User not authorised')
     })
 
     it('should correctly generate JWT token with all requested data', async () => {

@@ -1,7 +1,6 @@
 import { expect } from 'chai'
 import * as Server from '../../src/services/server'
 import * as User from '../../src/models/user'
-import { Server as ServerInterface } from 'hapi'
 import * as sinon from 'sinon'
 import Role from '../../src/plugins/roles/interface'
 import initMocha from '../init'
@@ -24,12 +23,10 @@ const fixtures = {
 }
 
 describe('Features', () => {
-  let server: ServerInterface
   let sandbox: sinon.SinonSandbox
 
   before(async () => {
     initMocha() // initialize testing environment
-    server = await Server.init()
   })
 
   beforeEach(async () => {
@@ -47,6 +44,7 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/${fixtures.user._id}`,
@@ -66,6 +64,7 @@ describe('Features', () => {
         UserModelFindById.withArgs(fixtures.user._id).onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.withArgs('59eef4f909225626a7fb0b7b').resolves()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/59eef4f909225626a7fb0b7b`,
@@ -86,6 +85,7 @@ describe('Features', () => {
           isActive: false
         }))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/${fixtures.user._id}`,
@@ -106,6 +106,7 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/auth`,
@@ -125,6 +126,7 @@ describe('Features', () => {
         UserModelFindById.withArgs(fixtures.user._id).onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.withArgs('59eef4f909225626a7fb0b7b').resolves()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/auth`,
@@ -145,6 +147,7 @@ describe('Features', () => {
           isActive: false
         }))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/user/auth`,
@@ -166,6 +169,7 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/auth`,
@@ -185,6 +189,7 @@ describe('Features', () => {
         UserModelFindById.withArgs(fixtures.user._id).onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.withArgs('59eef4f909225626a7fb0b7b').resolves()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/auth`,
@@ -205,6 +210,7 @@ describe('Features', () => {
           isActive: false
         }))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/auth`,
@@ -228,6 +234,7 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(User.Model, 'findOne').withArgs({ login: 'login' }).throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user/auth`,
@@ -249,6 +256,7 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(User.Model, 'findOne').withArgs({ login: 'login' }).resolves()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user/auth`,
@@ -271,6 +279,7 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findOne').withArgs({ login: 'login' }).resolves(new User.Model(fixtures.user))
         sandbox.stub(User.Model.prototype, 'save').withArgs({ login: 'login' }).resolves(new User.Model(fixtures.user))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user/auth`,
@@ -296,6 +305,7 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findOne').withArgs({ login: 'login' }).resolves(new User.Model(fixtures.user))
         sandbox.stub(User.Model.prototype, 'save').withArgs({ login: 'login' }).resolves(new User.Model(fixtures.user))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user/auth`,
@@ -321,6 +331,7 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,
@@ -347,6 +358,7 @@ describe('Features', () => {
         UserModelFindById.onCall(0).resolves(new User.Model(fixtures.user))
         UserModelFindById.onCall(1).resolves()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,
@@ -375,6 +387,7 @@ describe('Features', () => {
         }).resolves()
         sandbox.stub(User.Model.prototype, 'save').resolves(new User.Model(fixtures.user))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,
@@ -405,6 +418,7 @@ describe('Features', () => {
           _id: { $ne: fixtures.user._id }
         }).resolves(Object.assign({}, new User.Model(fixtures.user), { _id: 'fake_id' }))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,
@@ -431,6 +445,7 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(User.Model, 'findOne').withArgs({ login: fixtures.user.login }).throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user`,
@@ -455,6 +470,7 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(User.Model, 'findOne').withArgs({ login: fixtures.user.login }).resolves(new User.Model(fixtures.user))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user`,
@@ -480,6 +496,7 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findOne').withArgs({ login: fixtures.user.login }).resolves()
         sandbox.stub(User.Model.prototype, 'save').resolves(new User.Model(fixtures.user))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/user`,
@@ -518,6 +535,7 @@ describe('Features', () => {
           _id: { $ne: fixtures.user._id }
         }).resolves(Object.assign({}, new User.Model(fixtures.user), { _id: 'fake_id' }))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/user/${fixtures.user._id}`,

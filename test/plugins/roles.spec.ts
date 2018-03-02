@@ -2,7 +2,7 @@ import { expect } from 'chai'
 import Roles from '../../src/plugins/roles'
 import * as Server from '../../src/services/server'
 import * as User from '../../src/models/user'
-import { Server as ServerInterface } from 'hapi'
+import { Request, ResponseToolkit } from 'hapi'
 import * as sinon from 'sinon'
 import Role from '../../src/plugins/roles/interface'
 import initMocha from '../init'
@@ -24,12 +24,10 @@ const fixtures = {
 }
 
 describe('Plugins', () => {
-  let server: ServerInterface
   let sandbox: sinon.SinonSandbox
 
   before(async () => {
     initMocha() // initialize testing environment
-    server = await Server.init()
   })
 
   beforeEach(async () => {
@@ -46,6 +44,7 @@ describe('Plugins', () => {
         'roles': [Role.USER]
       })))
 
+      const server = await Server.init()
       const response = await server.inject({
         method: 'GET',
         url: `/user/${fixtures.user._id}`,
@@ -58,6 +57,7 @@ describe('Plugins', () => {
     it('should give access to route for user with correct roles set', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
 
+      const server = await Server.init()
       const response = await server.inject({
         method: 'GET',
         url: `/user/${fixtures.user._id}`,
@@ -70,6 +70,7 @@ describe('Plugins', () => {
     it('should correctly process exception', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).throws()
 
+      const server = await Server.init()
       const response = await server.inject({
         method: 'GET',
         url: `/user/${fixtures.user._id}`,
@@ -82,6 +83,7 @@ describe('Plugins', () => {
     it('should correctly process non existed user', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves({})
 
+      const server = await Server.init()
       const response = await server.inject({
         method: 'GET',
         url: `/user/${fixtures.user._id}`,
@@ -94,10 +96,11 @@ describe('Plugins', () => {
     it('should correctly process required auth route without roles set', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).throws()
 
+      const server = await Server.init()
       server.route({
         method: 'OPTIONS',
         path: '/test/with-auth-without-roles',
-        handler: ((request, reply) => {
+        handler: ((request: Request, reply: ResponseToolkit) => {
           return reply.response()
         }),
         options: {
@@ -118,10 +121,11 @@ describe('Plugins', () => {
     it('should correctly ignore registered ignoring route patterns', async () => {
       sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).throws()
 
+      const server = await Server.init()
       server.route({
         method: 'OPTIONS',
         path: '/swagger/ignoring-patterns',
-        handler: ((request, reply) => {
+        handler: ((request: Request, reply: ResponseToolkit) => {
           return reply.response()
         }),
         options: {

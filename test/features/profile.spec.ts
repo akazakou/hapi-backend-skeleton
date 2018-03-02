@@ -2,7 +2,6 @@ import { expect } from 'chai'
 import * as Server from '../../src/services/server'
 import * as User from '../../src/models/user'
 import * as Profile from '../../src/models/profile'
-import { Server as ServerInterface } from 'hapi'
 import * as sinon from 'sinon'
 import Role from '../../src/plugins/roles/interface'
 import initMocha from '../init'
@@ -47,12 +46,10 @@ const fixtures = {
 }
 
 describe('Features', () => {
-  let server: ServerInterface
   let sandbox: sinon.SinonSandbox
 
   before(async () => {
     initMocha() // initialize testing environment
-    server = await Server.init()
   })
 
   beforeEach(async () => {
@@ -69,10 +66,11 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/profile/${fixtures.profiles[0]._id}`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         expect(response.statusCode).to.be.equals(500)
@@ -87,10 +85,11 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).resolves(null)
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/profile/${fixtures.profiles[0]._id}`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         expect(response.statusCode).to.be.equals(422)
@@ -106,10 +105,11 @@ describe('Features', () => {
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).resolves(new Profile.Model(fixtures.profiles[0]))
         sandbox.stub(Profile.Model.prototype, 'remove').resolves()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'DELETE',
           url: `/profile/${fixtures.profiles[0]._id}`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         let result = JSON.parse(JSON.stringify(response.result))
@@ -124,10 +124,11 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/profile/${fixtures.profiles[0]._id}`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             email: 'some@fake.email',
             firstName: 'fakeFirstName',
@@ -147,10 +148,11 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).resolves(null)
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/profile/${fixtures.profiles[0]._id}`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             email: 'some@fake.email',
             firstName: 'fakeFirstName',
@@ -171,10 +173,11 @@ describe('Features', () => {
         sandbox.stub(Profile.Model, 'findById').withArgs(fixtures.profiles[0]._id).resolves(new Profile.Model(fixtures.profiles[0]))
         sandbox.stub(Profile.Model.prototype, 'save').resolves(new Profile.Model(fixtures.profiles[0]))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'PATCH',
           url: `/profile/${fixtures.profiles[0]._id}`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             email: 'some@fake.email',
             firstName: 'fakeFirstName',
@@ -194,10 +197,11 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model.prototype, 'save').throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profile`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             email: 'some@fake.email',
             firstName: 'fakeFirstName',
@@ -217,10 +221,11 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model.prototype, 'save').resolves(new Profile.Model(fixtures.profiles[0]))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profile`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             email: 'some@fake.email',
             firstName: 'fakeFirstName',
@@ -240,14 +245,15 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'find').throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profiles`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             skip: 1,
             limit: 2,
-            sort: { _id: -1 }
+            sort: {_id: -1}
           }
         })
 
@@ -268,14 +274,15 @@ describe('Features', () => {
           exec: () => Promise.resolve(fixtures.profiles.map(data => new Profile.Model(data)))
         })
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profiles`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             skip: 1,
             limit: 2,
-            sort: { _id: -1 }
+            sort: {_id: -1}
           }
         })
 
@@ -291,23 +298,24 @@ describe('Features', () => {
           skip: () => sandbox.spy(),
           limit: () => sandbox.spy(),
           sort: () => sandbox.spy(),
-          exec: () => Promise.resolve(fixtures.profiles.map(data => new Profile.Model({ _id: data._id })))
+          exec: () => Promise.resolve(fixtures.profiles.map(data => new Profile.Model({_id: data._id})))
         })
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'POST',
           url: `/profiles`,
-          credentials: { sub: `${fixtures.user._id}` },
+          credentials: {sub: `${fixtures.user._id}`},
           payload: {
             query: {},
-            fields: { _id: 1 }
+            fields: {_id: 1}
           }
         })
 
         let result = JSON.parse(JSON.stringify(response.result))
 
         expect(response.statusCode).to.be.equals(200)
-        expect(result).to.be.deep.equals(fixtures.profiles.map(data => { return { _id: data._id } }))
+        expect(result).to.be.deep.equals(fixtures.profiles.map(data => { return {_id: data._id} }))
       })
     })
 
@@ -316,10 +324,11 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').throws()
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'GET',
           url: `/profile/${fixtures.profiles[0]._id}`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         expect(response.statusCode).to.be.equals(500)
@@ -334,10 +343,11 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').resolves(new Profile.Model(fixtures.profiles[0]))
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'GET',
           url: `/profile/${fixtures.profiles[0]._id}`,
-          credentials: { sub: `${fixtures.user._id}` }
+          credentials: {sub: `${fixtures.user._id}`}
         })
 
         let result = JSON.parse(JSON.stringify(response.result))
@@ -350,13 +360,12 @@ describe('Features', () => {
         sandbox.stub(User.Model, 'findById').withArgs(fixtures.user._id).resolves(new User.Model(fixtures.user))
         sandbox.stub(Profile.Model, 'findById').resolves(null)
 
+        const server = await Server.init()
         const response = await server.inject({
           method: 'GET',
           url: `/profile/${fixtures.profiles[0]._id}`,
           credentials: {sub: `${fixtures.user._id}`}
         })
-
-        let result = JSON.parse(JSON.stringify(response.result))
 
         expect(response.statusCode).to.be.equals(404)
         expect(response.result).to.be.deep.equals({
