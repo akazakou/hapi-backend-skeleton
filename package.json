@@ -8,7 +8,7 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "build": "rm -rf ./build && npm run lint && tsc",
+    "build": "del-cli ./build && npm run lint && tsc",
     "lint": "tslint --project tsconfig.json --config tslint.json src/**/*.ts",
     "start": "node build/src/index.js",
     "debug": "concurrently 'tsc -w' 'nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js'",
@@ -21,6 +21,7 @@
     "bcrypt": "^1.0.3",
     "boom": "^7.1.1",
     "bson": "^2.0.0",
+    "del-cli": "^1.1.0",
     "good": "^8.1.0",
     "good-winston": "^4.0.0",
     "hapi": "^17.2.0",
