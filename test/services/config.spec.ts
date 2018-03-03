@@ -7,11 +7,10 @@ describe('Configuration', () => {
     initMocha() // initialize testing environment
   })
 
-  it('should initialize configuration correctly', done => {
+  it('should initialize configuration correctly', async () => {
     let config = Config.init().get('server')
 
     // check existing values from default configuration file
     expect(config).to.include.keys(['port'])
-    done()
   })
 })

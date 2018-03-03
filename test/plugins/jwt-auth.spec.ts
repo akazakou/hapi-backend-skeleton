@@ -42,7 +42,7 @@ describe('Plugins', () => {
       let pkg = require('hapi-auth-jwt2')
       sandbox.stub(pkg.plugin, 'register').throws()
       expect(Server.init()).to.eventually.rejectedWith(Error, 'Error')
-    }).timeout(2000)
+    })
 
     it('should correctly process user decoded information', async () => {
       sandbox.stub(User.Model, 'findOne').withArgs({

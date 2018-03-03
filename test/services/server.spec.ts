@@ -18,15 +18,11 @@ describe('Server', () => {
     sandbox.restore()
   })
 
-  it('should initialize server correctly', done => {
-    Server.init().then(() => {
-      done()
-    }).catch((error: Error) => {
-      console.log(error)
-    })
-  }).timeout(1000)
+  it('should initialize server correctly', async () => {
+    expect(Server.init()).to.eventually.be.fulfilled
+  })
 
-  it('should correctly process exception on plugin initialisation', done => {
+  it('should correctly process exception on plugin initialisation', async () => {
     const logsPlugin = require(`${global.__basedir}/src/plugins/logs`)
     sandbox.stub(logsPlugin, 'default').callsFake(() => {
       return {
@@ -40,11 +36,6 @@ describe('Server', () => {
       }
     })
 
-    Server.init().catch((error: Error) => {
-      expect(error).to.have.property('message')
-      expect(error.message).to.be.equals('Logs plugin testing error')
-
-      done()
-    })
-  }).timeout(1000)
+    expect(Server.init()).to.eventually.be.rejectedWith(Error, 'Logs plugin testing error')
+  })
 })
