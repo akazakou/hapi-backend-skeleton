@@ -17,26 +17,31 @@ process.on('uncaughtException', (error: Error) => {
   log.warn(`Detect uncaughtException: ${error.toString()}`, {error})
 })
 
-async function init () {
+/**
+ * Initialize HTTP server for processing requests
+ * @returns {Promise<Server | null>}
+ */
+async function init (): Promise<HapiServer | null> {
 
   try {
     // waiting database connection
     await Database.init()
 
-    //
     const server: HapiServer | null = await Server.init()
-    const info = server.info
 
-    if (info && info.uri) {
+    if (server && server.info && server.info.uri) {
       await server.start()
-      log.info(`Server running at: ${info.uri}`)
+      log.info(`Server running at: ${server.info.uri}`)
     } else {
       log.error(`Server doesn't initialized`)
     }
 
+    return server
   } catch (error) {
     log.error(`Can't start server\n${error.stack}`, {error})
   }
+
+  return null
 }
 
 init()

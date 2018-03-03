@@ -14,14 +14,17 @@ export default (): IPlugin => {
   return {
     register: async (server: Server): Promise<void> => {
       try {
+        // registering new plugin in server instance
         await server.register(require('hapi-auth-jwt2'))
 
+        // defining new auth strategy
         server.auth.strategy('jwt', 'jwt', {
           key: config.get('server:auth:jwt:privateKey'),
           validate: validateUser,
           verifyOptions: { algorithms: ['HS256'] }
         })
 
+        // setting default auth strategy as JWT
         server.auth.default('jwt')
 
       } catch (error) {
