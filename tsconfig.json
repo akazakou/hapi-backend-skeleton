@@ -35,8 +35,7 @@
   },
   "include": [
     "src/**/**.ts",
-    "test/**/**.ts",
-    "typings/*.d.ts"
+    "test/**/**.ts"
   ],
   "exclude": [
     "node_modules",

@@ -8,12 +8,12 @@
   "license": "MIT",
   "keywords": [],
   "scripts": {
-    "build": "del-cli ./build && npm run lint && tsc",
+    "build": "del-cli ./build ./node_modules/.cache ./.nyc_output && npm run lint && tsc",
     "lint": "tslint --project tsconfig.json --config tslint.json src/**/*.ts",
     "start": "node build/src/index.js",
     "debug": "concurrently 'tsc -w' 'nodemon --inspect=0.0.0.0:9229 --watch build/src build/src/index.js'",
     "test": "npm run build && npm run coverage",
-    "coverage": "nyc mocha -r ts-node/register -r source-map-support/register --recursive test/**/*.ts",
+    "coverage": "nyc mocha --require ts-node/register --require source-map-support/register --recursive test/**/*.ts",
     "codecov": "codecov -f build/coverage/*.json -t $CODECOV_TOKEN",
     "migrate:up": "migrate up --es6 --autosync --dbConnectionUri $database__uri"
   },
@@ -69,7 +69,8 @@
   "nyc": {
     "report-dir": "build/coverage",
     "check-coverage": true,
-    "cache": false,
+    "sourceMap": true,
+    "cache": true,
     "all": true,
     "lines": 100,
     "statements": 100,
