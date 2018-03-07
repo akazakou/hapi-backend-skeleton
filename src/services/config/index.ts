@@ -4,7 +4,7 @@ const defaults = {
   'server': {
     'title': 'Backend Node #1',
     'port': 3000,
-    'url': 'http://localhost:3000',
+    'url': 'http://localhost:3000/',
     'auth': {
       'jwt': {
         'expireIn': 86400,

@@ -54,7 +54,7 @@
   "server": {
     "title": "Backend Node #1",
     "port": 3000,
-    "url": "http://localhost:3000",
+    "url": "http://localhost:3000/",
     "auth": {
       "jwt": {
         "expireIn": 86400,
@@ -100,7 +100,7 @@ After server stated, documentation for available API Endpoints will be available
 ## NPM Scripts
 
 * `npm start` - build and start `production` version of API Endpoint application
-* `npm run debug` - build and start `development` version of API Endpoint application with files changes monitoring and debugger on port 9229
+* `npm run debug` - build and start `development` version of API Endpoint application with files changes monitoring and debugger by backend.dbg.local:9229 hostname (available Node.js Inspector debugger)
 * `npm build` - compile all TypeScript files into JavaScript
 * `npm test` - build and run test coverage functionality. `nyc` configuration for test report available in `nyc` section of `package.json` file
 * `npm run coverage` - run test coverage functionality

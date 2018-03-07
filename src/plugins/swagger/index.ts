@@ -1,5 +1,9 @@
 import { IPlugin } from '../interfaces'
+import * as Config from '../../services/config'
 import * as Hapi from 'hapi'
+import * as Url from 'url'
+
+const config = Config.init()
 
 export default (): IPlugin => {
   return {
@@ -12,6 +16,7 @@ export default (): IPlugin => {
         {
           plugin: require('hapi-swagger'),
           options: {
+            debug: true,
             info: {
               title: packageInfo.title,
               description: packageInfo.description,
@@ -32,7 +37,8 @@ export default (): IPlugin => {
                 description: 'Api interface for manipulate User Profile Entity'
               }
             ],
-            documentationPath: '/'
+            documentationPath: '/',
+            host: Url.parse(config.get('server:url')).host,
           }
         }
       ])
