@@ -24,9 +24,15 @@
 * List of available API Endpoints will be accessible by link http://backend.app.local (Default login: admin / password)
 * All emails will not be sent, but will be catches in http://mailer.app.local web interface
 
+After environment will be started, you can use next entry points (add these domains to your `hosts` file):
+
+* http://backend.app.local - backend application API interface
+* http://mailer.app.local - mail catcher Web interface
+* http://backend.dbg.local:9229 - entry point for debugging backend API endpoints ([Documentation](https://nodejs.org/en/docs/guides/debugging-getting-started/)) 
+
 ## Standalone Setup
 
-* Dependencies: Node.js >= 6.0 and MongoDB => 3.4
+* Dependencies: Node.js >= 8.0 and MongoDB => 3.4
 * Download project `git clone https://gitlab.com/akazakou/ads-platform.git`
 * Go to the folder with project `cd ads-platform`
 * Install npm modules by command `npm install`
