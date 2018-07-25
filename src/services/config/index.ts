@@ -29,16 +29,6 @@ const defaults = {
       'poolSize': 10,
       'bufferMaxEntries': 0
     }
-  },
-  'log': {
-    'level': 'debug',
-    'json': false,
-    'showLevel': true,
-    'timestamp': true,
-    'colorize': true,
-    'exitOnError': false,
-    'handleExceptions': true,
-    'humanReadableUnhandledException': true
   }
 }
 
@@ -54,9 +44,7 @@ let config: nconf.Provider
 function init (): nconf.Provider {
 
   if (!config) {
-    config = nconf.argv({parseValues: true})
-      .env({separator: '__', parseValues: true})
-      .file({file: `${global.__basedir}/config.json`})
+    config = nconf.argv({ parseValues: true }).env({ separator: '__', parseValues: true }).file({ file: `${process.cwd()}/config.json` })
       .defaults(defaults)
       .overrides()
   }

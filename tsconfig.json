@@ -1,13 +1,19 @@
 {
   "compilerOptions": {
-    "strict": true,
+    "baseUrl": ".",
     "rootDirs": [
       "src",
       "test"
     ],
     "outDir": "build",
-    "target": "es6",
+    "target": "esnext",
     "module": "commonjs",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "pretty": true,
+    "strict": true,
+    "allowJs": false,
+    "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "inlineSourceMap": true,
     "emitDecoratorMetadata": true,
@@ -19,18 +25,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "inlineSources": true,
+    "resolveJsonModule": true,
     "typeRoots": [
-      "src/typings",
+      "src/types",
       "node_modules/@types"
     ],
     "types": [
       "node",
       "mocha"
-    ],
-    "lib": [
-      "esnext.asynciterable",
-      "es2016",
-      "dom"
     ]
   },
   "include": [

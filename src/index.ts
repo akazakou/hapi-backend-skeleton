@@ -1,6 +1,3 @@
-// assign basedir property to global variables list
-global.__basedir = `${__dirname}/../..`
-
 // setting EventEmitter maxListeners
 require('events').EventEmitter.defaultMaxListeners = 100
 

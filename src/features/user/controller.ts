@@ -1,5 +1,5 @@
 import { Request, ResponseObject, ResponseToolkit } from 'hapi'
-import { badData, badImplementation, badRequest, Boom, unauthorized } from 'boom'
+import { badData, badImplementation, badRequest, unauthorized } from 'boom'
 import * as User from '../../models/user'
 import * as Log from '../../services/logs'
 import BasicController from '../basic/controller'
@@ -18,11 +18,11 @@ export default class UserController extends BasicController<User.Interface> {
 
   /**
    * Create new user record
-   * @param {Request} request
+   * @param {CreateUserRequest} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<void>}
+   * @returns {Promise<ResponseObject | Error>}
    */
-  public static async createUser (request: CreateUserRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public static async createUser (request: CreateUserRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       let existedUser: User.Interface | null = await User.Model.findOne({login: request.payload.login})
       if (existedUser) {
@@ -42,11 +42,11 @@ export default class UserController extends BasicController<User.Interface> {
 
   /**
    * Update existing user record by user ID
-   * @param {Request} request
+   * @param {UpdateUserRequest} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<Response>}
+   * @returns {Promise<ResponseObject | Error>}
    */
-  public static async updateUser (request: UpdateUserRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public static async updateUser (request: UpdateUserRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       let user: User.Interface | null = await User.Model.findById(request.params.id)
 
@@ -80,11 +80,11 @@ export default class UserController extends BasicController<User.Interface> {
 
   /**
    * Validate user login and password, and generate access token, if credentials is a valid
-   * @param {Request} request
+   * @param {LoginUserRequest} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<Response>}
+   * @returns {Promise<ResponseObject | Error>}
    */
-  public static async loginUser (request: LoginUserRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public static async loginUser (request: LoginUserRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     let {login, password} = request.payload
     try {
       const user: User.Interface | null = await User.Model.findOne({login})
@@ -110,11 +110,11 @@ export default class UserController extends BasicController<User.Interface> {
 
   /**
    * Check user auth status
-   * @param {Request} request
+   * @param {AuthorizedRequest} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<void>}
+   * @returns {Promise<ResponseObject | Error>}
    */
-  public static async authUser (request: AuthorizedRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public static async authUser (request: AuthorizedRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       let user: User.Interface | null = await User.Model.findById(request.auth.credentials.sub)
 
@@ -135,11 +135,11 @@ export default class UserController extends BasicController<User.Interface> {
 
   /**
    * Remove authorisation token from user entity
-   * @param {Request} request
+   * @param {AuthorizedRequest} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<void>}
+   * @returns {Promise<ResponseObject | Error>}
    */
-  public static async logoutUser (request: AuthorizedRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public static async logoutUser (request: AuthorizedRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       let user: User.Interface | null = await User.Model.findById(request.auth.credentials.sub)
 
@@ -162,9 +162,9 @@ export default class UserController extends BasicController<User.Interface> {
    * Disallow user to login into backend application
    * @param {Request} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<void>}
+   * @returns {Promise<ResponseObject | Error>}
    */
-  public static async deleteUser (request: Request, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public static async deleteUser (request: Request, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       let user: User.Interface | null = await User.Model.findById(request.params.id)
 

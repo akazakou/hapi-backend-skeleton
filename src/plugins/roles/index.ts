@@ -1,7 +1,7 @@
 import { IPlugin } from '../interfaces'
 import { PluginSpecificConfiguration, Request, ResponseToolkit, Server } from 'hapi'
 import * as Log from '../../services/logs'
-import { Boom, forbidden, internal } from 'boom'
+import { forbidden, internal } from 'boom'
 import * as User from '../../models/user'
 import { TypeRoles } from './interface'
 
@@ -31,7 +31,7 @@ const Plugin: any = {
      * @param {Request} request
      * @param {Base_Reply} reply
      */
-    server.ext('onPostAuth', async function (request: Request, reply: ResponseToolkit): Promise<Boom | symbol> {
+    server.ext('onPostAuth', async function (request: Request, reply: ResponseToolkit): Promise<Error | symbol> {
       const route = Object.assign({}, {settings: undefined, path: ''}, request.route)
 
       for (let ignore of ignored) {

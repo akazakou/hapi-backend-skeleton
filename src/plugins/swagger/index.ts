@@ -8,7 +8,7 @@ const config = Config.init()
 export default (): IPlugin => {
   return {
     register: (server: Hapi.Server): Promise<any> => {
-      const packageInfo = require(`${global.__basedir}/package.json`)
+      const packageInfo = require(`${process.cwd()}/package.json`)
 
       return server.register([
         require('inert'),

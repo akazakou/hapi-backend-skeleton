@@ -56,7 +56,7 @@ describe('Features', () => {
   })
 
   beforeEach(async () => {
-    sandbox = sinon.sandbox.create()
+    sandbox = sinon.createSandbox()
   })
 
   afterEach(async () => {

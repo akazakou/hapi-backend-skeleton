@@ -11,7 +11,7 @@ describe('Server', () => {
   })
 
   beforeEach(() => {
-    sandbox = sinon.sandbox.create()
+    sandbox = sinon.createSandbox()
   })
 
   afterEach(() => {
@@ -23,7 +23,7 @@ describe('Server', () => {
   })
 
   it('should correctly process exception on plugin initialisation', async () => {
-    const logsPlugin = require(`${global.__basedir}/src/plugins/logs`)
+    const logsPlugin = require(`${process.cwd()}/src/plugins/logs`)
     sandbox.stub(logsPlugin, 'default').callsFake(() => {
       return {
         register: () => Promise.reject(new Error('Logs plugin testing error')),
