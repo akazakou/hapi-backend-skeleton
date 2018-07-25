@@ -1,15 +1,16 @@
-import { Logger, LoggerInstance, transports } from 'winston'
-import * as Config from '../config'
+import { createLogger, Logger, LoggerOptions, transports } from 'winston'
 
-let logger: LoggerInstance
+let logger: Logger
 
-function init (reinit: boolean = false): LoggerInstance {
+function init (reinit: boolean = false): Logger {
   if (!logger || reinit) {
     // create new logger instance
-    logger = new Logger()
-
-    // add console transport to logger instance object
-    logger.add(transports.Console, Config.init().get('log'))
+    logger = createLogger({
+      level: 'debug',
+      transports: [
+        new transports.Console()
+      ]
+    } as LoggerOptions)
   }
 
   // logger instance

@@ -1,5 +1,5 @@
 import { Request, ResponseObject, ResponseToolkit } from 'hapi'
-import { badData, badImplementation, Boom, notFound } from 'boom'
+import { badData, badImplementation, notFound } from 'boom'
 import { Document, Model, MongooseDocumentOptionals } from 'mongoose'
 import * as Log from '../../services/logs'
 import { ITimed } from '../../models/misc/timed'
@@ -38,9 +38,9 @@ export default class BasicController<ModelType extends IBasicModel> {
    * Get one full described model object by model ID parameter
    * @param {Request} request
    * @param {ResponseToolkit} reply
-   * @returns {Promise<ResponseObject| Boom>}
+   * @returns {Promise<ResponseObject| Error>}
    */
-  public async getModel (request: Request, reply: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public async getModel (request: Request, reply: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       const result: ModelType | null = await this.model.findById(request.params.id)
       if (!result) {
@@ -58,9 +58,9 @@ export default class BasicController<ModelType extends IBasicModel> {
    * Receive list of models, based on query and fields parameters
    * @param {Request} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<ResponseObject| Boom>}
+   * @returns {Promise<ResponseObject| Error>}
    */
-  public async getList (request: ModelListRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public async getList (request: ModelListRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       const query = request.payload.query ? request.payload.query : {}
       const fields = request.payload.fields ? request.payload.fields : {_id: 1}
@@ -96,9 +96,9 @@ export default class BasicController<ModelType extends IBasicModel> {
    * Create new model in database
    * @param {Request} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<ResponseObject| Boom>}
+   * @returns {Promise<ResponseObject| Error>}
    */
-  public async createModel (request: Request, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public async createModel (request: Request, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       let model: ModelType = new this.model(request.payload)
       const result: ModelType = await model.save()
@@ -113,9 +113,9 @@ export default class BasicController<ModelType extends IBasicModel> {
    * Update existing model based by ID
    * @param {Request} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<ResponseObject| Boom>}
+   * @returns {Promise<ResponseObject| Error>}
    */
-  public async updateModel (request: ModelUpdateRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public async updateModel (request: ModelUpdateRequest, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       let model: ModelType | null = await this.model.findById(request.params.id)
 
@@ -128,7 +128,7 @@ export default class BasicController<ModelType extends IBasicModel> {
         model.markModified(key)
       }
 
-      const response: ModelType | null = await model.save()
+      const response: ModelType = await model.save()
 
       return toolkit.response(response)
     } catch (error) {
@@ -141,9 +141,9 @@ export default class BasicController<ModelType extends IBasicModel> {
    * Delete model from database
    * @param {Request} request
    * @param {ResponseToolkit} toolkit
-   * @returns {Promise<ResponseObject| Boom>}
+   * @returns {Promise<ResponseObject| Error>}
    */
-  public async deleteModel (request: Request, toolkit: ResponseToolkit): Promise<ResponseObject | Boom> {
+  public async deleteModel (request: Request, toolkit: ResponseToolkit): Promise<ResponseObject | Error> {
     try {
       let model: ModelType | null = await this.model.findById(request.params.id)
 

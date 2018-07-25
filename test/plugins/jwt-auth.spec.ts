@@ -30,7 +30,7 @@ describe('Plugins', () => {
   })
 
   beforeEach(async () => {
-    sandbox = sinon.sandbox.create()
+    sandbox = sinon.createSandbox()
   })
 
   afterEach(async () => {
